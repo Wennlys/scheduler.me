@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="@172.17.0.2" uuid="6b908a5b-862e-4816-ab91-5cf896731b01">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://172.17.0.2:3306</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="@172.17.0.3" uuid="5ee87582-d275-4f91-a2f2-635d05711eee">
+      <driver-ref>mongo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
+      <jdbc-url>mongodb://172.17.0.3:27017</jdbc-url>
+    </data-source>
+  </component>
+</project>
