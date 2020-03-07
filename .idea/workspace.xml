@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f3e4d74d-3e7b-475e-b034-3b7310c018ac" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/example/destroy_example.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/example/find_example.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/example/pdo_example.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/example/save_example.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,6 +203,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="832" y="282" width="800" height="672" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1582266728283" />
+    <state x="347" y="176" width="661" height="409" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1583576881750">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="347" y="176" width="661" height="409" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.768@0.0.1366.768" timestamp="1583576881750" />
     <state x="693" y="289" width="524" height="495" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1582220731000">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -284,9 +287,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="555" y="256" width="798" height="560" key="Vcs.Push.Dialog.v2/0.0.1920.1080@0.0.1920.1080" timestamp="1582153310812" />
-    <state x="730" y="454" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1582209519356">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state x="519" y="323" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1583576830155">
+      <screen x="0" y="0" width="1366" height="768" />
     </state>
+    <state x="519" y="323" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.768@0.0.1366.768" timestamp="1583576830155" />
     <state x="730" y="454" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1080@0.0.1920.1080" timestamp="1582209519356" />
     <state x="1096" y="354" width="550" height="372" key="jetbrains.nodejs.interpreters-dialog" timestamp="1582218872625">
       <screen x="0" y="0" width="1920" height="1080" />
