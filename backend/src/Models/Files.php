@@ -4,9 +4,9 @@
 namespace Source\Models;
 
 
-use Source\Core\Model;
+use Source\Core\model;
 
-class Files extends Model
+class Files extends model
 {
     public function __construct()
     {

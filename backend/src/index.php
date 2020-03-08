@@ -14,7 +14,9 @@ $strategy = new League\Route\Strategy\JsonStrategy($responseFactory);
 $router   = (new League\Route\Router)->setStrategy($strategy);
 
 // map a route
+$router->map('GET', '/', 'Source\App\UserController::show');
 $router->map('POST', '/', 'Source\App\UserController::store');
+
 
 $response = $router->dispatch($request);
 

@@ -4,9 +4,9 @@
 namespace Source\Models;
 
 
-use Source\Core\Model;
+use Source\Core\model;
 
-class Appointments extends Model
+class Appointments extends model
 {
     public function __construct()
     {

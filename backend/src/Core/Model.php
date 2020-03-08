@@ -10,41 +10,45 @@ use DateTime;
 
 abstract class Model
 {
-    /** @var string $entity */
-    private $entity;
+    /** @var string|null $entity */
+    private string $entity;
 
-    /** @var string $primary */
-    private $primary;
+    /** @var string|null $primary */
+    private string $primary;
 
-    /** @var array $required */
-    private $required;
+    /** @var array|null $required */
+    private array $required;
 
-    /** @var string $timestamps */
+    /** @var string|null $timestamps */
     private $timestamps;
 
-    /** @var string */
-    protected $statement;
+    /** @var string|null */
+    protected ?string $statement = null;
 
-    /** @var string */
-    protected $params;
+    /** @var array|null */
+    protected ?array $params = null;
 
-    /** @var string */
-    protected $group;
+    /** @var string|null */
+    protected ?string $group = null;
 
-    /** @var string */
-    protected $order;
+    /** @var string|null */
+    protected ?string $order = null;
 
-    /** @var int */
-    protected $limit;
+    /** @var int|null */
+    protected ?int $limit = null;
 
-    /** @var int */
-    protected $offset;
+    /** @var int|null */
+    protected ?int $offset = null;
 
     /** @var PDOException|null */
-    protected $fail;
+    protected ?PDOException $fail = null;
 
     /** @var object|null */
-    protected $data;
+    protected ?object $data = null;
+    /**
+     * @var int|null
+     */
+    public ?int $id = null;
 
     /**
      * Constructor.
@@ -112,26 +116,29 @@ abstract class Model
      * @param string|null $terms
      * @param string|null $params
      * @param string $columns
-     * @return Model
+     *
+     * @return model
      */
-    public function find(?string $terms = null, ?string $params = null, string $columns = "*"): Model
+    public function find(?string $terms = null, ?string $params = null, string $columns = "*"): model
     {
         if ($terms) {
-            $this->statement = "SELECT {$columns} FROM {$this->entity} WHERE {$terms}";
+            $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " WHERE " . $terms;
             parse_str($params, $this->params);
             return $this;
         }
 
-        $this->statement = "SELECT {$columns} FROM {$this->entity}";
+        $this->statement = "SELECT " . $columns . " FROM " . $this->entity;
         return $this;
     }
 
     /**
      * @param int $id
      * @param string $columns
-     * @return Model|null
+     *
+     * @return model|null
      */
-    public function findById(int $id, string $columns = "*"): ?Model
+    public function findById(int $id, string $columns = "*")
+    : ?model
     {
         $find = $this->find($this->primary . " = :id", "id={$id}", $columns);
         return $find->fetch();
@@ -139,9 +146,10 @@ abstract class Model
 
     /**
      * @param string $column
-     * @return Model|null
+     * @return model|null
      */
-    public function group(string $column): ?Model
+    public function group(string $column)
+    : ?model
     {
         $this->group = " GROUP BY {$column}";
         return $this;
@@ -149,9 +157,10 @@ abstract class Model
 
     /**
      * @param string $columnOrder
-     * @return Model|null
+     * @return model|null
      */
-    public function order(string $columnOrder): ?Model
+    public function order(string $columnOrder)
+    : ?model
     {
         $this->order = " ORDER BY {$columnOrder}";
         return $this;
@@ -159,9 +168,10 @@ abstract class Model
 
     /**
      * @param int $limit
-     * @return Model|null
+     * @return model|null
      */
-    public function limit(int $limit): ?Model
+    public function limit(int $limit)
+    : ?model
     {
         $this->limit = " LIMIT {$limit}";
         return $this;
@@ -169,9 +179,10 @@ abstract class Model
 
     /**
      * @param int $offset
-     * @return Model|null
+     * @return model|null
      */
-    public function offset(int $offset): ?Model
+    public function offset(int $offset)
+    : ?model
     {
         $this->offset = " OFFSET {$offset}";
         return $this;
@@ -227,13 +238,13 @@ abstract class Model
 
             /** Update */
             if (!empty($this->data->$primary)) {
-                $id = $this->data->$primary;
+                $this->id = $this->data->$primary;
                 $this->update($this->safe(), $this->primary . " = :id", "id={$id}");
             }
 
             /** Create */
             if (empty($this->data->$primary)) {
-                $id = $this->create($this->safe());
+                $this->id = $this->create($this->safe());
             }
 
             if (!$id) {
@@ -242,7 +253,7 @@ abstract class Model
 
             $this->data = $this->findById($id)->data();
             return true;
-        } catch (Exception $exception) {
+        } catch (Exception|PDOException $exception) {
             $this->fail = $exception;
             return false;
         }
@@ -271,7 +282,7 @@ abstract class Model
     {
         $data = (array)$this->data();
         foreach ($this->required as $field) {
-            if (empty($data[$field])) {
+            if (is_null($data[$field])) {
                 return false;
             }
         }
