@@ -31,9 +31,17 @@ class ComposerStaticInitdf8a8451882cf624ef21073361eafcb5
     );
 
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'Tests\\' => 6,
+        ),
         'S' => 
         array (
             'Source\\' => 7,
+        ),
+        'R' => 
+        array (
+            'ReallySimpleJWT\\' => 16,
         ),
         'P' => 
         array (
@@ -59,9 +67,17 @@ class ComposerStaticInitdf8a8451882cf624ef21073361eafcb5
     );
 
     public static $prefixDirsPsr4 = array (
+        'Tests\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rbdwllr/reallysimplejwt/tests',
+        ),
         'Source\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'ReallySimpleJWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rbdwllr/reallysimplejwt/src',
         ),
         'Psr\\Http\\Server\\' => 
         array (

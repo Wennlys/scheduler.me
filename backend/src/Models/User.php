@@ -9,22 +9,19 @@ use Source\Core\Model;
 /**
  * Class User
  *
- * @property mixed user_name
- * @property mixed first_name
- * @property mixed last_name
- * @property mixed email
- * @property mixed password
- * @property mixed provider
+ * @property mixed    user_name
+ * @property mixed    first_name
+ * @property mixed    last_name
+ * @property mixed    email
+ * @property mixed    password
+ * @property mixed    provider
+ * @property int|null userId
+ * @property string   message
  *
  * @package Source\Models
  */
 class User extends Model
 {
-    /**
-     * @var string
-     */
-    public ?string $message = null;
-
     /**
      * User constructor.
      */
@@ -34,9 +31,9 @@ class User extends Model
             "password", "provider"]);
     }
 
-    public function save()
-    : bool
+    public function save(): bool
     {
+
         if (!$this->required()) {
             $this->message ="Nome, sobrenome, email e senha são obrigatórios";
             return false;
@@ -50,33 +47,35 @@ class User extends Model
         if (!is_password($this->password)) {
             $min = MIN_PASS_LEN;
             $max = MAX_PASS_LEN;
-            $this->message ="A senha deve ter entre {$min} e {$max} caracteres";
+            $this->message = "A senha deve ter entre {$min} e {$max} caracteres";
             return false;
         } else {
             $this->password = password_hash($this->password, PASSWORD_DEFAULT);
         }
 
-        if(is_null($this->provider)) {
-            $this->message = "Ainda tá nulo";
-            return false;
-
-        }
-
         /** User Create */
         if (empty($this->id)) {
             if ($this->findByEmail($this->email, "id")) {
-                $this->message ="O e-mail informado já está cadastrado";
+                $this->message = "O e-mail informado já está cadastrado";
                 return false;
             }
 
-              $userId = $this->create($this->safe());
+            if ($this->findByUserName($this->user_name, "id")) {
+                $this->message = "O usuário informado já está cadastrado";
+                return false;
+            }
+
+            /* USER CREATION */
+            $userId = $this->create($this->safe());
+
             if ($this->fail()) {
-                $this->message = $this->fail()->getMessage() ? $this->fail()->getMessage() : null;
+                $this->message = $this->fail()->getMessage();
                 return false;
             }
         }
 
         $this->data = ($this->findById($userId))->data();
+        $this->userId = $userId;
         return true;
     }
 
@@ -89,6 +88,12 @@ class User extends Model
     public function findByEmail(string $email, string $columns = "*")
     {
         $find = $this->find("email = :email", "email={$email}", $columns);
+        return $find->fetch(true);
+    }
+
+    public function findByUserName(string $userName, string $columns = "*")
+    {
+        $find = $this->find("user_name = :user_name", "user_name={$userName}", $columns);
         return $find->fetch(true);
     }
 }

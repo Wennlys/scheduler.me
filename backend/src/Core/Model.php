@@ -117,9 +117,9 @@ abstract class Model
      * @param string|null $params
      * @param string $columns
      *
-     * @return model
+     * @return Model
      */
-    public function find(?string $terms = null, ?string $params = null, string $columns = "*"): model
+    public function find(?string $terms = null, ?string $params = null, string $columns = "*"): Model
     {
         if ($terms) {
             $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " WHERE " . $terms;
@@ -135,10 +135,10 @@ abstract class Model
      * @param int $id
      * @param string $columns
      *
-     * @return model|null
+     * @return Model|null
      */
     public function findById(int $id, string $columns = "*")
-    : ?model
+    : ?Model
     {
         $find = $this->find($this->primary . " = :id", "id={$id}", $columns);
         return $find->fetch();
@@ -146,10 +146,10 @@ abstract class Model
 
     /**
      * @param string $column
-     * @return model|null
+     * @return Model|null
      */
     public function group(string $column)
-    : ?model
+    : ?Model
     {
         $this->group = " GROUP BY {$column}";
         return $this;
@@ -157,10 +157,10 @@ abstract class Model
 
     /**
      * @param string $columnOrder
-     * @return model|null
+     * @return Model|null
      */
     public function order(string $columnOrder)
-    : ?model
+    : ?Model
     {
         $this->order = " ORDER BY {$columnOrder}";
         return $this;
@@ -168,10 +168,10 @@ abstract class Model
 
     /**
      * @param int $limit
-     * @return model|null
+     * @return Model|null
      */
     public function limit(int $limit)
-    : ?model
+    : ?Model
     {
         $this->limit = " LIMIT {$limit}";
         return $this;
@@ -179,10 +179,10 @@ abstract class Model
 
     /**
      * @param int $offset
-     * @return model|null
+     * @return Model|null
      */
     public function offset(int $offset)
-    : ?model
+    : ?Model
     {
         $this->offset = " OFFSET {$offset}";
         return $this;
@@ -203,7 +203,7 @@ abstract class Model
             }
 
             if ($all) {
-                return $stmt->fetchAll(PDO::FETCH_CLASS, static::class);
+                return $stmt->fetchAll();
             }
 
             return $stmt->fetchObject(static::class);

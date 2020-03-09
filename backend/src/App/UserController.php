@@ -4,12 +4,11 @@
 namespace Source\App;
 
 
+use Source\Core\Controller;
+
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response;
-use Source\Models\User;
 use Psr\Http\Message\ResponseInterface;
-use Exception;
-use Source\Core\Connection;
+use Laminas\Diactoros\Response;
 
 
 /**
@@ -17,44 +16,29 @@ use Source\Core\Connection;
  *
  * @package Source\App
  */
-class UserController
+class UserController extends Controller
 {
-    /**
-     * @var array
-     */
-    private array $content;
-    /**
-     * @var User
-     */
-    private User $user;
-    /**
-     * @var Response
-     */
-    private Response $response;
 
-    /**
-     * UserController constructor.
-     */
-    public function __construct()
-    {
-        $this->user = new User();
-        $this->response = new Response();
+    public function index() {
+        $this->response->getBody()->write(json_encode($this->getRows()));
+        return $this->response->withStatus(200);
+    }
+
+    public function show() {
+
+       $this->response->getBody()->write(json_encode(($this->user)->find()->fetch(true)));
+        return $this->response->withStatus(200);
     }
 
     /**
-     * REGISTER
-     *
      * @param ServerRequestInterface $request
      *
-     * @return ResponseInterface|string|array
-     * @throws Exception
+     * @return Response|ResponseInterface
      */
     public function store(ServerRequestInterface $request)
     {
-        $this->content = filter_var_array(json_decode($request->getBody(), true),
-                                    FILTER_SANITIZE_STRIPPED);
+        $this->content = json_decode($request->getBody(), true);
 
-        try {
             $this->user->user_name = $this->content['user_name'];
             $this->user->first_name = $this->content['first_name'];
             $this->user->last_name = $this->content['last_name'];
@@ -62,21 +46,31 @@ class UserController
             $this->user->password = $this->content['password'];
             $this->user->provider = $this->content['provider'];
             $this->user->save();
-        } catch (Exception $exception) {
-            return $exception->getMessage();
+
+        if ($this->user->message) {
+            $this->response->getBody()->write(json_encode($this->user->message));
+            return $this->response->withStatus(400);
         }
-        $this->response->getBody()->write(json_encode($this->user->message ?
-            $this->user->message :" true "));
-        $this->response->getBody()->write(json_encode($this->user->id));
 
-        return $this->response->withAddedHeader('content-type', 'application/json')->withStatus(200);
+        $data = (array)$this->user->data();
+        $parsedData = (object)[
+            "id" => $this->user->userId,
+            "user_name" => $data['user_name'],
+            "email" => $data['email'],
+            "provider" => $data['provider'],
+        ];
 
+        $this->response->getBody()->write(json_encode($parsedData));
+        return $this->response->withStatus(200);
     }
 
-    public function show() {
-        $results = $this->user->find()->fetch();
-        $this->response->getBody()->write(json_encode($results));
-        return $this->response->withAddedHeader('content-type', 'application/json')->withStatus(200);
+    public function update(ServerRequestInterface $request) {
+        $this->response->getBody()->write((string)$request->getBody());
+        return $this->response->withStatus(200);
+    }
+
+    public function destroy() {
+
     }
 
 }
