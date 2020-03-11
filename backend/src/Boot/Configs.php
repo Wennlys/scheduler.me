@@ -21,3 +21,10 @@ define("MIN_PASS_LEN", 8);
 define("MAX_PASS_LEN", 40);
 define("PASS_ALGO", PASSWORD_DEFAULT);
 define("PASS_OPTION", PASSWORD_BCRYPT_DEFAULT_COST);
+
+/**
+ * JWT
+ */
+define("JWT_SECRET", "97af779fec9b7be2dc0bd5855e77ba71!A");
+define("JWT_EXPIRATION", time() + 10000);
+define("JWT_ISSUER", "localhost");

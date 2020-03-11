@@ -7,9 +7,12 @@ namespace Source\Core;
 use Source\Models\User;
 use Laminas\Diactoros\Response;
 use PDO;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class Controller
+ *
+ * @property mixed $body
  *
  * @package Source\Core
  */
@@ -21,9 +24,6 @@ abstract class Controller
     /** @var Response $response */
     protected Response $response;
 
-    /** @var array $content */
-    protected array $content = [];
-
     /** @var PDO|null */
     protected ?PDO $instance;
 
@@ -34,13 +34,25 @@ abstract class Controller
         $this->instance = Connection::getInstance();
     }
 
-    public function getRows(?string $terms = null, string $columns = '*') {
+    public function getRows(?string $terms = null, ?string $params = null,
+        string $columns = '*')
+    {
+        return ($this->user)->find($terms, $params, $columns)->fetch(true);
+    }
 
-        if ($terms)
-        return (($this->instance)->query(
-           "SELECT" . $columns . "FROM scheduler.users" . " WHERE " . $terms))
-           ->fetchAll();
+    public function getToken(ServerRequestInterface $request)
+    {
+        $header = $request->getHeaders()["authorization"][0];
+        if (!$header) {
+            return $this->encodedWrite("Token not provided", 401);
+        }
+         $token = explode(' ', $header);
+         return $token[1];
+    }
 
-        return (($this->instance)->query("SELECT" . $columns . "FROM scheduler.users"))->fetchAll();
+    public function encodedWrite($data, int $status = 200)
+    {
+        $this->response->getBody()->write(json_encode($data));
+        return $this->response->withStatus($status);
     }
 }

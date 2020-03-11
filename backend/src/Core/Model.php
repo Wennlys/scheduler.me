@@ -247,9 +247,7 @@ abstract class Model
                 $this->id = $this->create($this->safe());
             }
 
-            if (!$id) {
-                return false;
-            }
+            if (!$id) return false;
 
             $this->data = $this->findById($id)->data();
             return true;
@@ -271,8 +269,7 @@ abstract class Model
             return false;
         }
 
-        $destroy = $this->delete($this->primary . " = :id", "id={$id}");
-        return $destroy;
+        return $this->delete($this->primary . " = :id", "id={$id}");
     }
 
     /**
@@ -352,7 +349,9 @@ abstract class Model
             $dateSet = implode(", ", $dateSet);
             parse_str($params, $params);
 
-            $stmt = Connection::getInstance()->prepare("UPDATE {$this->entity} SET {$dateSet} WHERE {$terms}");
+            $stmt = Connection::getInstance()->prepare(
+                "UPDATE " . $this->entity . " SET " . $dateSet . " WHERE " . $terms
+            );
             $stmt->execute($this->filter(array_merge($data, $params)));
             return ($stmt->rowCount() ?? 1);
         } catch (PDOException $exception) {

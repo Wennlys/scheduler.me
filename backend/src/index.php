@@ -3,8 +3,10 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+
 use Laminas\Diactoros\ResponseFactory;
 use League\Route\RouteGroup;
+
 use Source\Middleware\AuthMiddleware;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(

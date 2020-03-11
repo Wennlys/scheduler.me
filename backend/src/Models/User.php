@@ -6,6 +6,9 @@ namespace Source\Models;
 
 use Source\Core\Model;
 
+use Exception;
+
+
 /**
  * Class User
  *
@@ -31,9 +34,17 @@ class User extends Model
             "password", "provider"]);
     }
 
+    public function table(int $id)
+    {
+        return ($this->findById($id))->data();
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function save(): bool
     {
-
         if (!$this->required()) {
             $this->message ="Nome, sobrenome, email e senha são obrigatórios";
             return false;
@@ -74,9 +85,28 @@ class User extends Model
             }
         }
 
-        $this->data = ($this->findById($userId))->data();
+        $this->data = $this->table($userId);
         $this->userId = $userId;
         return true;
+    }
+
+    public function change(int $userId, array $body)
+    {
+            if ($this->find("email = :e AND id != :i", "e={$this->email}&i={$userId}", "id")->fetch()) {
+                $this->message = "O e-mail informado já está cadastrado";
+                return false;
+            }
+
+            if ($this->find("user_name = :u AND id != :i", "e={$this->user_name}&i={$userId}", "id")
+                ->fetch()) {
+                $this->message = "O nome de usuário informado já está cadastrado";
+                return false;
+            }
+            try {
+                return $this->update($body, "id = :id", "id={$userId}");
+            } catch (Exception $exception) {
+                return $exception;
+            }
     }
 
     /**
@@ -91,6 +121,12 @@ class User extends Model
         return $find->fetch(true);
     }
 
+    /**
+     * @param string $userName
+     * @param string $columns
+     *
+     * @return array|mixed|null
+     */
     public function findByUserName(string $userName, string $columns = "*")
     {
         $find = $this->find("user_name = :user_name", "user_name={$userName}", $columns);
