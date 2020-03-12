@@ -39,7 +39,7 @@ export const Content = styled.div`
     }
 
     .regular-checkbox:checked:after {
-      content: "\\2714";
+      content: "\\2713";
       font-size: 20px;
       position: absolute;
       top: -3px;
@@ -69,7 +69,7 @@ export const Content = styled.div`
     button {
       margin: 5px 0 0;
       height: 44px;
-      background: #9156cc;
+      background: #8354b3;
       color: #fff;
       border: 0;
       border-radius: 4px;

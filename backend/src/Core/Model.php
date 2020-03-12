@@ -3,7 +3,6 @@
 namespace Source\Core;
 
 use Exception;
-use PDO;
 use PDOException;
 use stdClass;
 use DateTime;
