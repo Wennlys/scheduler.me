@@ -39,7 +39,7 @@ export const Content = styled.div`
 
 export const Profile = styled.div`
   display: flex;
-  margin-left: 20px;
+  margin-left: 28px;
   padding-left: 20px;
   border-left: 1px solid #eee;
 

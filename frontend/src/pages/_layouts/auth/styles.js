@@ -1,5 +1,5 @@
-import { darken } from "polished";
 import styled from "styled-components";
+import { darken } from "polished";
 
 export const Wrapper = styled.div`
   height: 100%;
@@ -39,7 +39,7 @@ export const Content = styled.div`
     }
 
     .regular-checkbox:checked:after {
-      content: "\\2713";
+      content: "\\2716";
       font-size: 20px;
       position: absolute;
       top: -3px;
@@ -67,6 +67,7 @@ export const Content = styled.div`
     }
 
     button {
+      width: 100%;
       margin: 5px 0 0;
       height: 44px;
       background: #8354b3;
@@ -111,7 +112,7 @@ export const Content = styled.div`
 `;
 
 export const Bottom = styled.div`
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.4);
   width: 100%;
   max-width: 500px;
   height: 100%;

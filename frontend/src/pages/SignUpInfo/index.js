@@ -17,9 +17,7 @@ const SignUpInfo = () => {
             <div>SOU UM PRESTADOR DE SERVIÇOS</div>
           </label>
 
-          <button type="submit">
-            <Link to="/register-info">Cadastrar</Link>
-          </button>
+          <button type="submit">Cadastrar</button>
           <Link to="/">Já tenho uma conta</Link>
         </form>
       </div>

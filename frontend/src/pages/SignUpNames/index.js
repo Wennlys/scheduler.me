@@ -12,10 +12,9 @@ const SignUpNames = () => {
           <input placeholder="Nome de usuário" />
           <input placeholder="Seu nome" />
           <input placeholder="Seu sobrenome" />
-
-          <button type="submit">
-            <Link to="/register-info">Continuar o cadastro</Link>
-          </button>
+          <Link to="/register-info">
+            <button type="submit">Continuar o cadastro</button>
+          </Link>
           <Link to="/">Já tenho uma conta</Link>
         </form>
       </div>

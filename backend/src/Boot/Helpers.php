@@ -1,4 +1,6 @@
-<?php
+<?php declare(strict_types=1);
+
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @param string $email
@@ -19,6 +21,16 @@ function is_password(string $password): bool
             ($password) <= MAX_PASS_LEN)) {
         return true;
     }
-
     return false;
 }
+
+function getToken(ServerRequestInterface $request): ?string
+{
+    $header = $request->getHeaders()["authorization"][0];
+    if ($header) {
+        $token = explode(' ', $header);
+        return $token[1];
+    }
+    return null;
+}
+

@@ -1,15 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace Source\Models;
 
 
-use Source\Core\model;
-
-class Appointments extends model
+class Appointments
 {
-    public function __construct()
-    {
-        parent::__construct("appointments", ["date"], true);
-    }
+
 }

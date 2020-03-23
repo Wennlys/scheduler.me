@@ -1,135 +1,144 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace Source\Models;
 
 
-use Source\Core\Model;
-
 use Exception;
 
-
-/**
- * Class User
- *
- * @property mixed    user_name
- * @property mixed    first_name
- * @property mixed    last_name
- * @property mixed    email
- * @property mixed    password
- * @property mixed    provider
- * @property int|null userId
- * @property string   message
- *
- * @package Source\Models
- */
-class User extends Model
+class User
 {
+    private ?string $user_name = null;
+    private ?string $first_name = null;
+    private ?string $last_name = null;
+    private ?string $email = null;
+    private ?string $password = null;
+    private bool $provider;
+
     /**
-     * User constructor.
+     * @return string
      */
-    public function __construct()
+    public function getUserName()
+    : ?string
     {
-        parent::__construct("users", ["user_name", "first_name", "last_name", "email",
-            "password", "provider"]);
-    }
-
-    public function table(int $id)
-    {
-        return ($this->findById($id))->data();
+        return $this->user_name;
     }
 
     /**
-     * @return bool
+     * @param string $user_name
+     *
      * @throws Exception
      */
-    public function save(): bool
-    {
-        if (!$this->required()) {
-            $this->message ="Nome, sobrenome, email e senha são obrigatórios";
-            return false;
-        }
-
-        if (!is_email($this->email)) {
-            $this->message ="O e-mail informado não tem um formato válido";
-            return false;
-        }
-
-        if (!is_password($this->password)) {
-            $min = MIN_PASS_LEN;
-            $max = MAX_PASS_LEN;
-            $this->message = "A senha deve ter entre {$min} e {$max} caracteres";
-            return false;
-        } else {
-            $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-        }
-
-        /** User Create */
-        if (empty($this->id)) {
-            if ($this->findByEmail($this->email, "id")) {
-                $this->message = "O e-mail informado já está cadastrado";
-                return false;
-            }
-
-            if ($this->findByUserName($this->user_name, "id")) {
-                $this->message = "O usuário informado já está cadastrado";
-                return false;
-            }
-
-            /* USER CREATION */
-            $userId = $this->create($this->safe());
-
-            if ($this->fail()) {
-                $this->message = $this->fail()->getMessage();
-                return false;
-            }
-        }
-
-        $this->data = $this->table($userId);
-        $this->userId = $userId;
-        return true;
+    public function setUserName(string $user_name)
+    : void {
+        if (empty($user_name))
+            throw new Exception("User name cannot be empty.");
+        $this->user_name = filter_var($user_name, DEFAULT_FILTER);
     }
 
-    public function change(int $userId, array $body)
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    : ?string
     {
-            if ($this->find("email = :e AND id != :i", "e={$this->email}&i={$userId}", "id")->fetch()) {
-                $this->message = "O e-mail informado já está cadastrado";
-                return false;
-            }
+        return $this->first_name;
+    }
 
-            if ($this->find("user_name = :u AND id != :i", "e={$this->user_name}&i={$userId}", "id")
-                ->fetch()) {
-                $this->message = "O nome de usuário informado já está cadastrado";
-                return false;
-            }
-            try {
-                return $this->update($body, "id = :id", "id={$userId}");
-            } catch (Exception $exception) {
-                return $exception;
-            }
+    /**
+     * @param string $first_name
+     *
+     * @throws Exception
+     */
+    public function setFirstName(string $first_name)
+    : void {
+        if (empty($first_name))
+            throw new Exception("First name cannot be empty.");
+        $this->first_name = filter_var($first_name, DEFAULT_FILTER);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    : ?string
+    {
+        return $this->last_name;
+    }
+
+    /**
+     * @param string $last_name
+     *
+     * @throws Exception
+     */
+    public function setLastName(string $last_name)
+    : void {
+        if (empty($last_name))
+            throw new Exception("Last name cannot be empty.");
+        $this->last_name = filter_var($last_name, DEFAULT_FILTER);
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    : ?string
+    {
+        return $this->email;
     }
 
     /**
      * @param string $email
-     * @param string $columns
      *
-     * @return string
+     * @throws Exception
      */
-    public function findByEmail(string $email, string $columns = "*")
-    {
-        $find = $this->find("email = :email", "email={$email}", $columns);
-        return $find->fetch(true);
+    public function setEmail(string $email)
+    : void {
+        if (empty($email))
+            throw new Exception("Email cannot be empty.");
+        if (!is_email($email))
+            throw new Exception("Not valid email address.");
+        $this->email = filter_var($email, DEFAULT_FILTER);
     }
 
     /**
-     * @param string $userName
-     * @param string $columns
-     *
-     * @return array|mixed|null
+     * @return string
      */
-    public function findByUserName(string $userName, string $columns = "*")
+    public function getPassword()
+    : ?string
     {
-        $find = $this->find("user_name = :user_name", "user_name={$userName}", $columns);
-        return $find->fetch(true);
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     *
+     * @throws Exception
+     */
+    public function setPassword(string $password)
+    : void {
+        if (!is_password($password))
+            throw new Exception("Password must be between " . MIN_PASS_LEN . " and " .
+                                MAX_PASS_LEN . " characters");
+        $this->password = password_hash($password, PASS_ALGO);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getProvider()
+    : bool
+    {
+        return $this->provider;
+    }
+
+    /**
+     * @param bool $provider
+     */
+    public function setProvider(bool $provider)
+    : void {
+        if (empty($provider))
+            $this->provider = false;
+        $this->provider = $provider;
     }
 }

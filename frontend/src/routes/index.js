@@ -6,7 +6,10 @@ import Route from "./Route";
 import SignIn from "~/pages/SignIn";
 import SignUpNames from "~/pages/SignUpNames";
 import SignUpInfo from "~/pages/SignUpInfo";
+
 import Dashboard from "~/pages/Dashboard";
+import ClientDashboard from "~/pages/ClientDashboard";
+
 import Profile from "~/pages/Profile";
 
 export default function Routes() {
@@ -17,7 +20,12 @@ export default function Routes() {
       <Route path="/register-info" component={SignUpInfo} />
 
       <Route path="/dashboard" component={Dashboard} isPrivate />
+
+      <Route path="/client-dashboard" component={ClientDashboard} isPrivate />
+
       <Route path="/profile" component={Profile} isPrivate />
+
+      <Route path="/" component={() => <h1>404</h1>} />
     </Switch>
   );
 }

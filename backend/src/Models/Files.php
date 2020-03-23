@@ -1,15 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace Source\Models;
 
 
-use Source\Core\model;
-
-class Files extends model
+class Files
 {
-    public function __construct()
-    {
-        parent::__construct("files", ["name", "path"], true);
-    }
+
 }

@@ -1,10 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace Source\App;
 
 
 use Source\Core\Controller;
+use Source\Models\User;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -20,13 +21,20 @@ use Exception;
  */
 class UserController extends Controller
 {
+    public function __construct($var = null)
+    {
+        parent::__construct();
 
+        $this->var = $var;
+
+    }
     /**
      * @return Response|ResponseInterface
      */
-    public function index()
+    public function index(): Response
     {
-        return $this->getRows();
+//        return $this->encodedWrite($this->userDao->findAll());
+        return $this->encodedWrite($this->var);
     }
 
     /**
@@ -34,19 +42,11 @@ class UserController extends Controller
      *
      * @return array|mixed|null
      */
-    public function show(ServerRequestInterface $request)
+    public function show(ServerRequestInterface $request): Response
     {
-        $this->body = json_decode($request->getBody(), true);
-
-            $login = $this->body['login'];
-
-        if(is_email($login)) {
-            $user = ($this->user)->findByEmail($login);
-        } else {
-            $user = ($this->user)->findByUserName($login);
-        }
-        $table = $this->user->findById($user[0]->id);
-        return $this->encodedWrite($table->data());
+        $login = json_decode($request->getBody())->login;
+        $result = $this->userDao->findByLogin($login);
+        return $this->encodedWrite($result);
     }
 
     /**
@@ -55,97 +55,87 @@ class UserController extends Controller
      * @return Response|ResponseInterface
      * @throws Exception
      */
-    public function store(ServerRequestInterface $request)
+    public function store(ServerRequestInterface $request): Response
     {
-        $this->body = json_decode($request->getBody(), true);
+        $reqBody = json_decode($request->getBody(), true);
 
-            $this->user->user_name = $this->body['user_name'];
-            $this->user->first_name = $this->body['first_name'];
-            $this->user->last_name = $this->body['last_name'];
-            $this->user->email = $this->body['email'];
-            $this->user->password = $this->body['password'];
-            $this->user->provider = $this->body['provider'];
-            $this->user->save();
+        $user = new User();
 
-        if ($this->user->message) {
-            $this->encodedWrite($this->user->message);
-            return $this->response->withStatus(400);
+        try {
+            $user->setUserName($reqBody['user_name']);
+            $user->setFirstName($reqBody['first_name']);
+            $user->setLastName($reqBody['last_name']);
+            $user->setEmail($reqBody['email']);
+            $user->setPassword($reqBody['password']);
+            $user->setProvider($reqBody['provider']);
+
+            $this->userDao->save($user);
+        } catch (Exception $e) {
+            return $this->encodedWrite($e->getMessage(), 400);
         }
 
-        $data = (array)$this->user->data();
-        $parsedData = (object)[
-            "id" => $this->user->userId,
-            "user_name" => $data['user_name'],
-            "email" => $data['email'],
-            "provider" => $data['provider'],
-        ];
-
-        $this->encodedWrite($parsedData);
-        return $this->response->withStatus(200);
+        return $this->encodedWrite(true);
     }
 
     /**
      * @param ServerRequestInterface $request
      *
      * @return Response|ResponseInterface
+     * @throws Exception
      */
-    public function update(ServerRequestInterface $request)
+
+    public function update(ServerRequestInterface $request): Response
     {
-        $this->body = (array)json_decode($request->getBody());
+        $reqBody = json_decode($request->getBody(), true);
 
-            $login = $this->body['login'];
-            $oldPass = $this->body['old_password'];
-            $password = $this->body['password'];
+        if(!empty($reqBody['current_password']))
+            $currentPass = $reqBody['current_password'];
 
-        if ($oldPass === $password) {
-            return $this->encodedWrite("Passwords cannot be the same");
+        $user = new User;
+
+        if (!empty($reqBody['user_name']))
+            $user->setUserName($reqBody['user_name']);
+        if (!empty($reqBodyfirst_name))
+            $user->setFirstName($reqBody['first_name']);
+        if (!empty($reqBody['last_name']))
+            $user->setLastName($reqBody['last_name']);
+        if (!empty($reqBody['email']))
+            $user->setEmail($reqBody['email']);
+        if (!empty($reqBody['password']))
+            $user->setPassword($reqBody['password']);
+
+        $payload = Token::getPayload(getToken($request), JWT_SECRET);
+        $id = $payload['user_id'];
+
+        try {
+            $this->userDao->update($user, $currentPass, $id);
+        } catch (Exception $e) {
+            return $this->encodedWrite($e->getMessage(), 400);
         }
 
-        $token = $this->getToken($request);
-        $userId = (Token::getPayload($token, JWT_SECRET))['user_id'];
-        $user = $this->user->table($userId);;
-
-        $body = [
-            "first_name" => $this->body['first_name'],
-            "last_name" => $this->body['last_name'],
-            "password" => password_hash($this->body['password'], PASSWORD_DEFAULT),
-            "provider" => $this->body['provider']
-        ];
-
-        if (is_email($login)) {
-            $body["email"] = $login;
-
-            if ($user->email !== $login) {
-                $userExists = ($this->user)->findByEmail($login);
-
-                if ($userExists) {
-                    return $this->encodedWrite("User already exists", 401);
-                }
-            }
-        } else {
-            $body["user_name"] = $login;
-
-            if ($user->user_name !== $login) {
-                $userExists = ($this->user)->findByUserName($login);
-
-                if ($userExists) {
-                    return $this->encodedWrite("User already exists", 401);
-                }
-            }
-        }
-
-        if ($oldPass && !password_verify($oldPass, $user->password)) {
-            return $this->encodedWrite("Passwords do not match");
-        }
-
-        $changed = $this->user->change($userId, $body);
-        return $this->encodedWrite($changed);
+        return $this->encodedWrite(true);
     }
 
-    public function destroy(ServerRequestInterface $request)
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function destroy(ServerRequestInterface $request): Response
     {
-        $this->body = json_decode($request->getBody(), true);
-        return $this->encodedWrite("User");
+        $password = (json_decode($request->getBody()))->password;
+
+        $payload = Token::getPayload(getToken($request), JWT_SECRET);
+        $id = $payload['user_id'];
+
+        try {
+            $this->userDao->delete($id, $password);
+        } catch (Exception $e) {
+            return $this->encodedWrite($e->getMessage(), 400);
+        }
+
+        return $this->encodedWrite(true);
     }
 
 }

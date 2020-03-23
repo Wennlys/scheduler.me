@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace Source\Core;
@@ -23,31 +23,51 @@ class Connection
     ];
 
     /**
-     * @var PDO
+     * @var PDO $conn
      */
-    private static PDO $instance;
+    private PDO $conn;
+
+    /**
+     * @var Connection|null $instance
+     */
+    private static ?Connection $instance;
     /**
      * @var Exception|PDOException
      */
     public static $error;
 
     /**
-     * @return PDO|null
+     * Connection constructor.
      */
-    public static function getInstance(): ?PDO
+    final private function __construct()
     {
-        if (empty(self::$instance)) {
-            try {
-                self::$instance = new PDO(
-                    "mysql:host=" . SQL_DB_HOST . ";dbname=" . SQL_DB_NAME,
-                    SQL_DB_USER,
-                    SQL_DB_PASS,
-                    self::OPTIONS
-                );
-            } catch (PDOException $exception) {
-                self::$error = $exception;
-            }
+        try {
+            $this->conn = new PDO(
+                "mysql:host=" . SQL_DB_HOST . ";dbname=" . SQL_DB_NAME,
+                SQL_DB_USER,
+                SQL_DB_PASS,
+                self::OPTIONS
+            );
+        } catch (PDOException $exception) {
+            self::$error = $exception;
         }
+    }
+
+    /**
+     * @return Connection|null
+     */
+    public static function getInstance(): ?Connection
+    {
+        if (!self::$instance)
+            self::$instance = new Connection;
         return self::$instance;
+    }
+
+    /**
+     * @return PDO
+     */
+    public function getConnection(): PDO
+    {
+        return $this->conn;
     }
 }
