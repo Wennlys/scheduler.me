@@ -25,12 +25,12 @@ class Connection
     /**
      * @var PDO $conn
      */
-    private PDO $conn;
+    private ?PDO $conn = null;
 
     /**
      * @var Connection|null $instance
      */
-    private static ?Connection $instance;
+    private static ?Connection $instance = null;
     /**
      * @var Exception|PDOException
      */
@@ -41,16 +41,12 @@ class Connection
      */
     final private function __construct()
     {
-        try {
             $this->conn = new PDO(
                 "mysql:host=" . SQL_DB_HOST . ";dbname=" . SQL_DB_NAME,
                 SQL_DB_USER,
                 SQL_DB_PASS,
                 self::OPTIONS
             );
-        } catch (PDOException $exception) {
-            self::$error = $exception;
-        }
     }
 
     /**

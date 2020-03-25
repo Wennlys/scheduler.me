@@ -4,20 +4,39 @@
 namespace Source\App;
 
 
-use Source\Core\Controller;
-
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response;
 use ReallySimpleJWT\Token;
+use Source\Models\UserDAO;
+use Source\Core\Connection;
 
 /**
  * Class SessionController
  *
  * @package Source\App
  */
-class SessionController extends Controller
+class SessionController
 {
+    /** @var Connection */
+    private Connection $connection;
+
+    /** @var ResponseInterface */
+    private ResponseInterface $response;
+
+    /**
+     * SessionController constructor.
+     *
+     * @param Connection        $connection
+     * @param ResponseInterface $response
+     */
+    public function __construct(Connection $connection, ResponseInterface
+    $response)
+    {
+        $this->connection = $connection;
+        $this->response = $response;
+    }
+
     /**
      * @param ServerRequestInterface $request
      *
@@ -25,18 +44,20 @@ class SessionController extends Controller
      */
     public function store(ServerRequestInterface $request): Response
     {
-        $this->body = json_decode($request->getBody(), true);
+        $body = json_decode((string)$request->getBody(), true);
 
-            $login = $this->body['login'];
-            $password = $this->body['password'];
+            $login = $body['login'];
+            $password = $body['password'];
 
-        $user = $this->userDao->findByLogin($login);
+        $userDao = new UserDAO($this->connection);
+        $user = $userDao->findByLogin($login);
+
 
         if (!$user)
             return $this->encodedWrite("Usuário não encontrado", 401);
 
         if (!password_verify($password, $user->password))
-            return $this->encodedWrite("false");
+            return $this->encodedWrite("Wrong password", 401);
 
         return $this->encodedWrite((object)[
             "user" => [
@@ -46,4 +67,17 @@ class SessionController extends Controller
             "token" => Token::create($user->id, JWT_SECRET, JWT_EXPIRATION, JWT_ISSUER)
         ]);
     }
+
+    /**
+     * @param     $data
+     * @param int $status
+     *
+     * @return ResponseInterface
+     */
+    public function encodedWrite($data, int $status = 200)
+    {
+        $this->response->getBody()->write(json_encode($data));
+        return $this->response->withStatus($status);
+    }
+
 }

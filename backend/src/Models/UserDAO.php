@@ -4,7 +4,7 @@
 namespace Source\Models;
 
 
-use Source\Models\Interfaces\UserDaoInterface;
+use Source\Models\Interfaces\DaoInterface;
 use Source\Core\Database;
 
 use Exception;
@@ -17,7 +17,7 @@ use Source\Core\Connection;
  *
  * @package Source\Models
  */
-class UserDAO implements UserDaoInterface
+class UserDAO
 {
     /** @var Database */
     private Database $database;
@@ -73,8 +73,10 @@ class UserDAO implements UserDaoInterface
             throw new Exception("Wrong password.");
         }
 
-        if ($this->findByLogin($user->getEmail()))
-            throw new Exception("Email already in use.");
+        if ($user->getEmail()) {
+            if ($this->findByLogin($user->getEmail()))
+                throw new Exception("Email already in use.");
+        }
 
         $body = array_filter([
           "user_name" => $user->getUserName(),
@@ -82,6 +84,7 @@ class UserDAO implements UserDaoInterface
           "last_name" => $user->getLastName(),
           "email" => $user->getEmail(),
           "password" => $user->getPassword(),
+          "avatar_id" => $user->getAvatarId()
         ]);
 
         return $this->database->update($body, "id = :id", "id={$id}");
@@ -128,10 +131,22 @@ class UserDAO implements UserDaoInterface
     }
 
     /**
+     * @param string|null $where
+     *
      * @return array
      */
     public function findAll(): ?array
     {
         return $this->database->find()->fetch(true);
+    }
+
+    /**
+     * @param string|null $where
+     *
+     * @return array
+     */
+    public function findAllProviders(string $where = null): ?array
+    {
+        return $this->database->find($where)->fetch(true);
     }
 }

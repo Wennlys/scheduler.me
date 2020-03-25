@@ -13,6 +13,7 @@ class User
     private ?string $last_name = null;
     private ?string $email = null;
     private ?string $password = null;
+    private ?int $avatar_id = null;
     private bool $provider;
 
     /**
@@ -121,6 +122,23 @@ class User
             throw new Exception("Password must be between " . MIN_PASS_LEN . " and " .
                                 MAX_PASS_LEN . " characters");
         $this->password = password_hash($password, PASS_ALGO);
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getAvatarId()
+    : ?int
+    {
+        return $this->avatar_id;
+    }
+
+    /**
+     * @param int|null $avatar_id
+     */
+    public function setAvatarId(?int $avatar_id)
+    : void {
+        $this->avatar_id = $avatar_id;
     }
 
     /**

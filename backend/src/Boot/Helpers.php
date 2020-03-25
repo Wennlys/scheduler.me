@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @param string $email
  * @return bool
  */
-function is_email(string $email): bool
+function is_email(string $email)
 {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
@@ -24,13 +24,18 @@ function is_password(string $password): bool
     return false;
 }
 
-function getToken(ServerRequestInterface $request): ?string
+/**
+ * @param ServerRequestInterface $request
+ *
+ * @return string
+ */
+function getToken(ServerRequestInterface $request): string
 {
     $header = $request->getHeaders()["authorization"][0];
     if ($header) {
         $token = explode(' ', $header);
         return $token[1];
     }
-    return null;
+    return "invalid token";
 }
 

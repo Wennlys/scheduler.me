@@ -4,13 +4,13 @@
 namespace Source\App;
 
 
-use Source\Core\Controller;
 use Source\Models\User;
+use Source\Models\UserDAO;
+use Source\Core\Connection;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Laminas\Diactoros\Response;
 use ReallySimpleJWT\Token;
+use Psr\Http\Message\ServerRequestInterface;
 use Exception;
 
 
@@ -19,47 +19,61 @@ use Exception;
  *
  * @package Source\App
  */
-class UserController extends Controller
+class UserController
 {
-    public function __construct($var = null)
-    {
-        parent::__construct();
+    /** @var ResponseInterface */
+    private ResponseInterface $response;
 
-        $this->var = $var;
+    /** @var Connection*/
+    private Connection $connection;
 
-    }
     /**
-     * @return Response|ResponseInterface
+     * UserController constructor.
+     *
+     * @param Connection        $connection
+     * @param ResponseInterface $response
      */
-    public function index(): Response
+    public function __construct(Connection $connection, ResponseInterface $response)
     {
-//        return $this->encodedWrite($this->userDao->findAll());
-        return $this->encodedWrite($this->var);
+        $this->connection = $connection;
+        $this->response = $response;
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function index(): ResponseInterface
+    {
+        $userDao = new UserDAO($this->connection);
+
+        return $this->encodedWrite($userDao->findAll());
     }
 
     /**
      * @param ServerRequestInterface $request
      *
-     * @return array|mixed|null
+     * @return ResponseInterface
      */
-    public function show(ServerRequestInterface $request): Response
+    public function show(ServerRequestInterface $request): ResponseInterface
     {
-        $login = json_decode($request->getBody())->login;
-        $result = $this->userDao->findByLogin($login);
+        $userDao = new UserDAO($this->connection);
+
+        $login = json_decode((string)$request->getBody())->login;
+        $result = $userDao->findByLogin($login);
         return $this->encodedWrite($result);
     }
 
     /**
      * @param ServerRequestInterface $request
      *
-     * @return Response|ResponseInterface
-     * @throws Exception
+     * @return ResponseInterface
      */
-    public function store(ServerRequestInterface $request): Response
+    public function store(ServerRequestInterface $request): ResponseInterface
     {
-        $reqBody = json_decode($request->getBody(), true);
+        $reqBody = json_decode((string)$request->getBody(), true);
 
         $user = new User();
+        $userDao = new UserDAO($this->connection);
 
         try {
             $user->setUserName($reqBody['user_name']);
@@ -69,7 +83,7 @@ class UserController extends Controller
             $user->setPassword($reqBody['password']);
             $user->setProvider($reqBody['provider']);
 
-            $this->userDao->save($user);
+            $userDao->save($user);
         } catch (Exception $e) {
             return $this->encodedWrite($e->getMessage(), 400);
         }
@@ -80,18 +94,18 @@ class UserController extends Controller
     /**
      * @param ServerRequestInterface $request
      *
-     * @return Response|ResponseInterface
+     * @return ResponseInterface
      * @throws Exception
      */
-
-    public function update(ServerRequestInterface $request): Response
+    public function update(ServerRequestInterface $request): ResponseInterface
     {
-        $reqBody = json_decode($request->getBody(), true);
+        $reqBody = json_decode((string)$request->getBody(), true);
 
         if(!empty($reqBody['current_password']))
             $currentPass = $reqBody['current_password'];
 
         $user = new User;
+        $userDao = new UserDAO($this->connection);
 
         if (!empty($reqBody['user_name']))
             $user->setUserName($reqBody['user_name']);
@@ -103,12 +117,14 @@ class UserController extends Controller
             $user->setEmail($reqBody['email']);
         if (!empty($reqBody['password']))
             $user->setPassword($reqBody['password']);
+        if (!empty($reqBody['avatar_id']))
+            $user->setAvatarId($reqBody['avatar_id']);
 
         $payload = Token::getPayload(getToken($request), JWT_SECRET);
         $id = $payload['user_id'];
 
         try {
-            $this->userDao->update($user, $currentPass, $id);
+            $userDao->update($user, $currentPass, $id);
         } catch (Exception $e) {
             return $this->encodedWrite($e->getMessage(), 400);
         }
@@ -119,23 +135,36 @@ class UserController extends Controller
     /**
      * @param ServerRequestInterface $request
      *
-     * @return Response
-     * @throws Exception
+     * @return ResponseInterface
      */
-    public function destroy(ServerRequestInterface $request): Response
+    public function destroy(ServerRequestInterface $request): ResponseInterface
     {
-        $password = (json_decode($request->getBody()))->password;
+        $password = (json_decode((string)$request->getBody()))->password;
+
+        $userDao = new UserDAO($this->connection);
 
         $payload = Token::getPayload(getToken($request), JWT_SECRET);
-        $id = $payload['user_id'];
+        $userId = $payload['user_id'];
 
         try {
-            $this->userDao->delete($id, $password);
+            $userDao->delete($userId, $password);
         } catch (Exception $e) {
             return $this->encodedWrite($e->getMessage(), 400);
         }
 
         return $this->encodedWrite(true);
+    }
+
+    /**
+     * @param     $data
+     * @param int $status
+     *
+     * @return ResponseInterface
+     */
+    public function encodedWrite($data, int $status = 200): ResponseInterface
+    {
+        $this->response->getBody()->write(json_encode($data));
+        return $this->response->withStatus($status);
     }
 
 }

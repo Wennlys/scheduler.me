@@ -7,6 +7,11 @@ use PDOException;
 use stdClass;
 use DateTime;
 
+/**
+ * Class Database
+ *
+ * @package Source\Core
+ */
 class Database
 {
     /** @var string $entity */
@@ -33,22 +38,26 @@ class Database
     /** @var string|null */
     protected ?string $order = null;
 
-    /** @var int|null */
-    protected ?int $limit = null;
+    /** @var string|null */
+    protected ?string $limit = null;
 
-    /** @var int|null */
-    protected ?int $offset = null;
+    /** @var string|null */
+    protected ?string $offset = null;
 
     /** @var object|null */
     protected ?object $data = null;
 
+    /** @var Connection */
+    private Connection $connection;
+
     /**
      * Constructor.
      *
-     * @param string $entity
-     * @param array  $required
-     * @param string $primary
-     * @param bool   $timestamps
+     * @param Connection $connection
+     * @param string     $entity
+     * @param array      $required
+     * @param string     $primary
+     * @param bool       $timestamps
      */
     public function __construct(
         Connection $connection,
@@ -125,7 +134,7 @@ class Database
      *
      * @return Database
      */
-    public function find(?string $terms = null, ?string $params = null, string $columns = "*")
+    public function find(?string $terms = null, string $params = "", string $columns = "*")
     : Database {
         if ($terms) {
             $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " WHERE " . $terms;
@@ -229,7 +238,6 @@ class Database
      */
     public function fetch(bool $all = false)
     {
-        try {
             $stmt = $this->connection->getConnection()->prepare(
                 $this->statement . $this->group . $this->order . $this->limit . $this->offset
             );
@@ -242,9 +250,6 @@ class Database
                 return $stmt->fetchAll();
 
             return $stmt->fetchObject();
-        } catch (PDOException $e) {
-            throw new PDOException($e);
-        }
     }
 
     /**
@@ -264,7 +269,6 @@ class Database
             $data["updated_at"] = $data["created_at"];
         }
 
-        try {
             $columns = implode(", ", array_keys($data));
             $values = ":" . implode(", :", array_keys($data));
 
@@ -273,9 +277,6 @@ class Database
             );
 
             return $stmt->execute($this->filter($data));
-        } catch (PDOException $e) {
-            throw new PDOException($e);
-        }
     }
 
     /**
@@ -290,22 +291,17 @@ class Database
         if ($this->timestamps) {
             $data["updated_at"] = (new DateTime("now"))->format("Y-m-d H:i:s");
         }
-
-        try {
-            $dateSet = [];
+            $dataSet = [];
             foreach ($data as $bind => $value) {
-                $dateSet[] = "{$bind} = :{$bind}";
+                $dataSet[] = "{$bind} = :{$bind}";
             }
-            $dateSet = implode(", ", $dateSet);
+            $dataSet = implode(", ", $dataSet);
             parse_str($params, $params);
 
             $stmt = $this->connection->getConnection()->prepare(
-                "UPDATE " . $this->entity . " SET " . $dateSet . " WHERE " . $terms
+                "UPDATE " . $this->entity . " SET " . $dataSet . " WHERE " . $terms
             );
             return $stmt->execute($this->filter(array_merge($data, $params)));
-        } catch (PDOException $e) {
-            throw new PDOException($e);
-        }
     }
 
     /**
@@ -315,7 +311,6 @@ class Database
      */
     public function delete(string $terms, ?string $params): bool
     {
-        try {
             $stmt = $this->connection->getConnection()->prepare(
                 "DELETE FROM " . $this->entity . " WHERE " . $terms
             );
@@ -327,8 +322,5 @@ class Database
             }
             $stmt->execute();
             return true;
-        } catch (PDOException $e) {
-            throw new PDOException($e);
-        }
     }
 }
