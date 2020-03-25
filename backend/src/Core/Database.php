@@ -320,7 +320,6 @@ class Database
                 $stmt->execute($params);
                 return true;
             }
-            $stmt->execute();
-            return true;
+            return $stmt->execute();
     }
 }

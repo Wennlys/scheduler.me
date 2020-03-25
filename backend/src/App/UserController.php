@@ -120,7 +120,7 @@ class UserController
         if (!empty($reqBody['avatar_id']))
             $user->setAvatarId($reqBody['avatar_id']);
 
-        $payload = Token::getPayload(getToken($request), JWT_SECRET);
+        $payload = getPayload($request);
         $id = $payload['user_id'];
 
         try {
@@ -140,11 +140,11 @@ class UserController
     public function destroy(ServerRequestInterface $request): ResponseInterface
     {
         $password = (json_decode((string)$request->getBody()))->password;
+        $payload = getPayload($request);
+        $userId = $payload['user_id'];
 
         $userDao = new UserDAO($this->connection);
 
-        $payload = Token::getPayload(getToken($request), JWT_SECRET);
-        $userId = $payload['user_id'];
 
         try {
             $userDao->delete($userId, $password);
@@ -166,5 +166,4 @@ class UserController
         $this->response->getBody()->write(json_encode($data));
         return $this->response->withStatus($status);
     }
-
 }

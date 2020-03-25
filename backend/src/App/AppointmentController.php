@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Source\Models\Appointment;
 use Source\Models\AppointmentDAO;
 use ReallySimpleJWT\Token;
+use Exception;
 
 /**
  * Class AppointmentController
@@ -36,16 +37,22 @@ class AppointmentController
         $this->response = $response;
     }
 
+    public function index(): ResponseInterface
+    {
+        return $this->encodedWrite(true);
+    }
+
     /**
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
+     * @throws Exception
      */
     public function store(ServerRequestInterface $request): ResponseInterface
     {
         $reqBody = json_decode((string)$request->getBody(), true);
 
-        $payload = Token::getPayload(getToken($request), JWT_SECRET);
+        $payload = getPayload($request);
         $userId = $payload['user_id'];
 
         $appointment = new Appointment();
@@ -58,6 +65,18 @@ class AppointmentController
 
         $appointmentDao->save($appointment);
 
-        return $this->response->withStatus(200);
+        return $this->encodedWrite(true);
+    }
+
+    /**
+     * @param     $data
+     * @param int $status
+     *
+     * @return ResponseInterface
+     */
+    public function encodedWrite($data, int $status = 200): ResponseInterface
+    {
+        $this->response->getBody()->write(json_encode($data));
+        return $this->response->withStatus($status);
     }
 }

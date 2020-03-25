@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface;
+use ReallySimpleJWT\Token;
 
 /**
  * @param string $email
@@ -27,15 +28,18 @@ function is_password(string $password): bool
 /**
  * @param ServerRequestInterface $request
  *
- * @return string
+ * @return array|null
  */
-function getToken(ServerRequestInterface $request): string
+function getPayload(ServerRequestInterface $request): ?array
 {
     $header = $request->getHeaders()["authorization"][0];
-    if ($header) {
-        $token = explode(' ', $header);
-        return $token[1];
+    if (!$header) {
+        return null;
     }
-    return "invalid token";
+
+    $token = explode(' ', $header);
+    $token = $token[1];
+
+    return Token::getPayload($token, JWT_SECRET);
 }
 

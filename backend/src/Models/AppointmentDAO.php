@@ -40,8 +40,19 @@ class AppointmentDAO
             [
                 "provider_id" => $appointment->getProviderId(),
                 "user_id" => $appointment->getUserId(),
-                "date" => $appointment->getDate(),
+                "date" => $appointment->getDate()
             ]
         );
+    }
+
+    /**
+     * @param int $userId
+     *
+     * @return array
+     */
+    public function findAppointments(int $userId): ?array
+    {
+        return $this->database->find("user_id = :id, canceled_at = null", "id = {$userId}")->fetch
+        (true);
     }
 }

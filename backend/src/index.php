@@ -6,7 +6,7 @@ use Laminas\Diactoros\ResponseFactory;
 use League\Route\RouteGroup;
 use Laminas\Diactoros\Response;
 
-use Source\Middlewares\AuthMiddleware;
+use Source\Middleware\AuthMiddleware;
 use Source\App\UserController;
 use Source\Core\Connection;
 use Source\App\SessionController;

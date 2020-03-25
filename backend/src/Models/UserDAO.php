@@ -41,20 +41,16 @@ class UserDAO
      */
     public function save(User $user): bool
     {
-        try {
-            return $this->database->create(
-                [
-                    "user_name" => $user->getUserName(),
-                    "first_name" => $user->getFirstName(),
-                    "last_name" => $user->getLastName(),
-                    "email" => $user->getEmail(),
-                    "password" => $user->getPassword(),
-                    "provider" => $user->getProvider()
-                ]
-            );
-        } catch (PDOException $e) {
-            throw new PDOException($e->getMessage());
-        }
+        return $this->database->create(
+            [
+                "user_name" => $user->getUserName(),
+                "first_name" => $user->getFirstName(),
+                "last_name" => $user->getLastName(),
+                "email" => $user->getEmail(),
+                "password" => $user->getPassword(),
+                "provider" => $user->getProvider()
+            ]
+        );
     }
 
     /**
@@ -131,8 +127,6 @@ class UserDAO
     }
 
     /**
-     * @param string|null $where
-     *
      * @return array
      */
     public function findAll(): ?array
@@ -141,12 +135,10 @@ class UserDAO
     }
 
     /**
-     * @param string|null $where
-     *
      * @return array
      */
-    public function findAllProviders(string $where = null): ?array
+    public function findAllProviders(): ?array
     {
-        return $this->database->find($where)->fetch(true);
+        return $this->database->find("provider = true")->fetch(true);
     }
 }

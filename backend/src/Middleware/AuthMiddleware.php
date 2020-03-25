@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace Source\Middlewares;
+namespace Source\Middleware;
 
 
 use Psr\Http\Server\MiddlewareInterface;
@@ -41,7 +41,7 @@ class AuthMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (Token::validate(getToken($request), JWT_SECRET)) {
+        if (getPayload($request)) {
             return $handler->handle($request);
         }
 
