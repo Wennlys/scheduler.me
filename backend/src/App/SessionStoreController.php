@@ -8,15 +8,17 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response;
 use ReallySimpleJWT\Token;
+
 use Source\Models\UserDAO;
 use Source\Core\Connection;
 
+
 /**
- * Class SessionController
+ * Class SessionStoreController
  *
  * @package Source\App
  */
-class SessionController
+class SessionStoreController
 {
     /** @var Connection */
     private Connection $connection;
@@ -25,7 +27,7 @@ class SessionController
     private ResponseInterface $response;
 
     /**
-     * SessionController constructor.
+     * SessionStoreController constructor.
      *
      * @param Connection        $connection
      * @param ResponseInterface $response
@@ -44,40 +46,38 @@ class SessionController
      */
     public function store(ServerRequestInterface $request): Response
     {
-        $body = json_decode((string)$request->getBody(), true);
+        $reqBody = json_decode((string)$request->getBody(), true);
 
-            $login = $body['login'];
-            $password = $body['password'];
+            $login = $reqBody['login'];
+            $password = $reqBody['password'];
 
         $userDao = new UserDAO($this->connection);
         $user = $userDao->findByLogin($login);
 
+        if (!$user) {
+            $this->response->getBody()->write(json_encode("User not found."));
+            return $this->response->withStatus(200);
+        }
 
-        if (!$user)
-            return $this->encodedWrite("Usuário não encontrado", 401);
+        if (!password_verify($password, $user->password)) {
+            $this->response->getBody()->write(json_encode("Wrong password."));
+            return $this->response->withStatus(401);
+        }
 
-        if (!password_verify($password, $user->password))
-            return $this->encodedWrite("Wrong password", 401);
-
-        return $this->encodedWrite((object)[
+        $responseBody = [
             "user" => [
                 "id" => $user->id,
                 "name" => $user->user_name,
-                "email" => $user->email ],
-            "token" => Token::create($user->id, JWT_SECRET, JWT_EXPIRATION, JWT_ISSUER)
-        ]);
-    }
+                "email" => $user->email
+            ],
+            "token" => Token::create(
+                $user->id,
+                JWT_SECRET,
+                JWT_EXPIRATION,
+                JWT_ISSUER)
+            ];
 
-    /**
-     * @param     $data
-     * @param int $status
-     *
-     * @return ResponseInterface
-     */
-    public function encodedWrite($data, int $status = 200)
-    {
-        $this->response->getBody()->write(json_encode($data));
-        return $this->response->withStatus($status);
+        $this->response->getBody()->write(json_encode((object)$responseBody));
+        return $this->response->withStatus(200);
     }
-
 }

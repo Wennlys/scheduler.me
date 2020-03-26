@@ -3,6 +3,9 @@
 
 namespace Source\App;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Exception;
 
 use Source\Models\File;
 use Source\Core\Connection;
@@ -10,16 +13,13 @@ use Source\Models\FileDAO;
 use Source\Models\UserDAO;
 use Source\Models\User;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Exception;
 
 /**
- * Class FileController
+ * Class FileStoreController
  *
  * @package Source\App
  */
-class FileController
+class FileStoreController
 {
     /** @var ResponseInterface*/
     private ResponseInterface $response;
@@ -28,7 +28,7 @@ class FileController
     private Connection $connection;
 
     /**
-     * FileController constructor.
+     * FileStoreController constructor.
      *
      * @param Connection        $connection
      * @param ResponseInterface $response
@@ -76,7 +76,7 @@ class FileController
 
         $userDao->update($user);
 
-        $this->response->getBody()->write('true');
+        $this->response->getBody()->write(json_encode(true));
         return $this->response->withStatus(200);
     }
 }

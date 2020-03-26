@@ -14,6 +14,9 @@ use DateTime;
  */
 class Database
 {
+    /** @var Connection */
+    private Connection $connection;
+
     /** @var string $entity */
     protected string $entity;
 
@@ -47,8 +50,7 @@ class Database
     /** @var object|null */
     protected ?object $data = null;
 
-    /** @var Connection */
-    private Connection $connection;
+
 
     /**
      * Constructor.
@@ -68,8 +70,8 @@ class Database
     ) {
         $this->connection = $connection;
         $this->entity = $entity;
-        $this->primary = $primary;
         $this->required = $required;
+        $this->primary = $primary;
         $this->timestamps = $timestamps;
     }
 

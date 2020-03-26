@@ -1,23 +1,23 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace Source\App;
 
 
-use Source\Core\Connection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Source\Models\Appointment;
-use Source\Models\AppointmentDAO;
-use ReallySimpleJWT\Token;
 use Exception;
 
+use Source\Core\Connection;
+use Source\Models\Appointment;
+use Source\Models\AppointmentDAO;
+
 /**
- * Class AppointmentController
+ * Class AppointmentStoreController
  *
  * @package Source\App
  */
-class AppointmentController
+class AppointmentStoreController
 {
     /** @var Connection */
     private Connection $connection;
@@ -26,7 +26,7 @@ class AppointmentController
     private ResponseInterface $response;
 
     /**
-     * AppointmentController constructor.
+     * AppointmentStoreController constructor.
      *
      * @param Connection        $connection
      * @param ResponseInterface $response
@@ -36,12 +36,6 @@ class AppointmentController
         $this->connection = $connection;
         $this->response = $response;
     }
-
-    public function index(): ResponseInterface
-    {
-        return $this->encodedWrite(true);
-    }
-
     /**
      * @param ServerRequestInterface $request
      *
@@ -65,18 +59,7 @@ class AppointmentController
 
         $appointmentDao->save($appointment);
 
-        return $this->encodedWrite(true);
-    }
-
-    /**
-     * @param     $data
-     * @param int $status
-     *
-     * @return ResponseInterface
-     */
-    public function encodedWrite($data, int $status = 200): ResponseInterface
-    {
-        $this->response->getBody()->write(json_encode($data));
-        return $this->response->withStatus($status);
+        $this->response->getBody()->write(json_encode(true));
+        return $this->response->withStatus(200);
     }
 }

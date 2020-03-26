@@ -42,9 +42,4 @@ class FileDAO
             "path" => $file->getPath()
         ]);
     }
-
-    public function findById(int $id)
-    {
-        return $this->database->find("")->fetch(true);
-    }
 }
