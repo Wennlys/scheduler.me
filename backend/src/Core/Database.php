@@ -238,18 +238,18 @@ class Database
      */
     public function fetch(bool $all = false)
     {
-            $stmt = $this->connection->getConnection()->prepare(
-                $this->statement . $this->group . $this->order . $this->limit . $this->offset
-            );
-            $stmt->execute($this->params);
+        $stmt = $this->connection->getConnection()->prepare(
+            $this->statement . $this->group . $this->order . $this->limit . $this->offset
+        );
+        $stmt->execute($this->params);
 
-            if (!$stmt->rowCount())
-                return null;
+        if (!$stmt->rowCount())
+            return null;
 
-            if ($all)
-                return $stmt->fetchAll();
+        if ($all)
+            return $stmt->fetchAll();
 
-            return $stmt->fetchObject();
+        return $stmt->fetchObject();
     }
 
     /**
@@ -259,24 +259,27 @@ class Database
     /**
      * @param array $data
      *
-     * @return bool
+     * @return string
      * @throws Exception
      */
-    public function create(array $data): bool
+    public function create(array $data): string
     {
+        $connection = $this->connection->getConnection();
         if ($this->timestamps) {
             $data["created_at"] = (new DateTime("now"))->format("Y-m-d H:i:s");
             $data["updated_at"] = $data["created_at"];
         }
 
-            $columns = implode(", ", array_keys($data));
-            $values = ":" . implode(", :", array_keys($data));
+        $columns = implode(", ", array_keys($data));
+        $values = ":" . implode(", :", array_keys($data));
 
-            $stmt = $this->connection->getConnection()->prepare(
-                "INSERT INTO " . $this->entity . " (" . $columns . ") VALUES (" . $values . ")"
-            );
+        $stmt = $connection->prepare(
+            "INSERT INTO " . $this->entity . " (" . $columns . ") VALUES (" . $values . ")"
+        );
 
-            return $stmt->execute($this->filter($data));
+        $stmt->execute($this->filter($data));
+
+        return $connection->lastInsertId();
     }
 
     /**
@@ -288,20 +291,21 @@ class Database
      */
     public function update(array $data, string $terms, string $params): bool
     {
+        $connection = $this->connection->getConnection();
         if ($this->timestamps) {
             $data["updated_at"] = (new DateTime("now"))->format("Y-m-d H:i:s");
         }
-            $dataSet = [];
-            foreach ($data as $bind => $value) {
-                $dataSet[] = "{$bind} = :{$bind}";
-            }
-            $dataSet = implode(", ", $dataSet);
-            parse_str($params, $params);
+        $dataSet = [];
+        foreach ($data as $bind => $value) {
+            $dataSet[] = "{$bind} = :{$bind}";
+        }
+        $dataSet = implode(", ", $dataSet);
+        parse_str($params, $params);
 
-            $stmt = $this->connection->getConnection()->prepare(
-                "UPDATE " . $this->entity . " SET " . $dataSet . " WHERE " . $terms
-            );
-            return $stmt->execute($this->filter(array_merge($data, $params)));
+        $stmt = $connection->prepare(
+            "UPDATE " . $this->entity . " SET " . $dataSet . " WHERE " . $terms
+        );
+        return $stmt->execute($this->filter(array_merge($data, $params)));
     }
 
     /**
@@ -311,15 +315,16 @@ class Database
      */
     public function delete(string $terms, ?string $params): bool
     {
-            $stmt = $this->connection->getConnection()->prepare(
-                "DELETE FROM " . $this->entity . " WHERE " . $terms
-            );
+        $connection = $this->connection->getConnection();
+        $stmt = $connection->prepare(
+            "DELETE FROM " . $this->entity . " WHERE " . $terms
+        );
 
-            if ($params) {
-                parse_str($params, $params);
-                $stmt->execute($params);
-                return true;
-            }
-            return $stmt->execute();
+        if ($params) {
+            parse_str($params, $params);
+            $stmt->execute($params);
+            return true;
+        }
+        return $stmt->execute();
     }
 }

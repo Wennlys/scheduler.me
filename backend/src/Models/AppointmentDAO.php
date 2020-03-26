@@ -31,10 +31,10 @@ class AppointmentDAO
     /**
      * @param Appointment $appointment
      *
-     * @return bool
+     * @return string
      * @throws Exception
      */
-    public function save(Appointment $appointment): bool
+    public function save(Appointment $appointment): string
     {
         return $this->database->create(
             [

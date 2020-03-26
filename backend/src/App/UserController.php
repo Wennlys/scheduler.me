@@ -9,7 +9,6 @@ use Source\Models\UserDAO;
 use Source\Core\Connection;
 
 use Psr\Http\Message\ResponseInterface;
-use ReallySimpleJWT\Token;
 use Psr\Http\Message\ServerRequestInterface;
 use Exception;
 
@@ -67,6 +66,7 @@ class UserController
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
+     * @throws Exception
      */
     public function store(ServerRequestInterface $request): ResponseInterface
     {
@@ -75,18 +75,14 @@ class UserController
         $user = new User();
         $userDao = new UserDAO($this->connection);
 
-        try {
-            $user->setUserName($reqBody['user_name']);
-            $user->setFirstName($reqBody['first_name']);
-            $user->setLastName($reqBody['last_name']);
-            $user->setEmail($reqBody['email']);
-            $user->setPassword($reqBody['password']);
-            $user->setProvider($reqBody['provider']);
+        $user->setUserName($reqBody['user_name']);
+        $user->setFirstName($reqBody['first_name']);
+        $user->setLastName($reqBody['last_name']);
+        $user->setEmail($reqBody['email']);
+        $user->setPassword($reqBody['password']);
+        $user->setProvider($reqBody['provider']);
 
-            $userDao->save($user);
-        } catch (Exception $e) {
-            return $this->encodedWrite($e->getMessage(), 400);
-        }
+        $userDao->save($user);
 
         return $this->encodedWrite(true);
     }
@@ -101,12 +97,14 @@ class UserController
     {
         $reqBody = json_decode((string)$request->getBody(), true);
 
-        if(!empty($reqBody['current_password']))
-            $currentPass = $reqBody['current_password'];
-
         $user = new User;
         $userDao = new UserDAO($this->connection);
 
+        $payload = getPayload($request);
+        $user->setUserId($payload['user_id']);
+
+        if(!empty($reqBody['current_password']))
+            $user->setCurrentPassword($reqBody['current_password']);
         if (!empty($reqBody['user_name']))
             $user->setUserName($reqBody['user_name']);
         if (!empty($reqBodyfirst_name))
@@ -120,14 +118,8 @@ class UserController
         if (!empty($reqBody['avatar_id']))
             $user->setAvatarId($reqBody['avatar_id']);
 
-        $payload = getPayload($request);
-        $id = $payload['user_id'];
 
-        try {
-            $userDao->update($user, $currentPass, $id);
-        } catch (Exception $e) {
-            return $this->encodedWrite($e->getMessage(), 400);
-        }
+        $userDao->update($user);
 
         return $this->encodedWrite(true);
     }
@@ -136,21 +128,21 @@ class UserController
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
+     * @throws Exception
      */
     public function destroy(ServerRequestInterface $request): ResponseInterface
     {
-        $password = (json_decode((string)$request->getBody()))->password;
-        $payload = getPayload($request);
-        $userId = $payload['user_id'];
+        $currentPassword = (json_decode((string)$request->getBody()))->password;
 
+        $user = new User();
         $userDao = new UserDAO($this->connection);
 
+        $payload = getPayload($request);
 
-        try {
-            $userDao->delete($userId, $password);
-        } catch (Exception $e) {
-            return $this->encodedWrite($e->getMessage(), 400);
-        }
+        $user->setUserId($payload['user_id']);
+        $user->setCurrentPassword($currentPassword);
+
+        $userDao->delete($user);
 
         return $this->encodedWrite(true);
     }

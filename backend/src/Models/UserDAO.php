@@ -4,12 +4,10 @@
 namespace Source\Models;
 
 
-use Source\Models\Interfaces\DaoInterface;
 use Source\Core\Database;
+use Source\Core\Connection;
 
 use Exception;
-use PDOException;
-use Source\Core\Connection;
 
 
 /**
@@ -36,42 +34,41 @@ class UserDAO
     /**
      * @param User $user
      *
-     * @return bool
+     * @return string
      * @throws Exception
      */
-    public function save(User $user): bool
+    public function save(User $user): string
     {
-        return $this->database->create(
-            [
-                "user_name" => $user->getUserName(),
-                "first_name" => $user->getFirstName(),
-                "last_name" => $user->getLastName(),
-                "email" => $user->getEmail(),
-                "password" => $user->getPassword(),
-                "provider" => $user->getProvider()
-            ]
-        );
+        return $this->database->create([
+            "user_name" => $user->getUserName(),
+            "first_name" => $user->getFirstName(),
+            "last_name" => $user->getLastName(),
+            "email" => $user->getEmail(),
+            "password" => $user->getPassword(),
+            "provider" => $user->getProvider()
+        ]);
     }
 
     /**
-     * @param User   $user
-     * @param string $currentPass
-     * @param string $id
+     * @param User $user
      *
      * @return bool
      * @throws Exception
      */
-    public function update(User $user, string $currentPass, string $id): bool
+    public function update(User $user): bool
     {
-        $savedPass = ($this->findById($id))->password;
+        $id = $user->getUserId();
 
-        if (!password_verify($currentPass, $savedPass)) {
-            throw new Exception("Wrong password.");
-        }
+        if ($user->getEmail() || $user->getPassword() || $user->getUserName()) {
+            if (!$this->verifyPassword($user)) {
+                throw new Exception("Wrong password.");
+            }
 
-        if ($user->getEmail()) {
-            if ($this->findByLogin($user->getEmail()))
-                throw new Exception("Email already in use.");
+            if ($user->getEmail()) {
+                if ($this->findByLogin($user->getEmail())) {
+                    throw new Exception("Email already in use.");
+                }
+            }
         }
 
         $body = array_filter([
@@ -87,20 +84,36 @@ class UserDAO
     }
 
     /**
-     * @param string $id
-     * @param string $currentPass
+     * @param User $user
      *
      * @return bool
      * @throws Exception
      */
-    public function delete(string $id, string $currentPass): bool
+    public function delete(User $user): bool
     {
-        $savedPass = ($this->findById($id))->password;
+        $id = $user->getUserId();
 
-        if (!password_verify($currentPass, $savedPass))
+        if (!$this->verifyPassword($user))
             throw new Exception("Wrong password.");
 
         return $this->database->delete("id = :id", "id={$id}");
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function verifyPassword(User $user): bool
+    {
+        $id = $user->getUserId();
+        $currentPass = $user->getCurrentPassword();
+        $savedPass = ($this->findById($id))->password;
+
+        if (!password_verify($currentPass, $savedPass))
+            return false;
+        return true;
     }
 
     /**
@@ -111,7 +124,7 @@ class UserDAO
     public function findByLogin(string $login): ?object
     {
         if (is_email($login)){
-                return $this->database->find("email = :e", "e={$login}")->fetch();
+            return $this->database->find("email = :e", "e={$login}")->fetch();
         }
         return $this->database->find("user_name = :u", "u={$login}")->fetch();
     }
@@ -132,13 +145,5 @@ class UserDAO
     public function findAll(): ?array
     {
         return $this->database->find()->fetch(true);
-    }
-
-    /**
-     * @return array
-     */
-    public function findAllProviders(): ?array
-    {
-        return $this->database->find("provider = true")->fetch(true);
     }
 }

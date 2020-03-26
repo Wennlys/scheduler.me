@@ -8,13 +8,32 @@ use Exception;
 
 class User
 {
+    private ?string $user_id = null;
     private ?string $user_name = null;
     private ?string $first_name = null;
     private ?string $last_name = null;
     private ?string $email = null;
+    private ?string $currentPassword = null;
     private ?string $password = null;
-    private ?int $avatar_id = null;
+    private ?string $avatar_id = null;
     private bool $provider;
+
+    /**
+     * @return string|null
+     */
+    public function getUserId()
+    : ?string
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @param string|null $user_id
+     */
+    public function setUserId(?string $user_id)
+    : void {
+        $this->user_id = $user_id;
+    }
 
     /**
      * @return string
@@ -103,6 +122,23 @@ class User
     }
 
     /**
+     * @return string|null
+     */
+    public function getCurrentPassword()
+    : ?string
+    {
+        return $this->currentPassword;
+    }
+
+    /**
+     * @param string|null $currentPassword
+     */
+    public function setCurrentPassword(?string $currentPassword)
+    : void {
+        $this->currentPassword = $currentPassword;
+    }
+
+    /**
      * @return string
      */
     public function getPassword()
@@ -125,18 +161,18 @@ class User
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
     public function getAvatarId()
-    : ?int
+    : ?string
     {
         return $this->avatar_id;
     }
 
     /**
-     * @param int|null $avatar_id
+     * @param string|null $avatar_id
      */
-    public function setAvatarId(?int $avatar_id)
+    public function setAvatarId(?string $avatar_id)
     : void {
         $this->avatar_id = $avatar_id;
     }
