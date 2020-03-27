@@ -146,4 +146,11 @@ class UserDAO
     {
         return $this->database->find()->fetch(true);
     }
+
+    public function findProviders()
+    {
+        return $this->database->join('files',
+         'users.id, users.first_name, users.last_name, users.email, files.name, files.path',
+        'users.avatar_id = files.id, provider = false')->fetch(true);
+    }
 }

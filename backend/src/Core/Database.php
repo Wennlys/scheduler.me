@@ -329,4 +329,31 @@ class Database
         }
         return $stmt->execute();
     }
+
+    /**
+     * @param string      $table
+     * @param string      $terms
+     * @param string      $columns
+     *
+     * @param string|null $params
+     *
+     * @return Database
+     */
+    public function join(string $table, string $columns, string $terms, string $params = "")
+    : Database {
+        if (strpos($terms, ',') !== false) {
+            $terms = explode(',', $terms);
+
+            $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " INNER JOIN " .
+                $table . " ON " . $terms[0] . " AND " . $terms[1];
+            parse_str($params, $this->params);
+            return $this;
+        }
+
+        $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " INNER JOIN " .
+            $table . " ON " . $terms;
+        parse_str($params, $this->params);
+
+        return $this;
+    }
 }

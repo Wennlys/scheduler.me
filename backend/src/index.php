@@ -17,6 +17,7 @@ use Source\App\UserStoreController;
 use Source\App\UserUpdateController;
 use Source\App\UserDestroyController;
 use Source\App\TestController;
+use Source\App\UserIndexProviderController;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -26,12 +27,12 @@ $responseFactory = new ResponseFactory();
 
 $container = new League\Container\Container;
 
-$container->add(TestController::class)
+
+$container->add(UserIndexController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
-
-$container->add(UserIndexController::class)
+$container->add(UserIndexProviderController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
@@ -83,6 +84,8 @@ $router->group('/users', function (RouteGroup $route) {
         ->middleware(new AuthMiddleware(new Response));
     $route->map('DELETE', '/', 'Source\App\UserDestroyController::destroy');
 });
+
+$router->map('GET', '/providers', 'Source\App\UserIndexProviderController::index');
 
 $router->map('POST', '/sessions', 'Source\App\SessionController::store');
 

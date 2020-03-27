@@ -35,12 +35,10 @@ class UserIndexProviderController
     public function index(): ResponseInterface
     {
         $userDao = new UserDAO($this->connection);
-        $fileDao = new FileDAO($this->connection);
 
-        $responseBody = [];
+        $return = $userDao->findProviders();
 
-
-        $this->response->getBody()->write(json_encode((object)$responseBody));
+        $this->response->getBody()->write(json_encode($return));
         return $this->response->withStatus(200);
     }
 }
