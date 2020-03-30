@@ -6,9 +6,10 @@ namespace Source\App;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-
 use Source\Core\Connection;
 use Source\Models\UserDAO;
+use Source\Models\User;
+use Exception;
 
 
 class UserShowController
@@ -16,7 +17,7 @@ class UserShowController
     /** @var ResponseInterface */
     private ResponseInterface $response;
 
-    /** @var Connection*/
+    /** @var Connection */
     private Connection $connection;
 
     /**
@@ -35,15 +36,24 @@ class UserShowController
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
+     * @throws Exception
      */
     public function show(ServerRequestInterface $request): ResponseInterface
     {
+        $login = json_decode((string)$request->getBody())->login;
+
+        $user = new User();
         $userDao = new UserDAO($this->connection);
 
-        $login = json_decode((string)$request->getBody())->login;
-        $user = $userDao->findByLogin($login);
+        if (is_email($login)) {
+            $user->setEmail($login);
+        } else {
+            $user->setUserName($login);
+        }
 
-        $this->response->getBody()->write(json_encode($user));
+        $row = $userDao->findByLogin($user);
+
+        $this->response->getBody()->write(json_encode($row));
         return $this->response->withStatus(200);
     }
 }

@@ -7,10 +7,11 @@ namespace Source\App;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Exception;
-
 use Source\Core\Connection;
 use Source\Models\Appointment;
 use Source\Models\AppointmentDAO;
+use Source\Models\User;
+use Source\Models\UserDAO;
 
 /**
  * Class AppointmentStoreController
@@ -49,13 +50,26 @@ class AppointmentStoreController
         $payload = getPayload($request);
         $userId = $payload['user_id'];
 
-        $appointment = new Appointment();
+        $userDao = new UserDAO($this->connection);
+        $user = new User();
 
-            $appointment->setProviderId($reqBody["provider_id"]);
-            $appointment->setUserId($userId);
-            $appointment->setDate($reqBody["date"]);
+        $user->setUserId($reqBody["provider_id"]);
+
+        $isProvider = ($userDao->findById($user))->provider;
+
+        if (!$isProvider) {
+            $this->response->getBody()->write(
+                json_encode("You must create appointments with providers.")
+            );
+            return $this->response->withStatus(400);
+        }
 
         $appointmentDao = new AppointmentDAO($this->connection);
+        $appointment = new Appointment();
+
+        $appointment->setProviderId($reqBody["provider_id"]);
+        $appointment->setDate($reqBody["date"]);
+        $appointment->setUserId($userId);
 
         $appointmentDao->save($appointment);
 

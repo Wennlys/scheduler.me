@@ -17,7 +17,9 @@ use Source\App\UserStoreController;
 use Source\App\UserUpdateController;
 use Source\App\UserDestroyController;
 use Source\App\TestController;
-use Source\App\UserIndexProviderController;
+use Source\App\UserIndexProvidersController;
+use Source\App\AppointmentIndexController;
+use Source\App\AppointmentIndexScheduleController;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -32,7 +34,7 @@ $container->add(UserIndexController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
-$container->add(UserIndexProviderController::class)
+$container->add(UserIndexProvidersController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
@@ -60,7 +62,15 @@ $container->add(FileStoreController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
+$container->add(AppointmentIndexController::class)
+    ->addArgument(Connection::getInstance())
+    ->addArgument(Response::class);
+
 $container->add(AppointmentStoreController::class)
+    ->addArgument(Connection::getInstance())
+    ->addArgument(Response::class);
+
+$container->add(AppointmentIndexScheduleController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
@@ -69,6 +79,7 @@ $container->add(AuthMiddleware::class)
 
 $container->add(Connection::class);
 $container->add(Response::class);
+
 
 $strategy = (new League\Route\Strategy\JsonStrategy($responseFactory))
     ->addDefaultResponseHeader('content-type', 'scheduler/json')
@@ -87,15 +98,18 @@ $router->group('/users', function (RouteGroup $route) {
 
 $router->map('GET', '/providers', 'Source\App\UserIndexProviderController::index');
 
-$router->map('POST', '/sessions', 'Source\App\SessionController::store');
+$router->map('POST', '/sessions', 'Source\App\SessionStoreController::store');
+
+$router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController::index')
+    ->middleware(new AuthMiddleware(new Response));
 
 $router->group('/appointments', function (RouteGroup $route){
-    $route->map('POST', '/', 'Source\App\AppointmentController::store')
-        ->middleware(new AuthMiddleware(new Response));
-});
+    $route->map('GET', '/', 'Source\App\AppointmentIndexController::index');
+    $route->map('POST', '/', 'Source\App\AppointmentStoreController::store');
+})->middleware(new AuthMiddleware(new Response));
 
 $router->group('/files', function (RouteGroup $route) {
-    $route->map('POST', '/', 'Source\App\FileController::store')
+    $route->map('POST', '/', 'Source\App\FileStoreController::store')
         ->middleware(new AuthMiddleware(new Response));
 });
 

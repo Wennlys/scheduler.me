@@ -11,45 +11,48 @@ namespace Source\Models;
  */
 class Appointment
 {
-    /** @var int */
-    private int $providerId;
+    /** @var string */
+    private string $providerId;
 
-    /** @var int */
-    private int $userId;
+    /** @var string */
+    private string $userId;
 
     /** @var string */
     private string $date;
 
+    /** @var string */
+    private string $page;
+
     /**
-     * @return int
+     * @return string
      */
     public function getProviderId()
-    : int
+    : string
     {
         return $this->providerId;
     }
 
     /**
-     * @param int $providerId
+     * @param string $providerId
      */
-    public function setProviderId(int $providerId)
+    public function setProviderId(string $providerId)
     : void {
         $this->providerId = $providerId;
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getUserId()
-    : int
+    : string
     {
         return $this->userId;
     }
 
     /**
-     * @param int $userId
+     * @param string $userId
      */
-    public function setUserId(int $userId)
+    public function setUserId(string $userId)
     : void {
         $this->userId = $userId;
     }
@@ -69,5 +72,22 @@ class Appointment
     public function setDate(string $date)
     : void {
         $this->date = $date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPage()
+    : string
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param string $page
+     */
+    public function setPage(string $page)
+    : void {
+        $this->page = $page;
     }
 }

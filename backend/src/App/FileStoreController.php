@@ -6,13 +6,11 @@ namespace Source\App;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Exception;
-
 use Source\Models\File;
 use Source\Core\Connection;
 use Source\Models\FileDAO;
 use Source\Models\UserDAO;
 use Source\Models\User;
-
 
 /**
  * Class FileStoreController
@@ -51,12 +49,19 @@ class FileStoreController
 
         $originalName = $image->getClientFilename();
 
+        $size = $image->getSize();
+
+        if ($size > 50000) {
+            $this->response->getBody()->write(json_encode("Choose a smaller image."));
+            return $this->response->withStatus(401);
+        }
+
         $imageExt = pathinfo($originalName, PATHINFO_EXTENSION);
 
         $name = bin2hex(openssl_random_pseudo_bytes(16)) . '.' . $imageExt;
 
         $image->moveTo('tmp/uploads/' . $name);
-        
+
         $file = new File();
         $user = new User();
 

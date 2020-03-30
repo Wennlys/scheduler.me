@@ -6,9 +6,7 @@ namespace Source\Models;
 
 use Source\Core\Database;
 use Source\Core\Connection;
-
 use Exception;
-
 
 /**
  * Class UserDAO
@@ -65,7 +63,7 @@ class UserDAO
             }
 
             if ($user->getEmail()) {
-                if ($this->findByLogin($user->getEmail())) {
+                if ($this->findByLogin($user)) {
                     throw new Exception("Email already in use.");
                 }
             }
@@ -107,9 +105,8 @@ class UserDAO
      */
     public function verifyPassword(User $user): bool
     {
-        $id = $user->getUserId();
         $currentPass = $user->getCurrentPassword();
-        $savedPass = ($this->findById($id))->password;
+        $savedPass = ($this->findById($user))->password;
 
         if (!password_verify($currentPass, $savedPass))
             return false;
@@ -117,26 +114,32 @@ class UserDAO
     }
 
     /**
-     * @param string $login
+     * @param User $user
      *
      * @return object
      */
-    public function findByLogin(string $login): ?object
+    public function findByLogin(User $user): ?object
     {
-        if (is_email($login)){
-            return $this->database->find("email = :e", "e={$login}")->fetch();
+        if ($user->getEmail()) {
+            return $this->database
+                ->find("*", "email = :e", "e={$user->getEmail()}")
+                ->fetch();
         }
-        return $this->database->find("user_name = :u", "u={$login}")->fetch();
+        return $this->database
+            ->find("*", "user_name = :u", "u={$user->getUserName()}")
+            ->fetch();
     }
 
     /**
-     * @param string $id
+     * @param User $user
      *
      * @return object
      */
-    public function findById(string $id): ?object
+    public function findById(User $user): ?object
     {
-        return $this->database->find("id = :id", "id={$id}")->fetch();
+        return $this->database
+            ->find("*", "id = :id", "id={$user->getUserId()}")
+            ->fetch();
     }
 
     /**
@@ -147,10 +150,23 @@ class UserDAO
         return $this->database->find()->fetch(true);
     }
 
-    public function findProviders()
+    /**
+     * @return array|mixed|null
+     */
+    public function findAllProviders()
     {
-        return $this->database->join('files',
-         'users.id, users.first_name, users.last_name, users.email, files.name, files.path',
-        'users.avatar_id = files.id, provider = false')->fetch(true);
+        return $this->database
+            ->find("users.id, users.first_name, users.last_name, users.email, files.name, files.path")
+            ->join("users.avatar_id = files.id", "files")
+            ->order("id")
+            ->fetch(true);
+    }
+
+    public function findProvider(User $user)
+    {
+        return $this->database
+            ->find("*", "id = :id", "id={$user->getUserId()}")
+            ->and("provider = true")
+            ->fetch();
     }
 }

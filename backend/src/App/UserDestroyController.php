@@ -7,7 +7,6 @@ namespace Source\App;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Exception;
-
 use Source\Core\Connection;
 use Source\Models\User;
 use Source\Models\UserDAO;

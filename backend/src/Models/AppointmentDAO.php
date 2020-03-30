@@ -36,23 +36,65 @@ class AppointmentDAO
      */
     public function save(Appointment $appointment): string
     {
-        return $this->database->create(
-            [
+        if ($this->findByDateAndProvider($appointment))
+            throw new Exception("Date is not available.");
+
+        return $this->database->create([
                 "provider_id" => $appointment->getProviderId(),
                 "user_id" => $appointment->getUserId(),
                 "date" => $appointment->getDate()
-            ]
-        );
+            ]);
+    }
+
+    public function findByProvider(Appointment $appointment)
+    {
+        return $this->database
+            ->find("*", "provider_id = :id", "id={$appointment->getProviderId()}")
+            ->fetch(true);
     }
 
     /**
-     * @param int $userId
+     * @param Appointment $appointment
      *
-     * @return array
+     * @return array|null
      */
-    public function findAppointments(int $userId): ?array
+    public function findAppointments(Appointment $appointment): ?array
     {
-        return $this->database->find("user_id = :id, canceled_at = null", "id = {$userId}")->fetch
-        (true);
+        $page = $appointment->getPage();
+        return $this->database
+            ->find("appointments.id id, appointments.date,
+                              users.id user, users.first_name, users.last_name,
+                              files.id avatar, files.path",
+                    null,
+                    "a={$appointment->getUserId()}")
+            ->join("appointments.user_id = users.id", "users")
+            ->and("appointments.user_id = :a")
+            ->join("users.avatar_id = files.id", "files")
+            ->limit(20)
+            ->offset(($page - 1)*20)
+            ->fetch(true);
+    }
+
+    public function findByDateAndProvider(Appointment $appointment)
+    {
+        $date = (str_split($appointment->getDate(), 14))[0];
+        return $this->database
+            ->find("*",
+                   "date like '{$date}%'")
+            ->and("provider_id = {$appointment->getProviderId()}")
+            ->fetch(true);
+    }
+
+    public function findByDay(Appointment $appointment)
+    {
+        $date = (str_split($appointment->getDate(), 14))[0];
+        return $this->database
+            ->find("*",
+                "provider_id = :id", ":id={$appointment->getProviderId()}")
+            ->and("date like '{$date}%'")
+            ->and("canceled_at is null")
+            ->fetch(true);
     }
 }
+
+

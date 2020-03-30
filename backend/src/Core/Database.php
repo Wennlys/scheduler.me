@@ -32,6 +32,12 @@ class Database
     /** @var string|null */
     protected ?string $statement = null;
 
+    /** @var string|null */
+    private ?string $join = null;
+
+    /** @var string|null */
+    protected ?string $and = null;
+
     /** @var array|null */
     protected ?array $params = null;
 
@@ -49,8 +55,6 @@ class Database
 
     /** @var object|null */
     protected ?object $data = null;
-
-
 
     /**
      * Constructor.
@@ -130,21 +134,91 @@ class Database
     }
 
     /**
+     * @return bool
+     */
+    protected function required()
+    : bool
+    {
+        $data = (array)$this->data();
+        foreach ($this->required as $field) {
+            if (is_null($data[$field])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array|null
+     */
+    protected function filter(array $data): ?array
+    {
+        $filter = [];
+        foreach ($data as $key => $value) {
+            $filter[$key] = (is_null($value) ? null : filter_var($value, FILTER_DEFAULT));
+        }
+        return $filter;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    : int
+    {
+        $stmt = $this->connection->getConnection()->prepare($this->statement);
+        $stmt->execute($this->params);
+        return $stmt->rowCount();
+    }
+
+    /**
      * @param string|null $terms
      * @param string|null $params
-     * @param string      $columns
+     * @param string|null $columns
      *
      * @return Database
      */
-    public function find(?string $terms = null, string $params = "", string $columns = "*")
+    public function find(?string $columns = "*", ?string $terms = null, string $params = "")
     : Database {
+        $columns = $columns ?? "*";
+
         if ($terms) {
-            $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " WHERE " . $terms;
+            $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " WHERE " .
+                $terms;
             parse_str($params, $this->params);
             return $this;
         }
 
         $this->statement = "SELECT " . $columns . " FROM " . $this->entity;
+        parse_str($params, $this->params);
+        return $this;
+    }
+
+
+    /**
+     * @param string $clause
+     * @param string $table
+     *
+     * @return Database|null
+     */
+    public function join(string $clause, string $table)
+    : ?Database
+    {
+        $this->join .= " INNER JOIN {$table} ON ({$clause})";
+        return $this;
+    }
+
+    /**
+     * @param string $clause
+     *
+     * @return Database|null
+     */
+    public function and(string $clause)
+    : ?Database
+    {
+        $this->and .= " AND ({$clause})";
         return $this;
     }
 
@@ -193,47 +267,6 @@ class Database
     }
 
     /**
-     * @return bool
-     */
-    protected function required()
-    : bool
-    {
-        $data = (array)$this->data();
-        foreach ($this->required as $field) {
-            if (is_null($data[$field])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    /**
-     * @param array $data
-     *
-     * @return array|null
-     */
-    protected function filter(array $data): ?array
-    {
-        $filter = [];
-        foreach ($data as $key => $value) {
-            $filter[$key] = (is_null($value) ? null : filter_var($value, FILTER_DEFAULT));
-        }
-        return $filter;
-    }
-
-    /**
-     * @return int
-     */
-    public function count()
-    : int
-    {
-        $stmt = $this->connection->getConnection()->prepare($this->statement);
-        $stmt->execute($this->params);
-        return $stmt->rowCount();
-    }
-
-    /**
      * @param bool $all
      *
      * @return array|mixed|null
@@ -241,15 +274,13 @@ class Database
     public function fetch(bool $all = false)
     {
         $stmt = $this->connection->getConnection()->prepare(
-            $this->statement . $this->group . $this->order . $this->limit . $this->offset
-        );
+            $this->statement . $this->join . $this->and . $this->group . $this->order .
+            $this->limit . $this->offset);
         $stmt->execute($this->params);
 
-        if (!$stmt->rowCount())
-            return null;
+        if (!$stmt->rowCount()) return null;
 
-        if ($all)
-            return $stmt->fetchAll();
+        if ($all) return $stmt->fetchAll();
 
         return $stmt->fetchObject();
     }
@@ -276,8 +307,7 @@ class Database
         $values = ":" . implode(", :", array_keys($data));
 
         $stmt = $connection->prepare(
-            "INSERT INTO " . $this->entity . " (" . $columns . ") VALUES (" . $values . ")"
-        );
+            "INSERT INTO {$this->entity} ({$columns}) VALUES ({$values})");
 
         $stmt->execute($this->filter($data));
 
@@ -298,9 +328,8 @@ class Database
             $data["updated_at"] = (new DateTime("now"))->format("Y-m-d H:i:s");
         }
         $dataSet = [];
-        foreach ($data as $bind => $value) {
-            $dataSet[] = "{$bind} = :{$bind}";
-        }
+        foreach ($data as $bind => $value) $dataSet[] = "{$bind} = :{$bind}";
+
         $dataSet = implode(", ", $dataSet);
         parse_str($params, $params);
 
@@ -328,32 +357,5 @@ class Database
             return true;
         }
         return $stmt->execute();
-    }
-
-    /**
-     * @param string      $table
-     * @param string      $terms
-     * @param string      $columns
-     *
-     * @param string|null $params
-     *
-     * @return Database
-     */
-    public function join(string $table, string $columns, string $terms, string $params = "")
-    : Database {
-        if (strpos($terms, ',') !== false) {
-            $terms = explode(',', $terms);
-
-            $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " INNER JOIN " .
-                $table . " ON " . $terms[0] . " AND " . $terms[1];
-            parse_str($params, $this->params);
-            return $this;
-        }
-
-        $this->statement = "SELECT " . $columns . " FROM " . $this->entity . " INNER JOIN " .
-            $table . " ON " . $terms;
-        parse_str($params, $this->params);
-
-        return $this;
     }
 }

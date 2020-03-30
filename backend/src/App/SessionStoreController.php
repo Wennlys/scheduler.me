@@ -8,9 +8,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response;
 use ReallySimpleJWT\Token;
-
-use Source\Models\UserDAO;
+use Exception;
 use Source\Core\Connection;
+use Source\Models\User;
+use Source\Models\UserDAO;
 
 
 /**
@@ -43,35 +44,44 @@ class SessionStoreController
      * @param ServerRequestInterface $request
      *
      * @return Response|ResponseInterface
+     * @throws Exception
      */
     public function store(ServerRequestInterface $request): Response
     {
         $reqBody = json_decode((string)$request->getBody(), true);
 
-            $login = $reqBody['login'];
-            $password = $reqBody['password'];
+        $login = $reqBody['login'];
+        $password = $reqBody['password'];
 
         $userDao = new UserDAO($this->connection);
-        $user = $userDao->findByLogin($login);
+        $user = new User();
 
-        if (!$user) {
+        if (is_email($login)) {
+            $user->setEmail($login);
+        } else {
+            $user->setUserName($login);
+        }
+
+        $row = $userDao->findByLogin($user);
+
+        if (!$row) {
             $this->response->getBody()->write(json_encode("User not found."));
             return $this->response->withStatus(200);
         }
 
-        if (!password_verify($password, $user->password)) {
+        if (!password_verify($password, $row->password)) {
             $this->response->getBody()->write(json_encode("Wrong password."));
             return $this->response->withStatus(401);
         }
 
         $responseBody = [
             "user" => [
-                "id" => $user->id,
-                "name" => $user->user_name,
-                "email" => $user->email
+                "id" => $row->id,
+                "name" => $row->user_name,
+                "email" => $row->email,
             ],
             "token" => Token::create(
-                $user->id,
+                $row->id,
                 JWT_SECRET,
                 JWT_EXPIRATION,
                 JWT_ISSUER)

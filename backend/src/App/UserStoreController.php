@@ -6,12 +6,10 @@ namespace Source\App;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-
 use Source\Core\Connection;
 use Source\Models\UserDAO;
 use Source\Models\User;
 use Exception;
-
 
 class UserStoreController
 {
