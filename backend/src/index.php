@@ -20,7 +20,7 @@ use Source\App\UserDestroyController;
 use Source\App\UserIndexProvidersController;
 use Source\App\AppointmentIndexController;
 use Source\App\AppointmentIndexScheduleController;
-use Source\App\NotificationIndexController;
+use Source\App\NotificationProviderIndexController;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -76,7 +76,7 @@ $container->add(AppointmentIndexScheduleController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
-$container->add(NotificationIndexController::class)
+$container->add(NotificationProviderIndexController::class)
     ->addArgument(MongoConnection::getInstance())
     ->addArgument(Response::class);
 
@@ -107,7 +107,7 @@ $router->group('/users', function (RouteGroup $route) {
 $router->map('GET', '/providers', 'Source\App\UserIndexProviderController::index')
     ->middleware(new AuthMiddleware(new Response));
 
-$router->map('GET', '/notifications', 'Source\App\NotificationIndexController::index')
+$router->map('GET', '/notifications', 'Source\App\NotificationProviderIndexController::index')
     ->middleware(new AuthMiddleware(new Response));
 
 $router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController::index')

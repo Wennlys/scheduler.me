@@ -65,6 +65,14 @@ class AppointmentStoreController
 
         $userId = $payload["user_id"];
         $providerId = $reqBody["provider_id"];
+
+        if ($userId === $providerId) {
+            $this->response->getBody()->write(
+                json_encode("User and provider cannot be the same.")
+            );
+            return $this->response->withStatus(400);
+        }
+
         $date = $reqBody["date"];
 
         $userDao = new UserDAO($this->connection);
@@ -102,8 +110,8 @@ class AppointmentStoreController
         $notification->setUser($providerId);
         $notification->setContent("Novo agendamento de $userFullName para o dia $date");
         $notification->setRead(false);
-        $notification->setCreatedAt(date('m-d-Y h:i:s', time()));
-        $notification->setUpdatedAt(date('m-d-Y h:i:s', time()));
+        $notification->setCreatedAt(date('m-d-Y H:i:s', time()));
+        $notification->setUpdatedAt(date('m-d-Y H:i:s', time()));
         $notificationDao->save($notification);
 
         $this->response->getBody()->write(json_encode(true));

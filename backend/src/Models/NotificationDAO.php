@@ -27,4 +27,13 @@ class NotificationDAO
             "updated_at" => $notification->getUpdatedAt()
         ]);
     }
+
+    public function findByProvider(Notification $notification)
+    {
+        return $this->database->find(["user" => $notification->getUser()],
+            [
+                "limit" => 20,
+                "sort" => ["created_at" => -1]
+            ])->toArray();
+    }
 }
