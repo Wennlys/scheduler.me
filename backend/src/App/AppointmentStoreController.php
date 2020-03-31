@@ -48,6 +48,7 @@ class AppointmentStoreController
         $this->mongoConnection = $mongoConnection;
         $this->response = $response;
     }
+
     /**
      * @param ServerRequestInterface $request
      *

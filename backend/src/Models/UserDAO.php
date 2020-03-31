@@ -25,8 +25,7 @@ class UserDAO
      */
     public function __construct(Connection $connection)
     {
-        $this->database = new Database($connection,"users", ["user_name", "last_name", "first_name", "email",
-         "password", "provider"]);
+        $this->database = new Database($connection,"users");
     }
 
     /**

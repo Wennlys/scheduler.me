@@ -2,10 +2,9 @@
 
 namespace Source\Core;
 
-use Exception;
-use PDOException;
-use stdClass;
+
 use DateTime;
+use Exception;
 
 /**
  * Class Database
@@ -19,12 +18,6 @@ class Database
 
     /** @var string $entity */
     protected string $entity;
-
-    /** @var string $primary */
-    protected string $primary;
-
-    /** @var array|null $required */
-    protected ?array $required;
 
     /** @var bool $timestamps */
     protected bool $timestamps;
@@ -53,99 +46,18 @@ class Database
     /** @var string|null */
     protected ?string $offset = null;
 
-    /** @var object|null */
-    protected ?object $data = null;
-
     /**
      * Constructor.
      *
      * @param Connection $connection
      * @param string     $entity
-     * @param array      $required
-     * @param string     $primary
      * @param bool       $timestamps
      */
-    public function __construct(
-        Connection $connection,
-        string $entity,
-        array $required,
-        string $primary = 'id',
-        bool $timestamps = true
-    ) {
+    public function __construct(Connection $connection, string $entity, bool $timestamps = true)
+    {
         $this->connection = $connection;
         $this->entity = $entity;
-        $this->required = $required;
-        $this->primary = $primary;
         $this->timestamps = $timestamps;
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     */
-    public function __set($name, $value)
-    {
-        if (empty($this->data)) {
-            $this->data = new stdClass();
-        }
-
-        $this->data->$name = $value;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        return isset($this->data->$name);
-    }
-
-    /**
-     * @param $name
-     *
-     * @return string|null
-     */
-    public function __get($name)
-    {
-        return ($this->data->$name ?? null);
-    }
-
-    /**
-     * @return object|null
-     */
-    public function data()
-    : ?object
-    {
-        return $this->data;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function safe()
-    : ?array
-    {
-        $safe = (array)$this->data;
-        unset($safe[$this->primary]);
-
-        return $safe;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function required()
-    : bool
-    {
-        $data = (array)$this->data();
-        foreach ($this->required as $field) {
-            if (is_null($data[$field])) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -195,7 +107,6 @@ class Database
         parse_str($params, $this->params);
         return $this;
     }
-
 
     /**
      * @param string $clause
@@ -275,7 +186,9 @@ class Database
     {
         $stmt = $this->connection->getConnection()->prepare(
             $this->statement . $this->join . $this->and . $this->group . $this->order .
-            $this->limit . $this->offset);
+            $this->limit . $this->offset
+        );
+
         $stmt->execute($this->params);
 
         if (!$stmt->rowCount()) return null;
@@ -284,10 +197,6 @@ class Database
 
         return $stmt->fetchObject();
     }
-
-    /**
-     * CRUD Treatment
-     */
 
     /**
      * @param array $data
@@ -307,7 +216,8 @@ class Database
         $values = ":" . implode(", :", array_keys($data));
 
         $stmt = $connection->prepare(
-            "INSERT INTO {$this->entity} ({$columns}) VALUES ({$values})");
+            "INSERT INTO {$this->entity} ({$columns}) VALUES ({$values})"
+        );
 
         $stmt->execute($this->filter($data));
 

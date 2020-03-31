@@ -26,7 +26,7 @@ class FileDAO
      */
     public function __construct(Connection $connection)
     {
-        $this->database = new Database($connection, "files", ["name", "path"]);
+        $this->database = new Database($connection, "files");
     }
 
     /**

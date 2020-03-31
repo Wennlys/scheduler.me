@@ -25,7 +25,7 @@ class AppointmentDAO
      */
     public function __construct(Connection $connection)
     {
-        $this->database = new Database($connection, "appointments", ["date"]);
+        $this->database = new Database($connection, "appointments");
     }
 
     /**
@@ -40,10 +40,10 @@ class AppointmentDAO
             throw new Exception("Date is not available.");
 
         return $this->database->create([
-                "provider_id" => $appointment->getProviderId(),
-                "user_id" => $appointment->getUserId(),
-                "date" => $appointment->getDate()
-            ]);
+            "provider_id" => $appointment->getProviderId(),
+            "user_id" => $appointment->getUserId(),
+            "date" => $appointment->getDate()
+        ]);
     }
 
     public function findByProvider(Appointment $appointment)
