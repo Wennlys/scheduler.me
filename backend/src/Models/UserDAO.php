@@ -43,7 +43,7 @@ class UserDAO
             "last_name" => $user->getLastName(),
             "email" => $user->getEmail(),
             "password" => $user->getPassword(),
-            "provider" => $user->getProvider()
+            "provider" => $user->isProvider()
         ]);
     }
 

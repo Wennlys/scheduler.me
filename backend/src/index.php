@@ -7,6 +7,7 @@ use League\Route\RouteGroup;
 use Laminas\Diactoros\Response;
 
 use Source\Core\Connection;
+use Source\Core\MongoConnection;
 use Source\Middleware\AuthMiddleware;
 use Source\App\SessionStoreController;
 use Source\App\FileStoreController;
@@ -16,10 +17,10 @@ use Source\App\UserShowController;
 use Source\App\UserStoreController;
 use Source\App\UserUpdateController;
 use Source\App\UserDestroyController;
-use Source\App\TestController;
 use Source\App\UserIndexProvidersController;
 use Source\App\AppointmentIndexController;
 use Source\App\AppointmentIndexScheduleController;
+use Source\App\NotificationIndexController;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -68,16 +69,22 @@ $container->add(AppointmentIndexController::class)
 
 $container->add(AppointmentStoreController::class)
     ->addArgument(Connection::getInstance())
+    ->addArgument(MongoConnection::getInstance())
     ->addArgument(Response::class);
 
 $container->add(AppointmentIndexScheduleController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
+$container->add(NotificationIndexController::class)
+    ->addArgument(MongoConnection::getInstance())
+    ->addArgument(Response::class);
+
 $container->add(AuthMiddleware::class)
     ->addArgument(Response::class);
 
 $container->add(Connection::class);
+$container->add(MongoConnection::class);
 $container->add(Response::class);
 
 
@@ -87,31 +94,33 @@ $strategy = (new League\Route\Strategy\JsonStrategy($responseFactory))
 
 $router = (new League\Route\Router())->setStrategy($strategy);
 
+$router->map('POST', '/users', 'Source\App\UserStoreController::store');
+$router->map('POST', '/sessions', 'Source\App\SessionStoreController::store');
+
 $router->group('/users', function (RouteGroup $route) {
     $route->map('GET', '/', 'Source\App\UserIndexController::index');
-    $route->map('GET', '/find', 'Source\App\UserShowController::show');
-    $route->map('POST', '/', 'Source\App\UserStoreController::store');
-    $route->map('PUT', '/', 'Source\App\UserUpdateController::update')
-        ->middleware(new AuthMiddleware(new Response));
+    $route->map('GET', '/show', 'Source\App\UserShowController::show');
+    $route->map('PUT', '/', 'Source\App\UserUpdateController::update');
     $route->map('DELETE', '/', 'Source\App\UserDestroyController::destroy');
-});
+})->middleware(new AuthMiddleware(new Response));
 
-$router->map('GET', '/providers', 'Source\App\UserIndexProviderController::index');
+$router->map('GET', '/providers', 'Source\App\UserIndexProviderController::index')
+    ->middleware(new AuthMiddleware(new Response));
 
-$router->map('POST', '/sessions', 'Source\App\SessionStoreController::store');
+$router->map('GET', '/notifications', 'Source\App\NotificationIndexController::index')
+    ->middleware(new AuthMiddleware(new Response));
 
 $router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController::index')
     ->middleware(new AuthMiddleware(new Response));
 
-$router->group('/appointments', function (RouteGroup $route){
+$router->group('/appointments', function (RouteGroup $route) {
     $route->map('GET', '/', 'Source\App\AppointmentIndexController::index');
     $route->map('POST', '/', 'Source\App\AppointmentStoreController::store');
 })->middleware(new AuthMiddleware(new Response));
 
 $router->group('/files', function (RouteGroup $route) {
-    $route->map('POST', '/', 'Source\App\FileStoreController::store')
-        ->middleware(new AuthMiddleware(new Response));
-});
+    $route->map('POST', '/', 'Source\App\FileStoreController::store');
+})->middleware(new AuthMiddleware(new Response));
 
 $response = $router->dispatch($request);
 

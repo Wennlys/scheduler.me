@@ -180,7 +180,7 @@ class User
     /**
      * @return bool
      */
-    public function getProvider()
+    public function isProvider()
     : bool
     {
         return $this->provider;

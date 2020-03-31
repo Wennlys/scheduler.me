@@ -3,12 +3,12 @@
 
 namespace Source\Core;
 
-use PDOException;
-use Exception;
 use PDO;
+use Exception;
+use PDOException;
 
 /**
- * Class Connection
+ * SQL Database Connection Class
  *
  * @package Source\Core
  */
@@ -22,18 +22,13 @@ class Connection
         PDO::ATTR_CASE => PDO::CASE_NATURAL
     ];
 
-    /**
-     * @var PDO $conn
-     */
+    /** @var PDO $conn */
     private ?PDO $conn = null;
 
-    /**
-     * @var Connection|null $instance
-     */
+    /** @var Connection|null $instance */
     private static ?Connection $instance = null;
-    /**
-     * @var Exception|PDOException
-     */
+
+    /** @var Exception|PDOException */
     public static $error;
 
     /**
