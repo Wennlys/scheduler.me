@@ -4,9 +4,8 @@
 namespace Source\Models;
 
 
-use Source\Core\MongoConnection;
 use MongoDB\Collection;
-use Source\App\NotificationProviderUpdateController;
+use Source\Core\MongoConnection;
 
 class NotificationDAO
 {

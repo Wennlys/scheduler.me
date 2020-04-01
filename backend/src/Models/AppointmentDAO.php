@@ -46,15 +46,16 @@ class AppointmentDAO
         ]);
     }
 
-
     /**
      * @param Appointment $appointment
      *
      * @return bool
+     * @throws Exception
      */
-    public function delete(Appointment $appointment)
+    public function cancel(Appointment $appointment)
     {
-        return $this->database->delete("id = {$appointment->getId()}");
+        return $this->database->update(["canceled_at" => date('Y-m-d H:i:s', time())],
+                                        "id = :id", "id={$appointment->getId()}");
     }
 
     /**
@@ -81,6 +82,13 @@ class AppointmentDAO
             ->fetch(true);
     }
 
+    public function findById(Appointment $appointment)
+    {
+        return $this->database
+            ->find("*", "id = :id", "id={$appointment->getId()}")
+            ->fetch();
+    }
+
     /**
      * @param Appointment $appointment
      *
@@ -92,11 +100,9 @@ class AppointmentDAO
         return $this->database
             ->find("appointments.id id, appointments.date,
                               users.id user, users.first_name, users.last_name,
-                              files.id avatar, files.path",
-                    null,
-                    "a={$appointment->getUserId()}")
+                              files.id avatar, files.path")
             ->join("appointments.user_id = users.id", "users")
-            ->and("appointments.user_id = :a")
+            ->and("appointments.user_id = {$appointment->getUserId()}")
             ->join("users.avatar_id = files.id", "files")
             ->limit(20)
             ->offset(($page - 1)*20)

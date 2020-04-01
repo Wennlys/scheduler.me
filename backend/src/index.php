@@ -22,7 +22,7 @@ use Source\App\AppointmentIndexController;
 use Source\App\AppointmentIndexScheduleController;
 use Source\App\NotificationProviderIndexController;
 use Source\App\NotificationProviderUpdateController;
-use Source\App\AppointmentDestroyController;
+use Source\App\AppointmentCancelController;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -69,7 +69,7 @@ $container->add(AppointmentIndexController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
-$container->add(AppointmentDestroyController::class)
+$container->add(AppointmentCancelController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
@@ -129,7 +129,7 @@ $router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController:
 $router->group('/appointments', function (RouteGroup $route) {
     $route->map('GET', '/', 'Source\App\AppointmentIndexController::index');
     $route->map('POST', '/', 'Source\App\AppointmentStoreController::store');
-    $route->map('DELETE', '/{id:number}', 'Source\App\AppointmentDestroyController::destroy');
+    $route->map('DELETE', '/{id:number}', 'Source\App\AppointmentCancelController::cancel');
 })->middleware(new AuthMiddleware(new Response));
 
 $router->group('/files', function (RouteGroup $route) {

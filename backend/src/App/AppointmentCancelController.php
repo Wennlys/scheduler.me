@@ -9,13 +9,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Source\Core\Connection;
 use Source\Models\AppointmentDAO;
 use Source\Models\Appointment;
+use Exception;
 
 /**
- * Class AppointmentDestroyController
+ * AppointmentCancelController Class
  *
  * @package Source\App
  */
-class AppointmentDestroyController
+class AppointmentCancelController
 {
     /** @var ResponseInterface */
     private ResponseInterface $response;
@@ -24,7 +25,7 @@ class AppointmentDestroyController
     private Connection $connection;
 
     /**
-     * AppointmentDestroyController constructor.
+     * AppointmentCancelController constructor.
      *
      * @param Connection        $connection
      * @param ResponseInterface $response
@@ -41,8 +42,9 @@ class AppointmentDestroyController
      * @param array                  $args
      *
      * @return ResponseInterface
+     * @throws Exception
      */
-    public function destroy(ServerRequestInterface $request, array $args): ResponseInterface
+    public function cancel(ServerRequestInterface $request, array $args): ResponseInterface
     {
         $payload = getPayload($request);
         $userId = $payload["user_id"];
@@ -53,13 +55,15 @@ class AppointmentDestroyController
         $appointment->setId($args["id"]);
         $appointment->setUserId($userId);
 
-        if (!$appointmentDao->findByUserId($appointment)) {
+        $user = ($appointmentDao->findById($appointment))->user_id;
+
+        if (!$userId = $user) {
             $this->response->getBody()->write(json_encode(
                 "User does not have permission to cancel this appointment."));
             return $this->response->withStatus(200);
         }
 
-        $appointmentDao->delete($appointment);
+        $appointmentDao->cancel($appointment);
 
         $this->response->getBody()->write(json_encode(true));
         return $this->response->withStatus(200);
