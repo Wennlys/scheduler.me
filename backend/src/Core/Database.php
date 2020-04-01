@@ -254,7 +254,7 @@ class Database
      * @param string|null $params
      * @return bool
      */
-    public function delete(string $terms, ?string $params): bool
+    public function delete(string $terms, string $params = ""): bool
     {
         $connection = $this->connection->getConnection();
         $stmt = $connection->prepare(

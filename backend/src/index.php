@@ -21,6 +21,8 @@ use Source\App\UserIndexProvidersController;
 use Source\App\AppointmentIndexController;
 use Source\App\AppointmentIndexScheduleController;
 use Source\App\NotificationProviderIndexController;
+use Source\App\NotificationProviderUpdateController;
+use Source\App\AppointmentDestroyController;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -67,6 +69,10 @@ $container->add(AppointmentIndexController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
+$container->add(AppointmentDestroyController::class)
+    ->addArgument(Connection::getInstance())
+    ->addArgument(Response::class);
+
 $container->add(AppointmentStoreController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(MongoConnection::getInstance())
@@ -77,6 +83,11 @@ $container->add(AppointmentIndexScheduleController::class)
     ->addArgument(Response::class);
 
 $container->add(NotificationProviderIndexController::class)
+    ->addArgument(Connection::getInstance())
+    ->addArgument(MongoConnection::getInstance())
+    ->addArgument(Response::class);
+
+$container->add(NotificationProviderUpdateController::class)
     ->addArgument(MongoConnection::getInstance())
     ->addArgument(Response::class);
 
@@ -107,8 +118,10 @@ $router->group('/users', function (RouteGroup $route) {
 $router->map('GET', '/providers', 'Source\App\UserIndexProviderController::index')
     ->middleware(new AuthMiddleware(new Response));
 
-$router->map('GET', '/notifications', 'Source\App\NotificationProviderIndexController::index')
-    ->middleware(new AuthMiddleware(new Response));
+$router->group('/notifications', function (RouteGroup $route) {
+    $route->map('GET', '/', 'Source\App\NotificationProviderIndexController::index');
+    $route->map('PUT', '/', 'Source\App\NotificationProviderUpdateController::update');
+})->middleware(new AuthMiddleware(new Response));
 
 $router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController::index')
     ->middleware(new AuthMiddleware(new Response));
@@ -116,6 +129,7 @@ $router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController:
 $router->group('/appointments', function (RouteGroup $route) {
     $route->map('GET', '/', 'Source\App\AppointmentIndexController::index');
     $route->map('POST', '/', 'Source\App\AppointmentStoreController::store');
+    $route->map('DELETE', '/{id:number}', 'Source\App\AppointmentDestroyController::destroy');
 })->middleware(new AuthMiddleware(new Response));
 
 $router->group('/files', function (RouteGroup $route) {

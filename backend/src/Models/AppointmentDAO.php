@@ -46,10 +46,38 @@ class AppointmentDAO
         ]);
     }
 
+
+    /**
+     * @param Appointment $appointment
+     *
+     * @return bool
+     */
+    public function delete(Appointment $appointment)
+    {
+        return $this->database->delete("id = {$appointment->getId()}");
+    }
+
+    /**
+     * @param Appointment $appointment
+     *
+     * @return array|mixed|null
+     */
     public function findByProvider(Appointment $appointment)
     {
         return $this->database
             ->find("*", "provider_id = :id", "id={$appointment->getProviderId()}")
+            ->fetch(true);
+    }
+
+    /**
+     * @param Appointment $appointment
+     *
+     * @return array|mixed|null
+     */
+    public function findByUserId(Appointment $appointment)
+    {
+        return $this->database
+            ->find("*", "user_id = :id", "id={$appointment->getUserId()}")
             ->fetch(true);
     }
 
@@ -75,6 +103,11 @@ class AppointmentDAO
             ->fetch(true);
     }
 
+    /**
+     * @param Appointment $appointment
+     *
+     * @return array|mixed|null
+     */
     public function findByDateAndProvider(Appointment $appointment)
     {
         $date = (str_split($appointment->getDate(), 14))[0];
@@ -85,6 +118,11 @@ class AppointmentDAO
             ->fetch(true);
     }
 
+    /**
+     * @param Appointment $appointment
+     *
+     * @return array|mixed|null
+     */
     public function findByDay(Appointment $appointment)
     {
         $date = (str_split($appointment->getDate(), 14))[0];

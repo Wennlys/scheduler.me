@@ -6,6 +6,7 @@ namespace Source\Models;
 
 use Source\Core\MongoConnection;
 use MongoDB\Collection;
+use Source\App\NotificationProviderUpdateController;
 
 class NotificationDAO
 {
@@ -35,5 +36,13 @@ class NotificationDAO
                 "limit" => 20,
                 "sort" => ["created_at" => -1]
             ])->toArray();
+    }
+
+    public function update(Notification $notification)
+    {
+        return $this->database->findOneAndUpdate(["user" => $notification->getUser()],
+            [
+                '$set' => ["read" => true],
+            ]);
     }
 }

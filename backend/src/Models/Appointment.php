@@ -11,6 +11,9 @@ namespace Source\Models;
  */
 class Appointment
 {
+    /** @var string $id */
+    private string $id;
+
     /** @var string */
     private string $providerId;
 
@@ -22,6 +25,23 @@ class Appointment
 
     /** @var string */
     private string $page;
+
+    /**
+     * @return string
+     */
+    public function getId()
+    : string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId(string $id)
+    : void {
+        $this->id = $id;
+    }
 
     /**
      * @return string
