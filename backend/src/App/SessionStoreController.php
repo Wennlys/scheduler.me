@@ -61,30 +61,30 @@ class SessionStoreController
             $user->setUserName($login);
         }
 
-        $row = $userDao->findByLogin($user);
+        $user = $userDao->findByLogin($user);
 
-        if (!$row) {
+        if (!$user) {
             $this->response->getBody()->write(json_encode("User not found."));
             return $this->response->withStatus(200);
         }
 
-        if (!password_verify($password, $row->password)) {
+        if (!password_verify($password, $user->password)) {
             $this->response->getBody()->write(json_encode("Wrong password."));
             return $this->response->withStatus(401);
         }
 
         $responseBody = [
             "user" => [
-                "id" => $row->id,
-                "name" => $row->user_name,
-                "email" => $row->email,
+                "id" => $user->id,
+                "name" => $user->user_name,
+                "email" => $user->email,
             ],
             "token" => Token::create(
-                $row->id,
+                $user->id,
                 JWT_SECRET,
                 JWT_EXPIRATION,
                 JWT_ISSUER)
-            ];
+        ];
 
         $this->response->getBody()->write(json_encode((object)$responseBody));
         return $this->response->withStatus(200);

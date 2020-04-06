@@ -135,7 +135,7 @@ class AppointmentDAO
      */
     public function findByDay(Appointment $appointment)
     {
-        $date = (str_split($appointment->getDate(), 14))[0];
+        [$date] = (str_split($appointment->getDate(), 10));
         return $this->database
             ->find("*",
                 "provider_id = :id", ":id={$appointment->getProviderId()}")

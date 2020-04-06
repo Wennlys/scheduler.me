@@ -39,7 +39,8 @@ class AuthMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (getPayload($request)) {
+        $expiration = getPayload($request)["exp"];
+        if ($expiration > time()) {
             return $handler->handle($request);
         }
 

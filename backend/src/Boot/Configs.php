@@ -29,17 +29,6 @@ define("JWT_ISSUER", "localhost");
 define("DEFAULT_FILTER", FILTER_SANITIZE_STRIPPED);
 
 /*
- * MAIL CONFIGS
- * */
-define("MAIL", [
-    "HOST" => 'smtp.mailtrap.io',
-    "USER_NAME" => '072b7665a73421',
-    "PASSWORD" => '0f5e2db839b29a',
-    "PORT" => '465',
-]);
-
-
-/*
  * NOSQL(MONGODB) DATABASE
  * */
 define("NOSQL_DB_NAME", "schedulerMongo");

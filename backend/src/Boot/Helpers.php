@@ -32,13 +32,12 @@ function is_password(string $password): bool
  */
 function getPayload(ServerRequestInterface $request): ?array
 {
-    $header = $request->getHeaders()["authorization"][0];
+    [$header] = $request->getHeaders()["authorization"];
     if (!$header) {
         return null;
     }
 
-    $token = explode(' ', $header);
-    $token = $token[1];
+    [, $token] = explode(' ', $header);
 
     return Token::getPayload($token, JWT_SECRET);
 }

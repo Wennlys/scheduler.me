@@ -23,6 +23,7 @@ use Source\App\AppointmentIndexScheduleController;
 use Source\App\NotificationProviderIndexController;
 use Source\App\NotificationProviderUpdateController;
 use Source\App\AppointmentCancelController;
+use Source\App\AppointmentIndexAvailableController;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -127,7 +128,7 @@ $router->group(
         $route->map('GET', '/', 'Source\App\UserIndexProvidersController::index');
         $route->map(
             'GET',
-            '/{id:number}/available',
+            '/{providerId:number}/available',
             'Source\App\AppointmentIndexAvailableController::index'
         );
     }
