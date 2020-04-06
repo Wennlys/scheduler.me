@@ -7,7 +7,11 @@ use Psr\Http\Message\ResponseInterface;
 use Source\Core\Connection;
 use Source\Models\UserDAO;
 
-
+/**
+ * Class UserIndexProvidersController
+ *
+ * @package Source\App
+ */
 class UserIndexProvidersController
 {
     /** @var ResponseInterface */

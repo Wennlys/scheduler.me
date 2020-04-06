@@ -3,10 +3,8 @@
 
 namespace Source\App;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Exception;
 use Source\Core\Connection;
 use Source\Models\Appointment;
 use Source\Models\AppointmentDAO;
@@ -16,6 +14,7 @@ use Source\Core\MongoConnection;
 use Source\Models\NotificationDAO;
 use Source\Models\Notification;
 use DateTime;
+use Exception;
 
 /**
  * Class AppointmentStoreController

@@ -3,10 +3,8 @@
 
 namespace Source\Models;
 
-
 use Source\Core\Database;
 use Source\Core\Connection;
-
 use Exception;
 
 /**

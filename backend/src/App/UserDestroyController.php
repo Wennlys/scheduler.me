@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types=1);
+
 
 
 namespace Source\App;
-
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -11,7 +11,11 @@ use Source\Core\Connection;
 use Source\Models\User;
 use Source\Models\UserDAO;
 
-
+/**
+ * Class UserDestroyController
+ *
+ * @package Source\App
+ */
 class UserDestroyController
 {
     /** @var ResponseInterface */

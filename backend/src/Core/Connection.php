@@ -4,8 +4,8 @@
 namespace Source\Core;
 
 use PDO;
-use Exception;
 use PDOException;
+use Exception;
 
 /**
  * SQL Database Connection Class

@@ -3,7 +3,6 @@
 
 namespace Source\Models;
 
-
 /**
  * Class File
  *
@@ -11,10 +10,10 @@ namespace Source\Models;
  */
 class File
 {
-    /** @var string */
+    /** @var string $name*/
     private string $name;
 
-    /** @var string */
+    /** @var string $path*/
     private string $path;
 
     /**

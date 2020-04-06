@@ -32,7 +32,6 @@ $responseFactory = new ResponseFactory();
 
 $container = new League\Container\Container;
 
-
 $container->add(UserIndexController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
@@ -82,6 +81,10 @@ $container->add(AppointmentIndexScheduleController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(Response::class);
 
+$container->add(AppointmentIndexAvailableController::class)
+    ->addArgument(Connection::getInstance())
+    ->addArgument(Response::class);
+
 $container->add(NotificationProviderIndexController::class)
     ->addArgument(Connection::getInstance())
     ->addArgument(MongoConnection::getInstance())
@@ -108,33 +111,54 @@ $router = (new League\Route\Router())->setStrategy($strategy);
 $router->map('POST', '/users', 'Source\App\UserStoreController::store');
 $router->map('POST', '/sessions', 'Source\App\SessionStoreController::store');
 
-$router->group('/users', function (RouteGroup $route) {
-    $route->map('GET', '/', 'Source\App\UserIndexController::index');
-    $route->map('GET', '/show', 'Source\App\UserShowController::show');
-    $route->map('PUT', '/', 'Source\App\UserUpdateController::update');
-    $route->map('DELETE', '/', 'Source\App\UserDestroyController::destroy');
-})->middleware(new AuthMiddleware(new Response));
+$router->group(
+    '/users',
+    function (RouteGroup $route) {
+        $route->map('GET', '/', 'Source\App\UserIndexController::index');
+        $route->map('GET', '/show', 'Source\App\UserShowController::show');
+        $route->map('PUT', '/', 'Source\App\UserUpdateController::update');
+        $route->map('DELETE', '/', 'Source\App\UserDestroyController::destroy');
+    }
+)->middleware(new AuthMiddleware(new Response));
 
-$router->map('GET', '/providers', 'Source\App\UserIndexProviderController::index')
-    ->middleware(new AuthMiddleware(new Response));
+$router->group(
+    '/providers',
+    function (RouteGroup $route) {
+        $route->map('GET', '/', 'Source\App\UserIndexProvidersController::index');
+        $route->map(
+            'GET',
+            '/{id:number}/available',
+            'Source\App\AppointmentIndexAvailableController::index'
+        );
+    }
+)->middleware(new AuthMiddleware(new Response));
 
-$router->group('/notifications', function (RouteGroup $route) {
-    $route->map('GET', '/', 'Source\App\NotificationProviderIndexController::index');
-    $route->map('PUT', '/', 'Source\App\NotificationProviderUpdateController::update');
-})->middleware(new AuthMiddleware(new Response));
+$router->group(
+    '/notifications',
+    function (RouteGroup $route) {
+        $route->map('GET', '/', 'Source\App\NotificationProviderIndexController::index');
+        $route->map('PUT', '/', 'Source\App\NotificationProviderUpdateController::update');
+    }
+)->middleware(new AuthMiddleware(new Response));
 
 $router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController::index')
     ->middleware(new AuthMiddleware(new Response));
 
-$router->group('/appointments', function (RouteGroup $route) {
-    $route->map('GET', '/', 'Source\App\AppointmentIndexController::index');
-    $route->map('POST', '/', 'Source\App\AppointmentStoreController::store');
-    $route->map('DELETE', '/{id:number}', 'Source\App\AppointmentCancelController::cancel');
-})->middleware(new AuthMiddleware(new Response));
+$router->group(
+    '/appointments',
+    function (RouteGroup $route) {
+        $route->map('GET', '/', 'Source\App\AppointmentIndexController::index');
+        $route->map('POST', '/', 'Source\App\AppointmentStoreController::store');
+        $route->map('DELETE', '/{id:number}', 'Source\App\AppointmentCancelController::cancel');
+    }
+)->middleware(new AuthMiddleware(new Response));
 
-$router->group('/files', function (RouteGroup $route) {
-    $route->map('POST', '/', 'Source\App\FileStoreController::store');
-})->middleware(new AuthMiddleware(new Response));
+$router->group(
+    '/files',
+    function (RouteGroup $route) {
+        $route->map('POST', '/', 'Source\App\FileStoreController::store');
+    }
+)->middleware(new AuthMiddleware(new Response));
 
 $response = $router->dispatch($request);
 

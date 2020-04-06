@@ -3,7 +3,6 @@
 
 namespace Source\Models;
 
-
 /**
  * Class Appointment
  *

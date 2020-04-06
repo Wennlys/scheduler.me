@@ -3,9 +3,11 @@
 
 namespace Source\Models;
 
-
-use Source\Core\Database;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception as MailerException;
 use Source\Core\Connection;
+use Source\Core\Database;
 use Exception;
 
 /**
@@ -161,6 +163,11 @@ class UserDAO
             ->fetch(true);
     }
 
+    /**
+     * @param User $user
+     *
+     * @return array|mixed|null
+     */
     public function findProvider(User $user)
     {
         return $this->database

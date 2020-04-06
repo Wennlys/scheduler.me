@@ -3,19 +3,40 @@
 
 namespace Source\Models;
 
-
 use Exception;
 
+/**
+ * Class User
+ *
+ * @package Source\Models
+ */
 class User
 {
+    /** @var string|null $user_id*/
     private ?string $user_id = null;
+
+    /** @var string|null $user_name*/
     private ?string $user_name = null;
+
+    /** @var string|null $first_name*/
     private ?string $first_name = null;
+
+    /** @var string|null $last_name*/
     private ?string $last_name = null;
+
+    /** @var string|null $email*/
     private ?string $email = null;
+
+    /** @var string|null $currentPassword*/
     private ?string $currentPassword = null;
+
+    /** @var string|null $password*/
     private ?string $password = null;
+
+    /** @var string|null $avatar_id*/
     private ?string $avatar_id = null;
+
+    /** @var bool $provider*/
     private bool $provider;
 
     /**

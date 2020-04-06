@@ -3,7 +3,6 @@
 
 namespace Source\App;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Source\Core\Connection;
@@ -12,6 +11,11 @@ use Source\Models\Appointment;
 use Source\Models\User;
 use Source\Models\UserDAO;
 
+/**
+ * Class AppointmentIndexScheduleController
+ *
+ * @package Source\App
+ */
 class AppointmentIndexScheduleController
 {
     /** @var ResponseInterface */

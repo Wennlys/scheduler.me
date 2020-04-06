@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1e06f1e46fb0b85eb39a14c9188d127a",
+    "content-hash": "bf05d11dc91658a55693ed1e3fdc07e4",
     "packages": [
         {
             "name": "laminas/laminas-diactoros",
-            "version": "2.2.2",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-diactoros.git",
-                "reference": "95178c4751d737cdf9ab0a9f70a42754ac860e7b"
+                "reference": "b596c7141f5093aefec94cb5e8745212299e290f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/95178c4751d737cdf9ab0a9f70a42754ac860e7b",
-                "reference": "95178c4751d737cdf9ab0a9f70a42754ac860e7b",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/b596c7141f5093aefec94cb5e8745212299e290f",
+                "reference": "b596c7141f5093aefec94cb5e8745212299e290f",
                 "shasum": ""
             },
             "require": {
@@ -34,7 +34,7 @@
                 "psr/http-message-implementation": "1.0"
             },
             "replace": {
-                "zendframework/zend-diactoros": "self.version"
+                "zendframework/zend-diactoros": "^2.2.1"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -42,7 +42,7 @@
                 "ext-libxml": "*",
                 "http-interop/http-factory-tests": "^0.5.0",
                 "laminas/laminas-coding-standard": "~1.0.0",
-                "php-http/psr7-integration-tests": "dev-master",
+                "php-http/psr7-integration-tests": "^1.0",
                 "phpunit/phpunit": "^7.5.18"
             },
             "type": "library",
@@ -88,7 +88,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2020-01-07T19:39:26+00:00"
+            "time": "2020-03-29T12:30:54+00:00"
         },
         {
             "name": "laminas/laminas-httphandlerrunner",
@@ -151,16 +151,16 @@
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "0fb9675b84a1666ab45182b6c5b29956921e818d"
+                "reference": "bfbbdb6c998d50dbf69d2187cb78a5f1fa36e1e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/0fb9675b84a1666ab45182b6c5b29956921e818d",
-                "reference": "0fb9675b84a1666ab45182b6c5b29956921e818d",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/bfbbdb6c998d50dbf69d2187cb78a5f1fa36e1e9",
+                "reference": "bfbbdb6c998d50dbf69d2187cb78a5f1fa36e1e9",
                 "shasum": ""
             },
             "require": {
@@ -199,7 +199,13 @@
                 "laminas",
                 "zf"
             ],
-            "time": "2020-01-07T22:58:31+00:00"
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2020-04-03T16:01:00+00:00"
         },
         {
             "name": "league/container",
@@ -775,6 +781,7 @@
         "php": "7.4.4",
         "ext-json": "*",
         "ext-pdo": "*",
+        "ext-openssl": "*",
         "ext-mongodb": "*"
     },
     "platform-dev": []

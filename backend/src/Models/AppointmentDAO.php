@@ -3,7 +3,6 @@
 
 namespace Source\Models;
 
-
 use Source\Core\Database;
 use Source\Core\Connection;
 use Exception;
@@ -82,6 +81,11 @@ class AppointmentDAO
             ->fetch(true);
     }
 
+    /**
+     * @param Appointment $appointment
+     *
+     * @return array|mixed|null
+     */
     public function findById(Appointment $appointment)
     {
         return $this->database

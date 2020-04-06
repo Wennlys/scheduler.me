@@ -8,11 +8,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response;
 use ReallySimpleJWT\Token;
-use Exception;
 use Source\Core\Connection;
 use Source\Models\User;
 use Source\Models\UserDAO;
-
+use Exception;
 
 /**
  * Class SessionStoreController

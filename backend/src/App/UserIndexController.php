@@ -3,11 +3,15 @@
 
 namespace Source\App;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Source\Core\Connection;
 use Source\Models\UserDAO;
 
+/**
+ * Class UserIndexController
+ *
+ * @package Source\App
+ */
 class UserIndexController
 {
     /** @var ResponseInterface */

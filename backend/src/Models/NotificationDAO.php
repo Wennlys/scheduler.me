@@ -3,20 +3,34 @@
 
 namespace Source\Models;
 
-
 use MongoDB\Collection;
 use Source\Core\MongoConnection;
 
+/**
+ * Class NotificationDAO
+ *
+ * @package Source\Models
+ */
 class NotificationDAO
 {
     /** @var Collection */
     private Collection $database;
 
+    /**
+     * NotificationDAO constructor.
+     *
+     * @param MongoConnection $connection
+     */
     public function __construct(MongoConnection $connection)
     {
         $this->database = $connection->getConnection()->selectCollection("notifications");
     }
 
+    /**
+     * @param Notification $notification
+     *
+     * @return \MongoDB\InsertOneResult
+     */
     public function save(Notification $notification)
     {
         return $this->database->insertOne([
@@ -28,6 +42,11 @@ class NotificationDAO
         ]);
     }
 
+    /**
+     * @param Notification $notification
+     *
+     * @return array
+     */
     public function findByProvider(Notification $notification)
     {
         return $this->database->find(["user" => $notification->getUser()],
@@ -37,6 +56,11 @@ class NotificationDAO
             ])->toArray();
     }
 
+    /**
+     * @param Notification $notification
+     *
+     * @return array|object|null
+     */
     public function update(Notification $notification)
     {
         return $this->database->findOneAndUpdate(["user" => $notification->getUser()],

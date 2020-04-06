@@ -3,7 +3,6 @@
 
 namespace Source\App;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Source\Core\Connection;
@@ -11,6 +10,11 @@ use Source\Models\UserDAO;
 use Source\Models\User;
 use Exception;
 
+/**
+ * Class UserStoreController
+ *
+ * @package Source\App
+ */
 class UserStoreController
 {
     /** @var ResponseInterface */
