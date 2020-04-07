@@ -42,7 +42,6 @@ class AppointmentIndexAvailableController
      */
     public function index(ServerRequestInterface $request, array $args): ResponseInterface
     {
-        $providerId = $args['providerId'];
         ['date' => $date] = $request->getQueryParams();
         $date = (int)floor($date / 1000.0);
         $date = date("Y-m-d H:i:s", $date);
@@ -50,7 +49,7 @@ class AppointmentIndexAvailableController
         $appointmentDao = new AppointmentDAO($this->connection);
         $appointment = new Appointment();
 
-        $appointment->setProviderId($providerId);
+        $appointment->setProviderId($args['providerId']);
         $appointment->setDate($date);
 
         $appointments = $appointmentDao->findByDay($appointment);
@@ -72,11 +71,10 @@ class AppointmentIndexAvailableController
         ];
 
         $available = array_map(function ($time) use ($date, $appointments) {
-            [$hour, $minute] = explode(":", $time);
             [$day] = (str_split($date, 10));
             $value = "$day $time:00";
 
-            $available = (date("Y-m-d H:i:s") < $value) &&
+            $isAvailable = (date("Y-m-d H:i:s") < $value) &&
                 !current(array_filter($appointments,
                     fn($appointment) =>
                         date_format(date_create($appointment->date), "H:i") === $time));
@@ -84,7 +82,7 @@ class AppointmentIndexAvailableController
             return [
                 "time" => $time,
                 "value" => $value,
-                "available" => $available
+                "available" => $isAvailable
             ];
         }, $schedule);
 

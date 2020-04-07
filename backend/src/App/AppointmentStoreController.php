@@ -58,36 +58,27 @@ class AppointmentStoreController
     {
         date_default_timezone_set('America/Sao_Paulo');
 
-        $reqBody = json_decode((string)$request->getBody(), true);
+        [
+            'provider_id' => $providerId,
+            'date' => $date
+        ] = json_decode((string)$request->getBody(),true);
 
-        $payload = getPayload($request);
-
-        $userId = $payload["user_id"];
-        $providerId = $reqBody["provider_id"];
-
-        if ($userId === $providerId) {
-            $this->response->getBody()->write(
-                json_encode("User and provider cannot be the same.")
-            );
-            return $this->response->withStatus(400);
-        }
-
-        $date = $reqBody["date"];
+        ['user_id' => $userId] = getPayload($request);
 
         $userDao = new UserDAO($this->connection);
         $user = new User();
 
         $user->setUserId($providerId);
 
-        $userInfos = $userDao->findById($user);
-
-        $userFullName = "{$userInfos->first_name} {$userInfos->last_name}";
-        $isProvider = $userInfos->provider;
+        [
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'provider' => $isProvider
+        ] = (array)$userDao->findById($user);
 
         if (!$isProvider) {
             $this->response->getBody()->write(
-                json_encode("You must create appointments with providers.")
-            );
+                json_encode("You must only create appointments with providers."));
             return $this->response->withStatus(400);
         }
 
@@ -104,10 +95,11 @@ class AppointmentStoreController
         $notification = new Notification();
 
         $date = new DateTime($date);
-        $date = $date->format('d \d\e m \d\e Y \à\s H:i ');
+        $date = $date->format('d \d\e m \d\e Y \à\s H:i');
 
         $notification->setUser($providerId);
-        $notification->setContent("Novo agendamento de $userFullName para o dia $date");
+        $notification->setContent(
+            "Novo agendamento de $firstName $lastName para o dia $date.");
         $notification->setRead(false);
         $notification->setCreatedAt(date('m-d-Y H:i:s', time()));
         $notification->setUpdatedAt(date('m-d-Y H:i:s', time()));

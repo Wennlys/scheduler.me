@@ -14,6 +14,9 @@ use Exception;
  */
 class AppointmentDAO
 {
+    /** @var string $id */
+    private string $id;
+
     /** @var Database*/
     private Database $database;
 
@@ -35,16 +38,23 @@ class AppointmentDAO
      */
     public function save(Appointment $appointment): array
     {
-        if ($this->findByDateAndProvider($appointment))
+        $userId = $appointment->getUserId();
+        $providerId = $appointment->getProviderId();
+        $date = $appointment->getDate();
+
+        if ($userId === $providerId)
+            throw new Exception("User and provider cannot be the same.");
+
+        if ($this->findByDay($appointment))
             throw new Exception("Date is not available.");
 
-        $this->database->create([
-            "provider_id" => $appointment->getProviderId(),
-            "user_id" => $appointment->getUserId(),
-            "date" => $appointment->getDate()
+        $this->id = $this->database->create([
+            "provider_id" => $providerId,
+            "user_id" => $userId,
+            "date" => $date
         ]);
 
-        return $this->database->findByLastId();
+        return (array)$this->findById();
     }
 
     /**
@@ -85,34 +95,14 @@ class AppointmentDAO
      *
      * @return array|mixed|null
      */
-    public function findByProvider(Appointment $appointment)
+    public function findById(?Appointment $appointment = null)
     {
-        return $this->database
-            ->find("*", "provider_id = :id", "id={$appointment->getProviderId()}")
-            ->fetch(true);
-    }
+        $id = $appointment ? $appointment->getId() : $this->id;
 
-    /**
-     * @param Appointment $appointment
-     *
-     * @return array|mixed|null
-     */
-    public function findByUserId(Appointment $appointment)
-    {
         return $this->database
-            ->find("*", "user_id = :id", "id={$appointment->getUserId()}")
-            ->fetch(true);
-    }
-
-    /**
-     * @param Appointment $appointment
-     *
-     * @return array|mixed|null
-     */
-    public function findById(Appointment $appointment)
-    {
-        return $this->database
-            ->find("*", "id = :id", "id={$appointment->getId()}")
+            ->find("*",
+                   "id = :id",
+                   "id=$id")
             ->fetch();
     }
 
@@ -133,21 +123,6 @@ class AppointmentDAO
             ->join("users.avatar_id = files.id", "files")
             ->limit(20)
             ->offset(($page - 1)*20)
-            ->fetch(true);
-    }
-
-    /**
-     * @param Appointment $appointment
-     *
-     * @return array|mixed|null
-     */
-    public function findByDateAndProvider(Appointment $appointment)
-    {
-        $date = (str_split($appointment->getDate(), 14))[0];
-        return $this->database
-            ->find("*",
-                   "date like '{$date}%'")
-            ->and("provider_id = {$appointment->getProviderId()}")
             ->fetch(true);
     }
 

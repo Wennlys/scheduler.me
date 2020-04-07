@@ -201,10 +201,10 @@ class Database
     /**
      * @param array $data
      *
-     * @return bool
+     * @return string
      * @throws Exception
      */
-    public function create(array $data): bool
+    public function create(array $data): string
     {
         $connection = $this->connection;
         if ($this->timestamps) {
@@ -219,7 +219,8 @@ class Database
             "INSERT INTO {$this->entity} ({$columns}) VALUES ({$values})"
         );
 
-        return $stmt->execute($this->filter($data));
+        $stmt->execute($this->filter($data));
+        return $this->connection->lastInsertId();
     }
 
     /**
@@ -265,13 +266,5 @@ class Database
             return true;
         }
         return $stmt->execute();
-    }
-
-    /**
-     * @return array|mixed|null
-     */
-    public function findByLastId()
-    {
-        return $this->find('*', "id = {$this->connection->lastInsertId()}")->fetch();
     }
 }

@@ -14,6 +14,9 @@ use Exception;
  */
 class UserDAO
 {
+    /** @var string $id */
+    private string $id;
+
     /** @var Database */
     private Database $database;
 
@@ -35,7 +38,7 @@ class UserDAO
      */
     public function save(User $user): array
     {
-        $this->database->create([
+        $this->id = $this->database->create([
             "user_name" => $user->getUserName(),
             "first_name" => $user->getFirstName(),
             "last_name" => $user->getLastName(),
@@ -44,7 +47,7 @@ class UserDAO
             "provider" => $user->isProvider()
         ]);
 
-        return (array)$this->database->findByLastId();
+        return (array)$this->findById();
     }
 
     /**
@@ -55,7 +58,7 @@ class UserDAO
      */
     public function update(User $user): array
     {
-        $id = $user->getUserId();
+        $this->id = $user->getUserId();
 
         if ($user->getEmail() || $user->getPassword() || $user->getUserName()) {
             if (!$this->verifyPassword($user)) {
@@ -78,9 +81,9 @@ class UserDAO
           "avatar_id" => $user->getAvatarId()
         ]);
 
-        $this->database->update($body, "id = :id", "id={$id}");
+        $this->database->update($body, "id = :id", "id=$this->id");
 
-        return (array)$this->findByLogin($user);
+        return (array)$this->findById();
     }
 
     /**
@@ -123,24 +126,35 @@ class UserDAO
     public function findByLogin(User $user): ?object
     {
         if ($user->getEmail()) {
-            return $this->database
-                ->find("*", "email = :e", "e={$user->getEmail()}")
+            return $this->database->find("*, users.id id")
+                ->join("users.avatar_id = files.id", "files")
+                ->and("email='{$user->getEmail()}'")
                 ->fetch();
         }
-        return $this->database
-            ->find("*", "user_name = :u", "u={$user->getUserName()}")
+        return $this->database->find("*, users.id id")
+            ->join("users.avatar_id = files.id", "files")
+            ->and("user_name='{$user->getUserName()}'")
             ->fetch();
+
+//        return $this->database
+//            ->find("users.id, users.first_name, users.last_name, users.email, files.name, files.path")
+//            ->join("users.avatar_id = files.id", "files")
+//            ->order("id")
+//            ->fetch(true);
     }
 
     /**
-     * @param User $user
+     * @param User|null $user
      *
      * @return object
      */
-    public function findById(User $user): ?object
+    public function findById(?User $user = null): ?object
     {
-        return $this->database
-            ->find("*", "id = :id", "id={$user->getUserId()}")
+        $id = $user ? $user->getUserId() : $this->id;
+
+        return $this->database->find("*, users.id id")
+            ->join("users.avatar_id = files.id", "files")
+            ->and("users.id = $id")
             ->fetch();
     }
 
@@ -172,7 +186,9 @@ class UserDAO
     public function findProvider(User $user)
     {
         return $this->database
-            ->find("*", "id = :id", "id={$user->getUserId()}")
+            ->find("*",
+                   "id = :id",
+                   "id={$user->getUserId()}")
             ->and("provider = true")
             ->fetch();
     }

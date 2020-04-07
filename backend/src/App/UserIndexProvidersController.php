@@ -38,24 +38,21 @@ class UserIndexProvidersController
     public function index(): ResponseInterface
     {
         $userDao = new UserDAO($this->connection);
-
-        $providers = $userDao->findAllProviders();
-
-        $responseBody = [];
-        foreach ($providers as $provider) {
-            $responseBody[] = [
+        $providers = array_map(function ($provider) {
+            return [
                 "id" => $provider->id,
                 "full_name" => $provider->first_name . " " . $provider->last_name,
                 "email" => $provider->email,
+                "provider" => $provider->provider === "1" ? true : false,
                 "avatar" => [
                     "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$provider->path}",
                     "name" => $provider->name,
                     "path" => $provider->path,
                 ],
             ];
-        }
+        }, $userDao->findAllProviders());
 
-        $this->response->getBody()->write(json_encode($responseBody, JSON_UNESCAPED_SLASHES));
+        $this->response->getBody()->write(json_encode($providers, JSON_UNESCAPED_SLASHES));
         return $this->response->withStatus(200);
     }
 }

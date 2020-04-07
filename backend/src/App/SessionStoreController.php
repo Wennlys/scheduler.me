@@ -64,7 +64,7 @@ class SessionStoreController
 
         if (!$user) {
             $this->response->getBody()->write(json_encode("User not found."));
-            return $this->response->withStatus(200);
+            return $this->response->withStatus(401);
         }
 
         if (!password_verify($password, $user->password)) {
@@ -72,20 +72,26 @@ class SessionStoreController
             return $this->response->withStatus(401);
         }
 
-        $responseBody = [
-            "user" => [
-                "id" => $user->id,
-                "name" => $user->user_name,
-                "email" => $user->email,
-            ],
-            "token" => Token::create(
-                $user->id,
-                JWT_SECRET,
-                JWT_EXPIRATION,
-                JWT_ISSUER)
-        ];
-
-        $this->response->getBody()->write(json_encode((object)$responseBody));
+        $this->response->getBody()->write(
+            json_encode([
+                "user" => [
+                    "id" => $user->id,
+                    "user_name" => $user->user_name,
+                    "name" => $user->first_name . " " . $user->last_name,
+                    "email" => $user->email,
+                    "provider" => $user->provider === "1" ? true : false,
+                    "avatar" => [
+                        "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$user->path}",
+                        "name" => $user->name,
+                        "path" => $user->path,
+                    ],
+                ],
+                "token" => Token::create(
+                    $user->id,
+                    JWT_SECRET,
+                    JWT_EXPIRATION,
+                    JWT_ISSUER)
+            ], JSON_UNESCAPED_SLASHES));
         return $this->response->withStatus(200);
     }
 }

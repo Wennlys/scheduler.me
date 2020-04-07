@@ -64,17 +64,22 @@ class UserUpdateController
         if (!empty($reqBody['password']))
             $user->setPassword($reqBody['password']);
         if (!empty($reqBody['avatar_id']))
-            $user->setAvatarId($reqBody['avatar_id']);
+            $user->setAvatarId((string)$reqBody['avatar_id']);
 
-        $updated = $userDao->update($user);
+        $user = $userDao->update($user);
 
         $this->response->getBody()->write(json_encode((object)[
-            "id" => $updated['id'],
-            "user_name" => $updated['user_name'],
-            "full_name" => $updated['first_name'] . " " .$updated['last_name'],
-            "email" => $updated['email'],
-            "provider" => $updated['provider'] === "1" ? true : false,
-        ]));
+            "id" => $user['id'],
+            "user_name" => $user['user_name'],
+            "full_name" => $user['first_name'] . " " .$user['last_name'],
+            "email" => $user['email'],
+            "provider" => $user['provider'] === "1" ? true : false,
+            "avatar" => [
+                "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$user['path']}",
+                "name" => $user['name'],
+                "path" => $user['path'],
+            ]
+        ], JSON_UNESCAPED_SLASHES));
         return $this->response->withStatus(200);
     }
 }

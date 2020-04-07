@@ -43,17 +43,17 @@ class AppointmentIndexScheduleController
      */
     public function index(ServerRequestInterface $request): ResponseInterface
     {
-        $date = ($request->getQueryParams())['date'];
-
-        $payload = getPayload($request);
-        $userId = $payload['user_id'];
+        ['date' => $date] = $request->getQueryParams();
+        ['user_id' => $userId] = getPayload($request);
 
         $user = new User();
         $userDao = new UserDAO($this->connection);
 
         $user->setUserId($userId);
 
-        if (!$userDao->findProvider($user)) {
+        $user = $userDao->findProvider($user);
+
+        if (!$user) {
             $this->response->getBody()->write(json_encode("User is not a provider."));
             return $this->response->withStatus(200);
         }
@@ -64,9 +64,14 @@ class AppointmentIndexScheduleController
         $appointment->setDate($date);
         $appointment->setProviderId($userId);
 
-        $responseBody = $appointmentDao->findByDay($appointment);
+        $appointments = array_map(function ($appointment) use ($user) {
+            return [
+                "name" => $user->first_name . " " . $user->last_name,
+                $appointment,
+            ];
+        }, $appointmentDao->findByDay($appointment));
 
-        $this->response->getBody()->write(json_encode($responseBody, JSON_UNESCAPED_SLASHES));
+        $this->response->getBody()->write(json_encode($appointments, JSON_UNESCAPED_SLASHES));
         return $this->response->withStatus(200);
     }
 }

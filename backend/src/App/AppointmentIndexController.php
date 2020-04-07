@@ -50,25 +50,24 @@ class AppointmentIndexController
         $appointment->setUserId($userId);
         $appointment->setPage($page);
 
-        $appointments = $appointmentDao->findAppointments($appointment);
-
-        foreach ($appointments as $item) {
-            $responseBody[] = [
-                "id" => $item->id,
-                "date" => $item->date,
+        $appointments = array_map(function ($appointment) {
+            return [
+                "id" => $appointment->id,
+                "date" => $appointment->date,
                 "past" =>
-                    date_format(date_create($item->date), "Y-m-d H:i:s") < date("Y-m-d H:i:s"),
+                    date_format(date_create($appointment->date), "Y-m-d H:i:s") < date("Y-m-d H:i:s"),
                 "provider" => [
-                    "id" => $item->user,
-                    "name" => $item->first_name . " " . $item->last_name,
+                    "id" => $appointment->user,
+                    "name" => $appointment->first_name . " " . $appointment->last_name,
                     "avatar" => [
-                        "id" => $item->avatar,
-                        "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$item->path}",
+                        "id" => $appointment->avatar,
+                        "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$appointment->path}",
                     ]
                 ]
             ];
-        }
-        $this->response->getBody()->write(json_encode($responseBody ?? [], JSON_UNESCAPED_SLASHES));
+        }, $appointmentDao->findAppointments($appointment));
+
+        $this->response->getBody()->write(json_encode($appointments, JSON_UNESCAPED_SLASHES));
         return $this->response->withStatus(200);
     }
 }
