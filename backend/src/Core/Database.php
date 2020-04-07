@@ -4,6 +4,7 @@ namespace Source\Core;
 
 use DateTime;
 use Exception;
+use PDO;
 
 /**
  * Class Database
@@ -12,8 +13,8 @@ use Exception;
  */
 class Database
 {
-    /** @var Connection */
-    private Connection $connection;
+    /** @var PDO */
+    private PDO $connection;
 
     /** @var string $entity */
     protected string $entity;
@@ -54,7 +55,7 @@ class Database
      */
     public function __construct(Connection $connection, string $entity, bool $timestamps = true)
     {
-        $this->connection = $connection;
+        $this->connection = $connection->getConnection();
         $this->entity = $entity;
         $this->timestamps = $timestamps;
     }
@@ -79,7 +80,7 @@ class Database
     public function count()
     : int
     {
-        $stmt = $this->connection->getConnection()->prepare($this->statement);
+        $stmt = $this->connection->prepare($this->statement);
         $stmt->execute($this->params);
         return $stmt->rowCount();
     }
@@ -183,7 +184,7 @@ class Database
      */
     public function fetch(bool $all = false)
     {
-        $stmt = $this->connection->getConnection()->prepare(
+        $stmt = $this->connection->prepare(
             $this->statement . $this->join . $this->and . $this->group . $this->order .
             $this->limit . $this->offset
         );
@@ -200,12 +201,12 @@ class Database
     /**
      * @param array $data
      *
-     * @return string
+     * @return bool
      * @throws Exception
      */
-    public function create(array $data): string
+    public function create(array $data): bool
     {
-        $connection = $this->connection->getConnection();
+        $connection = $this->connection;
         if ($this->timestamps) {
             $data["created_at"] = (new DateTime("now"))->format("Y-m-d H:i:s");
             $data["updated_at"] = $data["created_at"];
@@ -218,9 +219,7 @@ class Database
             "INSERT INTO {$this->entity} ({$columns}) VALUES ({$values})"
         );
 
-        $stmt->execute($this->filter($data));
-
-        return $connection->lastInsertId();
+        return $stmt->execute($this->filter($data));
     }
 
     /**
@@ -232,7 +231,7 @@ class Database
      */
     public function update(array $data, string $terms, string $params): bool
     {
-        $connection = $this->connection->getConnection();
+        $connection = $this->connection;
         if ($this->timestamps) {
             $data["updated_at"] = (new DateTime("now"))->format("Y-m-d H:i:s");
         }
@@ -255,7 +254,7 @@ class Database
      */
     public function delete(string $terms, string $params = ""): bool
     {
-        $connection = $this->connection->getConnection();
+        $connection = $this->connection;
         $stmt = $connection->prepare(
             "DELETE FROM " . $this->entity . " WHERE " . $terms
         );
@@ -266,5 +265,13 @@ class Database
             return true;
         }
         return $stmt->execute();
+    }
+
+    /**
+     * @return array|mixed|null
+     */
+    public function findByLastId()
+    {
+        return $this->find('*', "id = {$this->connection->lastInsertId()}")->fetch();
     }
 }

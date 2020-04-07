@@ -48,8 +48,8 @@ class UserUpdateController
         $user = new User;
         $userDao = new UserDAO($this->connection);
 
-        $payload = getPayload($request);
-        $user->setUserId($payload['user_id']);
+        ['user_id' => $userId] = getPayload($request);
+        $user->setUserId($userId);
 
         if(!empty($reqBody['current_password']))
             $user->setCurrentPassword($reqBody['current_password']);
@@ -66,9 +66,15 @@ class UserUpdateController
         if (!empty($reqBody['avatar_id']))
             $user->setAvatarId($reqBody['avatar_id']);
 
-        $userDao->update($user);
+        $updated = $userDao->update($user);
 
-        $this->response->getBody()->write(json_encode(true));
+        $this->response->getBody()->write(json_encode((object)[
+            "id" => $updated['id'],
+            "user_name" => $updated['user_name'],
+            "full_name" => $updated['first_name'] . " " .$updated['last_name'],
+            "email" => $updated['email'],
+            "provider" => $updated['provider'] === "1" ? true : false,
+        ]));
         return $this->response->withStatus(200);
     }
 }

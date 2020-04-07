@@ -45,7 +45,7 @@ class UserIndexProvidersController
         foreach ($providers as $provider) {
             $responseBody[] = [
                 "id" => $provider->id,
-                "full_name" => "{$provider->first_name} {$provider->last_name}",
+                "full_name" => $provider->first_name . " " . $provider->last_name,
                 "email" => $provider->email,
                 "avatar" => [
                     "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$provider->path}",

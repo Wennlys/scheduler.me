@@ -3,9 +3,6 @@
 
 namespace Source\Models;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception as MailerException;
 use Source\Core\Connection;
 use Source\Core\Database;
 use Exception;
@@ -33,12 +30,12 @@ class UserDAO
     /**
      * @param User $user
      *
-     * @return string
+     * @return array
      * @throws Exception
      */
-    public function save(User $user): string
+    public function save(User $user): array
     {
-        return $this->database->create([
+        $this->database->create([
             "user_name" => $user->getUserName(),
             "first_name" => $user->getFirstName(),
             "last_name" => $user->getLastName(),
@@ -46,15 +43,17 @@ class UserDAO
             "password" => $user->getPassword(),
             "provider" => $user->isProvider()
         ]);
+
+        return (array)$this->database->findByLastId();
     }
 
     /**
      * @param User $user
      *
-     * @return bool
+     * @return array
      * @throws Exception
      */
-    public function update(User $user): bool
+    public function update(User $user): array
     {
         $id = $user->getUserId();
 
@@ -79,7 +78,9 @@ class UserDAO
           "avatar_id" => $user->getAvatarId()
         ]);
 
-        return $this->database->update($body, "id = :id", "id={$id}");
+        $this->database->update($body, "id = :id", "id={$id}");
+
+        return (array)$this->findByLogin($user);
     }
 
     /**

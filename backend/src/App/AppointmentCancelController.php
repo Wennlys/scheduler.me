@@ -45,13 +45,12 @@ class AppointmentCancelController
      */
     public function cancel(ServerRequestInterface $request, array $args): ResponseInterface
     {
-        $payload = getPayload($request);
-        $userId = $payload["user_id"];
+        ['user_id' => $userId] = getPayload($request);
 
         $appointmentDao = new AppointmentDAO($this->connection);
         $appointment = new Appointment();
 
-        $appointment->setId($args["id"]);
+        $appointment->setId($args['id']);
         $appointment->setUserId($userId);
 
         $appointmentDao->cancel($appointment);

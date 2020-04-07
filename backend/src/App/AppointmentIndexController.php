@@ -41,10 +41,8 @@ class AppointmentIndexController
      */
     public function index(ServerRequestInterface $request): ResponseInterface
     {
-        $page = ($request->getQueryParams())['page'];
-
-        $payload = getPayload($request);
-        $userId = $payload['user_id'];
+        ['page' => $page] = $request->getQueryParams();
+        ['user_id' => $userId] = getPayload($request);
 
         $appointmentDao = new AppointmentDAO($this->connection);
         $appointment = new Appointment();
@@ -54,7 +52,6 @@ class AppointmentIndexController
 
         $appointments = $appointmentDao->findAppointments($appointment);
 
-        $responseBody = [];
         foreach ($appointments as $item) {
             $responseBody[] = [
                 "id" => $item->id,
@@ -63,7 +60,7 @@ class AppointmentIndexController
                     date_format(date_create($item->date), "Y-m-d H:i:s") < date("Y-m-d H:i:s"),
                 "provider" => [
                     "id" => $item->user,
-                    "name" => "{$item->first_name} {$item->last_name}",
+                    "name" => $item->first_name . " " . $item->last_name,
                     "avatar" => [
                         "id" => $item->avatar,
                         "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$item->path}",
@@ -71,7 +68,7 @@ class AppointmentIndexController
                 ]
             ];
         }
-        $this->response->getBody()->write(json_encode($responseBody, JSON_UNESCAPED_SLASHES));
+        $this->response->getBody()->write(json_encode($responseBody ?? [], JSON_UNESCAPED_SLASHES));
         return $this->response->withStatus(200);
     }
 }

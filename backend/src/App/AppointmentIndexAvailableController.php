@@ -42,8 +42,8 @@ class AppointmentIndexAvailableController
      */
     public function index(ServerRequestInterface $request, array $args): ResponseInterface
     {
-        $providerId = $args["providerId"];
-        $date = ($request->getQueryParams())["date"];
+        $providerId = $args['providerId'];
+        ['date' => $date] = $request->getQueryParams();
         $date = (int)floor($date / 1000.0);
         $date = date("Y-m-d H:i:s", $date);
 

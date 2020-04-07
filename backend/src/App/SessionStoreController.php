@@ -47,10 +47,9 @@ class SessionStoreController
      */
     public function store(ServerRequestInterface $request): Response
     {
-        $reqBody = json_decode((string)$request->getBody(), true);
-
-        $login = $reqBody['login'];
-        $password = $reqBody['password'];
+        [
+            'login' => $login, 'password' => $password,
+        ] = json_decode((string)$request->getBody(), true);
 
         $userDao = new UserDAO($this->connection);
         $user = new User();

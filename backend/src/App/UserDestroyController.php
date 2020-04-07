@@ -44,14 +44,14 @@ class UserDestroyController
      */
     public function destroy(ServerRequestInterface $request): ResponseInterface
     {
-        $currentPassword = (json_decode((string)$request->getBody()))->password;
+        ['password' => $currentPassword] = json_decode((string)$request->getBody(), true);
 
         $user = new User();
         $userDao = new UserDAO($this->connection);
 
-        $payload = getPayload($request);
+        ['user_id' => $userId] = getPayload($request);
 
-        $user->setUserId($payload['user_id']);
+        $user->setUserId($userId);
         $user->setCurrentPassword($currentPassword);
 
         $userDao->delete($user);

@@ -60,7 +60,8 @@ class NotificationProviderIndexController
         $user->setUserId($userId);
 
         if ($userDao->findProvider($user)) {
-            $this->response->getBody()->write(json_encode("User must be a provider."));
+            $this->response->getBody()->write(json_encode(
+                "User must be a provider to list notifications."));
             return $this->response->withStatus(200);
         }
 
@@ -69,9 +70,7 @@ class NotificationProviderIndexController
 
         $notification->setUser($userId);
 
-        $reqBody = $notificationDao->findByProvider($notification);
-
-        $this->response->getBody()->write(json_encode($reqBody));
+        $this->response->getBody()->write(json_encode($notificationDao->findByProvider($notification)));
         return $this->response->withStatus(200);
     }
 }

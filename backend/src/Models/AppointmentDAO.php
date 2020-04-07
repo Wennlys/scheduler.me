@@ -30,19 +30,21 @@ class AppointmentDAO
     /**
      * @param Appointment $appointment
      *
-     * @return string
+     * @return array
      * @throws Exception
      */
-    public function save(Appointment $appointment): string
+    public function save(Appointment $appointment): array
     {
         if ($this->findByDateAndProvider($appointment))
             throw new Exception("Date is not available.");
 
-        return $this->database->create([
+        $this->database->create([
             "provider_id" => $appointment->getProviderId(),
             "user_id" => $appointment->getUserId(),
             "date" => $appointment->getDate()
         ]);
+
+        return $this->database->findByLastId();
     }
 
     /**

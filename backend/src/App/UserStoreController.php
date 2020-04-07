@@ -55,9 +55,15 @@ class UserStoreController
         $user->setPassword($reqBody['password']);
         $user->setProvider($reqBody['provider']);
 
-        $userDao->save($user);
+        $saved = $userDao->save($user);
 
-        $this->response->getBody()->write(json_encode(true));
+        $this->response->getBody()->write(json_encode((object)[
+            "id" => $saved['id'],
+            "user_name" => $saved['user_name'],
+            "full_name" => $saved['first_name'] . " " .$saved['last_name'],
+            "email" => $saved['email'],
+            "provider" => $saved['provider'] === "1" ? true : false,
+        ]));
         return $this->response->withStatus(200);
     }
 }

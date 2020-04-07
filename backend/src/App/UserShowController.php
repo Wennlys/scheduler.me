@@ -54,9 +54,7 @@ class UserShowController
             $user->setUserName($login);
         }
 
-        $row = $userDao->findByLogin($user);
-
-        $this->response->getBody()->write(json_encode($row));
+        $this->response->getBody()->write(json_encode($userDao->findByLogin($user)));
         return $this->response->withStatus(200);
     }
 }

@@ -73,8 +73,7 @@ class FileStoreController
 
         $avatarId = $fileDao->save($file);
 
-        $payload = getPayload($request);
-        $userId = $payload['user_id'];
+        ['user_id' => $userId] = getPayload($request);
 
         $user->setAvatarId($avatarId);
         $user->setUserId($userId);

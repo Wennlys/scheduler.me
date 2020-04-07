@@ -49,9 +49,7 @@ class NotificationProviderUpdateController
 
         $notification->setUser($userId);
 
-        $reqBody = $notificationDao->update($notification);
-
-        $this->response->getBody()->write(json_encode($reqBody));
+        $this->response->getBody()->write(json_encode($notificationDao->update($notification)));
         return $this->response->withStatus(200);
     }
 }
