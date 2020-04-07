@@ -53,8 +53,29 @@ class AppointmentDAO
      */
     public function cancel(Appointment $appointment)
     {
-        return $this->database->update(["canceled_at" => date('Y-m-d H:i:s', time())],
-                                        "id = :id", "id={$appointment->getId()}");
+        [
+            "user_id" => $appointmentUserId,
+            "date" => $appointmentDate,
+        ] = (array)$this->findById($appointment);
+
+        $date = date_create(date("Y-m-d H:i:s"));
+        $appointmentDate = date_create($appointmentDate);
+
+        $difference = date_diff($appointmentDate, $date)->h;
+
+        if ($difference <= 2)
+            throw new Exception("You can only cancel an appointment with two hours in advance.");
+
+        if (!$appointmentUserId)
+            throw new Exception("Not existing appointment.");
+
+        if ($appointment->getUserId() !== $appointmentUserId)
+            throw  new Exception("User does not have permission to cancel this appointment.");
+
+        return $this->database->update(
+            ["canceled_at" => date("Y-m-d H:i:s", time())],
+            "id = :id",
+            "id={$appointment->getId()}");
     }
 
     /**

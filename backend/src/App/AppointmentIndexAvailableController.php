@@ -88,7 +88,6 @@ class AppointmentIndexAvailableController
             ];
         }, $schedule);
 
-
         $this->response->getBody()->write(json_encode($available, JSON_UNESCAPED_SLASHES));
         return $this->response->withStatus(200);
     }

@@ -54,14 +54,6 @@ class AppointmentCancelController
         $appointment->setId($args["id"]);
         $appointment->setUserId($userId);
 
-        $user = ($appointmentDao->findById($appointment))->user_id;
-
-        if (!$userId = $user) {
-            $this->response->getBody()->write(json_encode(
-                "User does not have permission to cancel this appointment."));
-            return $this->response->withStatus(200);
-        }
-
         $appointmentDao->cancel($appointment);
 
         $this->response->getBody()->write(json_encode(true));

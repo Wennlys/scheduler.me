@@ -59,6 +59,8 @@ class AppointmentIndexController
             $responseBody[] = [
                 "id" => $item->id,
                 "date" => $item->date,
+                "past" =>
+                    date_format(date_create($item->date), "Y-m-d H:i:s") < date("Y-m-d H:i:s"),
                 "provider" => [
                     "id" => $item->user,
                     "name" => "{$item->first_name} {$item->last_name}",
