@@ -8,28 +8,28 @@ import { Container, Content, Profile } from "./styles";
 import Notifications from "~/components/Notifications";
 
 const Header = () => {
-  return (
-    <Container>
-      <Content>
-        <nav>
-          <img src={logo} alt="Scheduler" />
-          <Link to="/dashboard">DASHBOARD</Link>
-        </nav>
+    return (
+        <Container>
+            <Content>
+                <nav>
+                    <img src={logo} alt="Scheduler" />
+                    <Link to="/dashboard">DASHBOARD</Link>
+                </nav>
 
-        <aside>
-          <Notifications />
+                <aside>
+                    <Notifications />
 
-          <Profile>
-            <div>
-              <strong>Wennlys Oliveira</strong>
-              <Link to="/profile">Meu perfil</Link>
-            </div>
-            <img src={profile} alt="Wennlys Oliveira" />
-          </Profile>
-        </aside>
-      </Content>
-    </Container>
-  );
+                    <Profile>
+                        <div>
+                            <strong>Wennlys Oliveira</strong>
+                            <Link to="/profile">Meu perfil</Link>
+                        </div>
+                        <img src={profile} alt="Wennlys Oliveira" />
+                    </Profile>
+                </aside>
+            </Content>
+        </Container>
+    );
 };
 
 export default Header;

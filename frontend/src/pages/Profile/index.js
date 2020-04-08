@@ -17,13 +17,13 @@ const Profile = () => {
         <hr />
 
         <input
-          type="passwword"
+          type="password"
           name="oldPassword"
           placeholder="Sua senha atual"
         />
-        <input type="passwword" name="password" placeholder="Sua nova senha" />
+        <input type="password" name="password" placeholder="Sua nova senha" />
         <input
-          type="passwword"
+          type="password"
           name="confirm"
           placeholder="Sua nova senha novamente"
         />
