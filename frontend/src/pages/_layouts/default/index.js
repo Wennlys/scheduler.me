@@ -6,16 +6,16 @@ import Header from "~/components/Header";
 import { Wrapper } from "./styles";
 
 const DefaultLayout = ({ children }) => {
-  return (
-    <Wrapper>
-      <Header />
-      {children}
-    </Wrapper>
-  );
+    return (
+        <Wrapper>
+            <Header />
+            {children}
+        </Wrapper>
+    );
 };
 
 DefaultLayout.propTypes = {
-  children: PropTypes.element.isRequired
+    children: PropTypes.element.isRequired
 };
 
 export default DefaultLayout;

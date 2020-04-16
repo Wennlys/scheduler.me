@@ -3,10 +3,10 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/all";
 
 import { Container, Time } from "~/pages/ProviderDashboard/styles";
 
-const ClientDashboard = () => {
+const Dashboard = () => {
     return (
         <Container>
-            <strong>CLIENT DASHBOARD</strong>
+            <strong>DEFAULT CLIENT</strong>
             <header>
                 <button type="button">
                     <MdChevronLeft size={36} color="#ffffff" />
@@ -43,4 +43,4 @@ const ClientDashboard = () => {
     );
 };
 
-export default ClientDashboard;
+export default Dashboard;

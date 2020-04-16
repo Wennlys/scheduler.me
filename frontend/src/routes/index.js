@@ -3,29 +3,25 @@ import { Switch } from "react-router-dom";
 
 import Route from "./Route";
 
-import SignIn from "~/pages/SignIn";
-import SignUpNames from "~/pages/SignUpNames";
-import SignUpInfo from "~/pages/SignUpInfo";
-
+import Home from "~/pages/Home";
+import ProviderDashboard from "~/pages/ProviderDashboard";
 import Dashboard from "~/pages/Dashboard";
-import ClientDashboard from "~/pages/ClientDashboard";
 
 import Profile from "~/pages/Profile";
 
+const provider = false;
+
 export default function Routes() {
-  return (
-    <Switch>
-      <Route path="/" exact component={SignIn} />
-      <Route path="/register-names" component={SignUpNames} />
-      <Route path="/register-info" component={SignUpInfo} />
-
-      <Route path="/dashboard" component={Dashboard} isPrivate />
-
-      <Route path="/client-dashboard" component={ClientDashboard} isPrivate />
-
-      <Route path="/profile" component={Profile} isPrivate />
-
-      <Route path="/" component={() => <h1>404</h1>} />
-    </Switch>
-  );
+    return (
+        <Switch>
+            <Route path="/" exact component={Home} />
+            <Route
+                path="/dashboard"
+                component={!provider ? Dashboard : ProviderDashboard}
+                isPrivate
+            />
+            <Route path="/profile" component={Profile} isPrivate />
+            <Route path="/" component={() => <h1>404</h1>} />
+        </Switch>
+    );
 }

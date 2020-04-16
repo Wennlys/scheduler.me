@@ -1,125 +1,86 @@
 import styled from "styled-components";
-import { darken } from "polished";
+import background from "../../../assets/background.jpg";
 
 export const Wrapper = styled.div`
-  height: 100%;
-  background-image: linear-gradient(120deg, #ffe478 0%, #e8c36d 100%);
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 228, 120, 0.9) 0%, rgba(232, 195, 109, 0.9) 100%),
+        url(${background});
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    padding: 0 115px;
 `;
 
-export const Content = styled.div`
-  width: 100%;
-  max-width: 315px;
-  text-align: center;
+export const Nav = styled.div`
+    padding-top: 30px;
 
-  img {
-    width: 100px;
-    height: 100px;
-  }
+    nav {
+        height: 70px;
+        display: flex;
+        justify-content: space-between;
 
-  form {
-    display: flex;
-    flex-direction: column;
-    margin-top: 30px;
+        img {
+            height: 100%;
+        }
 
-    .regular-checkbox {
-      -webkit-appearance: none;
-      background-color: #fafafa;
-      border: 1px solid #cacece;
-      padding: 0;
-      border-radius: 3px;
-      display: inline-block;
+        aside {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
 
-      width: 20px;
-      height: 20px;
-      position: relative;
+            fieldset {
+                border: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 190px;
+                height: 65px;
+                margin-left: 22px;
+                background: #8354b3;
+                color: #fff;
+                font-weight: bold;
+                box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
+            }
+        }
     }
 
-    .regular-checkbox:checked:after {
-      content: "\\2716";
-      font-size: 20px;
-      position: absolute;
-      top: -3px;
-      left: 1px;
-      color: #8354b3;
+    div.container {
+        margin-top: 175px;
+        max-height: 100%;
+        display: flex;
+
+        img {
+            min-width: 60%;
+            margin-right: -250px;
+        }
+
+        span {
+            display: flex;
+            flex-direction: column;
+            margin-top: 100px;
+
+            strong {
+                font-size: 64px;
+                margin-bottom: 60px;
+                text-align: center;
+            }
+
+            fieldset {
+                border: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 415px;
+                height: 128px;
+                margin-left: 300px;
+                background: #8354b3;
+                color: #fff;
+                font-size: 48px;
+                font-weight: 500;
+                box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
+            }
+        }
     }
-
-    input {
-      background: rgba(255, 255, 255, 0.5);
-      border: 0;
-      border-radius: 4px;
-      height: 44px;
-      color: #000;
-      padding: 0 15px;
-      margin: 0 0 10px;
-      text-align: center;
-
-      &:focus::placeholder {
-        color: transparent;
-      }
-
-      &::placeholder {
-        color: rgba(0, 0, 0);
-      }
-    }
-
-    button {
-      width: 100%;
-      margin: 5px 0 0;
-      height: 44px;
-      background: #8354b3;
-      color: #fff;
-      border: 0;
-      border-radius: 4px;
-      font-size: 16px;
-      transition: background 0.2s;
-
-      a {
-        color: #fff;
-      }
-
-      &:hover {
-        background: ${darken(0.05, "#8354B3")};
-      }
-    }
-
-    a {
-      color: #8354b3;
-      margin-top: 15px;
-      font-size: 16px;
-      opacity: 0.8;
-
-      &:hover {
-        opacity: 1;
-      }
-    }
-
-    label {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-
-      div {
-        padding: 2px 0 0 10px;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.5);
-      }
-    }
-  }
-`;
-
-export const Bottom = styled.div`
-  background: rgba(255, 255, 255, 0.4);
-  width: 100%;
-  max-width: 500px;
-  height: 100%;
-  max-height: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
 `;

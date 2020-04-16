@@ -2,12 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 
-import AuthLayout from "~/pages/_layouts/auth";
+import HomeLayout from "~/pages/_layouts/auth";
 import DefaultLayout from "~/pages/_layouts/default";
 
 export default function RouteWrapper({ component: Component, isPrivate, ...rest }) {
-    const signed = true;
-    const client = false;
+    const signed = false;
 
     if (!signed && isPrivate) {
         return <Redirect to="/" />;
@@ -17,11 +16,7 @@ export default function RouteWrapper({ component: Component, isPrivate, ...rest 
         return <Redirect to="/dashboard" />;
     }
 
-    if (signed && !isPrivate && client) {
-        return <Redirect to="/client-dashboard" />;
-    }
-
-    const Layout = signed ? DefaultLayout : AuthLayout;
+    const Layout = signed ? DefaultLayout : HomeLayout;
 
     /* eslint react/jsx-props-no-spreading:0 */
     return (

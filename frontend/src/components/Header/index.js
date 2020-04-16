@@ -5,7 +5,6 @@ import logo from "~/assets/calendar.svg";
 import profile from "~/assets/calendar.png";
 
 import { Container, Content, Profile } from "./styles";
-import Notifications from "~/components/Notifications";
 
 const Header = () => {
     return (
@@ -17,8 +16,6 @@ const Header = () => {
                 </nav>
 
                 <aside>
-                    <Notifications />
-
                     <Profile>
                         <div>
                             <strong>Wennlys Oliveira</strong>

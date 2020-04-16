@@ -9,10 +9,10 @@ import history from "./services/history";
 import GlobalStyle from "./styles/global";
 
 const App = () => (
-  <Router history={history}>
-    <Routes />
-    <GlobalStyle/>
-  </Router>
+    <Router history={history}>
+        <Routes />
+        <GlobalStyle />
+    </Router>
 );
 
 export default App;

@@ -1,20 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { Wrapper, Content, Bottom } from "./styles";
+import { Wrapper, Nav } from "./styles";
 
-const AuthLayout = ({ children }) => {
-  return (
-    <Wrapper>
-      <Bottom>
-        <Content>{children}</Content>
-      </Bottom>
-    </Wrapper>
-  );
+const HomeLayout = ({ children }) => {
+    return (
+        <Wrapper>
+            <Nav>{children}</Nav>
+        </Wrapper>
+    );
 };
 
-AuthLayout.propTypes = {
-  children: PropTypes.element.isRequired
+HomeLayout.propTypes = {
+    children: PropTypes.element.isRequired
 };
 
-export default AuthLayout;
+export default HomeLayout;
