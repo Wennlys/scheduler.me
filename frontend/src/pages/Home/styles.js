@@ -1,20 +1,51 @@
 import styled from "styled-components";
-import background from "../../../assets/background.jpg";
+import { darken } from "polished";
+
+import background from "~/assets/background.jpg";
 
 export const Wrapper = styled.div`
     height: 100%;
     background: linear-gradient(180deg, rgba(255, 228, 120, 0.9) 0%, rgba(232, 195, 109, 0.9) 100%),
         url(${background});
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
 
     padding: 0 115px;
 `;
 
-export const Nav = styled.div`
+export const Content = styled.div`
+    pointer-events: ${props => (props.disable ? "none" : "all")};
+
     padding-top: 30px;
+
+    button {
+        text-decoration: none;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #8354b3;
+        font-size: 24px;
+        color: #fff;
+        box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
+        outline: none;
+
+        ::-moz-focus-inner {
+            border: 0;
+        }
+
+        :hover {
+            background: ${darken(0.05, "#8354B3")};
+            cursor: pointer;
+        }
+
+        :first-child {
+            background: none;
+            box-shadow: none;
+            color: #000;
+            font-size: 24px;
+            font-weight: 400;
+        }
+    }
 
     nav {
         height: 70px;
@@ -30,18 +61,15 @@ export const Nav = styled.div`
             align-items: center;
             font-size: 24px;
 
-            fieldset {
-                border: none;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            div:hover {
+                cursor: pointer;
+            }
+
+            button {
                 width: 190px;
                 height: 65px;
                 margin-left: 22px;
-                background: #8354b3;
-                color: #fff;
                 font-weight: bold;
-                box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
             }
         }
     }
@@ -67,19 +95,12 @@ export const Nav = styled.div`
                 text-align: center;
             }
 
-            fieldset {
-                border: none;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            button {
+                font-size: 48px;
+                font-weight: 400;
                 width: 415px;
                 height: 128px;
                 margin-left: 300px;
-                background: #8354b3;
-                color: #fff;
-                font-size: 48px;
-                font-weight: 500;
-                box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
             }
         }
     }

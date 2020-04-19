@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 
-import HomeLayout from "~/pages/_layouts/auth";
-import DefaultLayout from "~/pages/_layouts/default";
+import Layout from "~/pages/_layouts/default";
+import Home from "~/pages/Home";
 
 export default function RouteWrapper({ component: Component, isPrivate, ...rest }) {
     const signed = false;
@@ -16,16 +16,16 @@ export default function RouteWrapper({ component: Component, isPrivate, ...rest 
         return <Redirect to="/dashboard" />;
     }
 
-    const Layout = signed ? DefaultLayout : HomeLayout;
+    const LayoutComponent = signed ? Layout : Home;
 
     /* eslint react/jsx-props-no-spreading:0 */
     return (
         <Route
             {...rest}
             render={props => (
-                <Layout>
+                <LayoutComponent>
                     <Component {...props} />
-                </Layout>
+                </LayoutComponent>
             )}
         />
     );
