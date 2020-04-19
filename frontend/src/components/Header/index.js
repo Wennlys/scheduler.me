@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import logo from "~/assets/calendar.svg";
-import profile from "~/assets/calendar.png";
+import profile from "~/assets/profile.png";
+import burger from "~/assets/burger.svg";
 
 import { Container, Content, Profile } from "./styles";
 
@@ -10,20 +10,15 @@ const Header = () => {
     return (
         <Container>
             <Content>
-                <nav>
-                    <img src={logo} alt="Scheduler" />
-                    <Link to="/dashboard">DASHBOARD</Link>
-                </nav>
-
                 <aside>
                     <Profile>
-                        <div>
-                            <strong>Wennlys Oliveira</strong>
-                            <Link to="/profile">Meu perfil</Link>
-                        </div>
                         <img src={profile} alt="Wennlys Oliveira" />
+                        <hr/>
+                        <div className="title">Wennlys Oliveira</div>
                     </Profile>
                 </aside>
+                    <img src={logo} alt="logo" />
+                    <div><img src={burger} alt="menu" /></div>
             </Content>
         </Container>
     );

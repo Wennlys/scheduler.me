@@ -12,56 +12,31 @@ export const Content = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    nav {
-        display: flex;
-        align-items: center;
-
-        img {
-            margin-right: 28px;
-            padding-right: 20px;
-            width: 50px;
-            height: 50px;
-            border-right: 1px solid #eee;
-        }
-
-        a {
-            font-weight: bold;
-            color: #000;
-        }
-
-        aside {
-            display: flex;
-            align-items: center;
-        }
-    }
+    
+      img {
+        width: 40px;
+        height: 40px;
+      }
+      
+      img[alt="menu"] {
+        cursor: pointer;
+      }
+      
+      img[alt="logo"] {
+        margin-left: -190px;
+      }
 `;
 
 export const Profile = styled.div`
-    display: flex;
-    margin-left: 28px;
-    padding-left: 20px;
-    border-left: 1px solid #eee;
+      display: flex;
+      align-items: center;
 
-    div {
-        text-align: right;
-        margin-right: 10px;
-
-        strong {
-            display: block;
-            color: #333;
-        }
-
-        a {
-            display: block;
-            margin-top: 2px;
-            font-size: 12px;
-            color: #999;
-        }
-    }
-
-    img {
-        height: 32px;
+      hr {
+        height: 50px;
+        margin: 0 25px;
+      }      
+      
+      img {
         border-radius: 50%;
-    }
+      }
 `;

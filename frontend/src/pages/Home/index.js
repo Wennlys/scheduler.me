@@ -15,8 +15,8 @@ const Home = () => {
         setIframe(false);
     }
 
-    function handleSubmit() {
-
+    function handleSubmit(data) {
+        console.tron.log(data);
     }
 
     function handleSignUpClick() {

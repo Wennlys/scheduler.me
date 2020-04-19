@@ -11,18 +11,16 @@ const SignIn = props => {
         <Wrapper>
             <Content>
                 <span>
-                <button type="button" onClick={() => props.close()}>
-                    <img src={close} alt="close" />
-                </button>
+                    <img src={close} alt="close" onClick={props.close} />
                     <span><img src={logo} alt="logo" /></span>
                 </span>
-                <Form onSubmit={() => props.submit()}>
+                <Form onSubmit={props.submit}>
                     <span className="inputs">
                         <Input name="userName" placeholder="Nome de usuário ou e-mail"/>
                         <Input name="password" type="password" placeholder="Sua senha"/>
                     </span>
                     <span className="buttons">
-                        <button type="button" className="purple" onClick={() => props.signup()}>Criar uma conta</button>
+                        <button type="button" className="purple" onClick={props.signup}>Criar uma conta</button>
                         <button type="submit" className="green">Login</button>
                     </span>
                 </Form>

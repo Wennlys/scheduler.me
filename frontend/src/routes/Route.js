@@ -6,7 +6,7 @@ import Layout from "~/pages/_layouts/default";
 import Home from "~/pages/Home";
 
 export default function RouteWrapper({ component: Component, isPrivate, ...rest }) {
-    const signed = false;
+    const signed = true;
 
     if (!signed && isPrivate) {
         return <Redirect to="/" />;

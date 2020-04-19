@@ -6,7 +6,6 @@ import { Container, Time } from "~/pages/ProviderDashboard/styles";
 const ClientDashboard = () => {
     return (
         <Container>
-            <strong>CLIENT DASHBOARD</strong>
             <header>
                 <button type="button">
                     <MdChevronLeft size={36} color="#ffffff" />

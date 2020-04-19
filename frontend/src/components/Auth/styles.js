@@ -18,14 +18,15 @@ export const Content = styled.div`
     border: 2px solid #000;
         
     span {
-    display: flex;
-    flex-direction: column;
-    
-      img {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      
+      img[alt="close"] {
         width: 50px;
         height: 50px;
-        padding: 20px 20px 0 0;
-        box-sizing: content-box;
+        margin: 10px 10px 0;
+        cursor: pointer;
       }
       
       span {
@@ -34,8 +35,6 @@ export const Content = styled.div`
         img {
           width: 120px;
           height: 120px;
-          padding: 0;
-          margin-top: -20px;
         }
       }
       
@@ -60,7 +59,7 @@ export const Content = styled.div`
     
         input {
           border: 0;
-          background: ${lighten( 0.2, '#8354B3')};
+          background: ${ lighten(0.2, '#8354B3') };
           width: 100%;
           padding: 20px;
           color: #000;
@@ -68,7 +67,7 @@ export const Content = styled.div`
           margin-top: 3px;
         }
         
-        input#check {
+        input#provider {
           width: 0;
         }
         
@@ -105,7 +104,7 @@ export const Content = styled.div`
               box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
               
               :hover {
-                  background: ${darken(0.05, "#8354B3")};
+                  background: ${ darken(0.05, "#8354B3") };
                   cursor: pointer;
               }
             }
@@ -115,7 +114,7 @@ export const Content = styled.div`
               font-weight: bold;
               
               :hover {
-                  background: ${darken(0.05, "#42B367")};
+                  background: ${ darken(0.05, "#42B367") };
                   cursor: pointer;
               }
             }
