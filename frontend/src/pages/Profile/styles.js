@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { darken } from "polished";
+import styled from 'styled-components'
+import { darken } from 'polished'
 
 export const Container = styled.div`
     max-width: 450px;
@@ -51,7 +51,7 @@ export const Container = styled.div`
             }
 
             &:hover {
-                background: ${darken(0.05, "#8354B3")};
+                background: ${darken(0.05, '#8354B3')};
             }
         }
     }
@@ -72,7 +72,7 @@ export const Container = styled.div`
         }
 
         &:hover {
-            background: ${darken(0.05, "#f55")};
+            background: ${darken(0.05, '#f55')};
         }
     }
-`;
+`

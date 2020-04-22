@@ -1,11 +1,11 @@
 /* eslint import/no-extraneous-dependencies:0 */
-const { addBabelPlugin, override } = require("customize-cra");
+const { addBabelPlugin, override } = require('customize-cra')
 
 module.exports = override(
   addBabelPlugin([
-    "babel-plugin-root-import",
+    'babel-plugin-root-import',
     {
-      rootPathSuffix: "src"
+      rootPathSuffix: 'src'
     }
   ])
-);
+)

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
     max-width: 600px;
@@ -30,7 +30,7 @@ export const Container = styled.div`
         grid-gap: 15px;
         margin-top: 30px;
     }
-`;
+`
 
 export const Time = styled.li`
     padding: 20px;
@@ -41,7 +41,7 @@ export const Time = styled.li`
 
     strong {
         display: block;
-        color: ${props => (props.available ? "#999" : "#8354b3")};
+        color: ${props => (props.available ? '#999' : '#8354b3')};
         font-size: 20px;
         font-weight: normal;
     }
@@ -49,6 +49,6 @@ export const Time = styled.li`
     span {
         display: block;
         margin-top: 3px;
-        color: ${props => (props.available ? "#999" : "#666")};
+        color: ${props => (props.available ? '#999' : '#666')};
     }
-`;
+`

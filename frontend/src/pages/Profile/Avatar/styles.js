@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
   align-self: center;
@@ -23,4 +23,4 @@ export const Container = styled.div`
       display: none;
     }
   }
-`;
+`

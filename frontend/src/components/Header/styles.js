@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
     background: #fff;
     padding: 0 30px;
-`;
+`
 
 export const Content = styled.div`
     height: 64px;
@@ -12,6 +12,22 @@ export const Content = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
+    button {
+      border: 0;
+      background: none;
+    }
+    
+    button:after {
+      content: "";
+      display: ${props => props.unread ? 'inline-block' : 'none'};
+      position: absolute;
+      margin-left: -5px;
+      width: 10px;
+      height: 10px;
+      background: #ff892e;
+      border-radius: 50%;
+    }
     
       img {
         width: 40px;
@@ -25,7 +41,7 @@ export const Content = styled.div`
       img[alt="logo"] {
         margin-left: -190px;
       }
-`;
+`
 
 export const Profile = styled.div`
       display: flex;
@@ -39,4 +55,4 @@ export const Profile = styled.div`
       img {
         border-radius: 50%;
       }
-`;
+`

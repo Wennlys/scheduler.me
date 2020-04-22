@@ -1,7 +1,7 @@
-import styled from "styled-components";
-import { darken } from "polished";
+import styled from 'styled-components'
+import { darken } from 'polished'
 
-import background from "~/assets/background.jpg";
+import background from '~/assets/background.jpg'
 
 export const Wrapper = styled.div`
     height: 100%;
@@ -10,10 +10,10 @@ export const Wrapper = styled.div`
     background-size: cover;
 
     padding: 0 115px;
-`;
+`
 
 export const Content = styled.div`
-    pointer-events: ${props => (props.disable ? "none" : "all")};
+    pointer-events: ${props => (props.disable ? 'none' : 'all')};
 
     padding-top: 30px;
 
@@ -34,7 +34,7 @@ export const Content = styled.div`
         }
 
         :hover {
-            background: ${darken(0.05, "#8354B3")};
+            background: ${darken(0.05, '#8354B3')};
             cursor: pointer;
         }
 
@@ -104,4 +104,4 @@ export const Content = styled.div`
             }
         }
     }
-`;
+`
