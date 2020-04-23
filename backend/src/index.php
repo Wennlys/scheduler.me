@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+header("Access-Control-Allow-Origin:*");
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -24,6 +25,9 @@ use Source\App\NotificationProviderIndexController;
 use Source\App\NotificationProviderUpdateController;
 use Source\App\AppointmentCancelController;
 use Source\App\AppointmentIndexAvailableController;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Source\Middleware\DefaultMiddleware;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
@@ -104,10 +108,16 @@ $container->add(Response::class);
 
 
 $strategy = (new League\Route\Strategy\JsonStrategy($responseFactory))
-    ->addDefaultResponseHeader('content-type', 'scheduler/json')
+    ->addDefaultResponseHeader('content-type', 'application/json')
     ->setContainer($container);
 
 $router = (new League\Route\Router())->setStrategy($strategy);
+
+$router->middleware(new DefaultMiddleware(new Response()));
+
+$router->options('/{routes:.+}', function ($response) {
+    return $response;
+});
 
 $router->map('POST', '/users', 'Source\App\UserStoreController::store');
 $router->map('POST', '/sessions', 'Source\App\SessionStoreController::store');

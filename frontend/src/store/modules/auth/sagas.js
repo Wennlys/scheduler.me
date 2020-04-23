@@ -12,17 +12,11 @@ export function* signIn({ payload }) {
     api.post,
     'sessions',
     {
-      method: 'POST',
       login,
       password
     });
 
   const { token, user } = response.data;
-
-  if (!user.provider) {
-    console.tron.error('Usuário não é um prestador de serviços', '401');
-    return
-  }
 
   yield put(signInSuccess(token, user));
 
