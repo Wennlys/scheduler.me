@@ -3,7 +3,7 @@ import { MdChevronLeft, MdChevronRight } from 'react-icons/all'
 
 import { Container, Time } from './styles'
 
-const Dashboard = () => {
+const ProviderDashboard = () => {
   return (
     <Container>
       <header>
@@ -42,4 +42,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default ProviderDashboard

@@ -25,8 +25,6 @@ use Source\App\NotificationProviderIndexController;
 use Source\App\NotificationProviderUpdateController;
 use Source\App\AppointmentCancelController;
 use Source\App\AppointmentIndexAvailableController;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Source\Middleware\DefaultMiddleware;
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(

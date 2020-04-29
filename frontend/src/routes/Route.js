@@ -5,8 +5,10 @@ import { Route, Redirect } from 'react-router-dom'
 import Layout from '~/pages/_layouts/default'
 import Home from '~/pages/Home'
 
+import store from '~/store';
+
 export default function RouteWrapper ({ component: Component, isPrivate, ...rest }) {
-  const signed = false
+  const { signed, provider } = store.getState().auth;
 
   if (!signed && isPrivate) {
     return <Redirect to='/' />
