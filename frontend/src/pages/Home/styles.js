@@ -29,10 +29,6 @@ export const Content = styled.div`
         box-shadow: 4px 4px rgba(0, 0, 0, 0.25);
         outline: none;
 
-        ::-moz-focus-inner {
-            border: 0;
-        }
-
         :hover {
             background: ${darken(0.05, '#8354B3')};
             cursor: pointer;

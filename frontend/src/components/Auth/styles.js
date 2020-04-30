@@ -67,7 +67,7 @@ export const Content = styled.div`
           margin-top: 3px;
         }
         
-        input#provider {
+        input[type='checkbox'] {
           width: 0;
         }
         

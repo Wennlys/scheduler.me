@@ -43,7 +43,7 @@ class UserIndexProvidersController
                 "id" => $provider->id,
                 "full_name" => $provider->first_name . " " . $provider->last_name,
                 "email" => $provider->email,
-                "provider" => $provider->provider === "1" ? true : false,
+                "provider" => $provider->provider === "1",
                 "avatar" => [
                     "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$provider->path}",
                     "name" => $provider->name,

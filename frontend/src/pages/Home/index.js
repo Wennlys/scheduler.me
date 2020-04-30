@@ -9,7 +9,7 @@ import homeImage from '~/assets/home-image.svg'
 import SignIn from '~/components/Auth/SignIn'
 import SignUp from '~/components/Auth/SignUp'
 
-import { signInRequest } from "~/store/modules/auth/actions";
+import { signInRequest, signUpRequest } from "~/store/modules/auth/actions";
 
 const Home = () => {
   const [iframe, setIframe] = useState(false);
@@ -19,16 +19,21 @@ const Home = () => {
     setIframe(false)
   }
 
-  function handleSubmit ({ login, password }) {
+  function handleSignInSubmit ({ login, password }) {
     dispatch(signInRequest(login, password));
   }
 
-  function handleSignUpClick () {
-    setIframe(<SignUp handleClose={handleClose} handleSubmit={handleSubmit} handleLogin={handleSignInClick} />)
+  function handleSignUpSubmit ({ user_name, first_name, last_name, email, password, provider }) {
+    dispatch(signUpRequest(user_name, first_name, last_name, email, password, provider));
+    handleSignInClick();
   }
 
   function handleSignInClick () {
-    setIframe(<SignIn handleClose={handleClose} handleSubmit={handleSubmit} handleSignup={handleSignUpClick} />)
+    setIframe(<SignIn handleClose={handleClose} handleSubmit={handleSignInSubmit} handleSignup={handleSignUpClick} />)
+  }
+
+  function handleSignUpClick () {
+    setIframe(<SignUp handleClose={handleClose} handleSubmit={handleSignUpSubmit} handleLogin={handleSignInClick} />)
   }
 
   return (

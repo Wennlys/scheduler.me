@@ -62,7 +62,7 @@ class UserStoreController
             "user_name" => $user['user_name'],
             "full_name" => $user['first_name'] . " " .$user['last_name'],
             "email" => $user['email'],
-            "provider" => $user['provider'] === "1" ? true : false,
+            "provider" => $user['provider'] === "1",
             "avatar" => [
                 "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$user['path']}",
                 "name" => $user['name'],
