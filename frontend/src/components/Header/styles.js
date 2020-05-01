@@ -12,21 +12,13 @@ export const Content = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    a {
+      color: #000;
+    }
     
     button {
       border: 0;
       background: none;
-    }
-    
-    button:after {
-      content: "";
-      display: ${props => props.unread ? 'inline-block' : 'none'};
-      position: absolute;
-      margin-left: -5px;
-      width: 10px;
-      height: 10px;
-      background: #ff892e;
-      border-radius: 50%;
     }
     
       img {
@@ -39,7 +31,7 @@ export const Content = styled.div`
       }
       
       img[alt="logo"] {
-        margin-left: -190px;
+        margin-left: -115px;
       }
 `
 
