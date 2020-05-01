@@ -10,7 +10,7 @@ import Menu from "~/components/Header/Menu";
 const Header = () => {
   return (
     <Container>
-      <Content unread>
+      <Content>
           <Link to='/profile'>
             <Profile>
               <img src={profile} alt='Wennlys Oliveira' />

@@ -1,35 +1,44 @@
 import React from 'react'
+import { Form } from '@unform/web';
 
 import { Container } from './styles'
+import Input from "~/components/Form";
 
 import Avatar from './Avatar'
+import { useSelector } from "react-redux";
 
 const Profile = () => {
+  const profile = useSelector(state => state.user.profile);
+
+  function handleSubmit(data) {
+    console.tron.log(data)
+  }
+
   return (
     <Container>
-      <form>
+      <Form initialData={profile} onSubmit={handleSubmit}>
         <Avatar name='avatar_id' />
-        <input name='userName' placeholder='Nome de usuário' />
-        <input name='name' placeholder='Primeiro nome' />
-        <input name='name' placeholder='Sobrenome' />
-        <input name='email' type='email' placeholder='Seu e-mail' />
+        <Input name='user_name' placeholder='Nome de usuário' />
+        <Input name='first_name' placeholder='Primeiro nome' />
+        <Input name='last_name' placeholder='Sobrenome' />
+        <Input name='email' type='email' placeholder='Seu e-mail' />
 
         <hr />
 
-        <input
+        <Input
           type='password'
           name='oldPassword'
           placeholder='Sua senha atual'
         />
-        <input type='password' name='password' placeholder='Sua nova senha' />
-        <input
+        <Input type='password' name='password' placeholder='Sua nova senha' />
+        <Input
           type='password'
           name='confirm'
           placeholder='Sua nova senha novamente'
         />
 
         <button type='submit'>Atualizar perfil</button>
-      </form>
+      </Form>
 
       <button type='button'>Desconectar-se</button>
     </Container>

@@ -35,8 +35,8 @@ class NotificationProviderIndexController
      * @param Connection        $connection
      * @param ResponseInterface $response
      */
-    public function __construct(MongoConnection $mongoConnection,
-                                Connection $connection,
+    public function __construct(Connection $connection,
+                                MongoConnection $mongoConnection,
                                 ResponseInterface $response)
     {
         $this->mongoConnection = $mongoConnection;
@@ -59,10 +59,10 @@ class NotificationProviderIndexController
 
         $user->setUserId($userId);
 
-        if ($userDao->findProvider($user)) {
+        if (!$userDao->findProvider($user)) {
             $this->response->getBody()->write(json_encode(
                 "User must be a provider to list notifications."));
-            return $this->response->withStatus(200);
+            return $this->response->withStatus(400);
         }
 
         $notificationDao = new NotificationDAO($this->mongoConnection);

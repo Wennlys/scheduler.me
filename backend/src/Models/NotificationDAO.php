@@ -5,6 +5,7 @@ namespace Source\Models;
 
 use MongoDB\Collection;
 use Source\Core\MongoConnection;
+use MongoDB\BSON\ObjectId;
 
 /**
  * Class NotificationDAO
@@ -63,7 +64,9 @@ class NotificationDAO
      */
     public function update(Notification $notification)
     {
-        return $this->database->findOneAndUpdate(["user" => $notification->getUser()],
+        return $this->database->findOneAndUpdate([
+            "user" => $notification->getUser(),
+            "_id" => new ObjectId($notification->getId())],
             [
                 '$set' => ["read" => true],
             ]);

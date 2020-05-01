@@ -95,7 +95,7 @@ class AppointmentStoreController
         $notification = new Notification();
 
         $date = new DateTime($date);
-        $date = $date->format('d \d\e m \d\e Y \à\s H:i');
+        $date = $date->format('d \d\o m \d\e Y \à\s H:i');
 
         $notification->setUser($providerId);
         $notification->setContent(

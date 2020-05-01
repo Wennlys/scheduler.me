@@ -10,6 +10,9 @@ namespace Source\Models;
  */
 class Notification
 {
+    /** @var string $id */
+    private string $id;
+
     /** @var string $content*/
     private string $content;
 
@@ -24,6 +27,23 @@ class Notification
 
     /** @var string $updated_at*/
     private string $updated_at;
+
+    /**
+     * @return string
+     */
+    public function getId()
+    : string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId(string $id)
+    : void {
+        $this->id = $id;
+    }
 
     /**
      * @return string

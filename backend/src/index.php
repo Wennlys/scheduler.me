@@ -146,7 +146,7 @@ $router->group(
     '/notifications',
     function (RouteGroup $route) {
         $route->map('GET', '/', 'Source\App\NotificationProviderIndexController::index');
-        $route->map('PUT', '/', 'Source\App\NotificationProviderUpdateController::update');
+        $route->map('PUT', '/{id:.+}', 'Source\App\NotificationProviderUpdateController::update');
     }
 )->middleware(new AuthMiddleware(new Response));
 

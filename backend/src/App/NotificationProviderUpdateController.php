@@ -37,16 +37,20 @@ class NotificationProviderUpdateController
     /**
      * @param ServerRequestInterface $request
      *
+     * @param array                  $args
+     *
      * @return ResponseInterface
      */
-    public function update(ServerRequestInterface $request): ResponseInterface
+    public function update(ServerRequestInterface $request, array $args): ResponseInterface
     {
+        ["id" => $id] = $args;
         $payload = getPayload($request);
         $userId = $payload["user_id"];
 
         $notificationDao = new NotificationDAO($this->mongoConnection);
         $notification = new Notification();
 
+        $notification->setId($id);
         $notification->setUser($userId);
 
         $this->response->getBody()->write(json_encode($notificationDao->update($notification)));
