@@ -1,17 +1,21 @@
 import React from 'react'
+import { useSelector, useDispatch } from "react-redux";
 import { Form } from '@unform/web';
+
+import { updateProfileRequest } from "~/store/modules/user/actions";
 
 import { Container } from './styles'
 import Input from "~/components/Form";
 
 import Avatar from './Avatar'
-import { useSelector } from "react-redux";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const profile = useSelector(state => state.user.profile);
 
   function handleSubmit(data) {
-    console.tron.log(data)
+    dispatch(updateProfileRequest(data));
+    console.tron.log(data);
   }
 
   return (
@@ -22,12 +26,10 @@ const Profile = () => {
         <Input name='first_name' placeholder='Primeiro nome' />
         <Input name='last_name' placeholder='Sobrenome' />
         <Input name='email' type='email' placeholder='Seu e-mail' />
-
         <hr />
-
         <Input
           type='password'
-          name='oldPassword'
+          name='current_password'
           placeholder='Sua senha atual'
         />
         <Input type='password' name='password' placeholder='Sua nova senha' />

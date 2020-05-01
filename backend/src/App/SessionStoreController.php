@@ -77,7 +77,8 @@ class SessionStoreController
                 "user" => [
                     "id" => $user->id,
                     "user_name" => $user->user_name,
-                    "name" => $user->first_name . " " . $user->last_name,
+                    "first_name" => $user->first_name,
+                    "last_name" =>  $user->last_name,
                     "email" => $user->email,
                     "provider" => $user->provider === "1",
                     "avatar" => [

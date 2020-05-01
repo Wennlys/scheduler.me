@@ -14,8 +14,8 @@ use Exception;
  */
 class UserDAO
 {
-    /** @var string $id */
-    private string $id;
+    /** @var string|null string $id */
+    private ?string $id;
 
     /** @var Database */
     private Database $database;
@@ -60,23 +60,20 @@ class UserDAO
     {
         $this->id = $user->getUserId();
 
-        if ($user->getEmail() || $user->getPassword() || $user->getUserName()) {
+        $email = $user->getEmail();
+        $userName = $user->getUserName();
+
+        if ($user->getPassword()) {
             if (!$this->verifyPassword($user)) {
                 throw new Exception("Wrong password.");
-            }
-
-            if ($user->getEmail()) {
-                if ($this->findByLogin($user)) {
-                    throw new Exception("Email already in use.");
-                }
             }
         }
 
         $body = array_filter([
-          "user_name" => $user->getUserName(),
+          "user_name" => $userName,
           "first_name" => $user->getFirstName(),
           "last_name" => $user->getLastName(),
-          "email" => $user->getEmail(),
+          "email" => $email,
           "password" => $user->getPassword(),
           "avatar_id" => $user->getAvatarId()
         ]);
@@ -135,12 +132,6 @@ class UserDAO
             ->join("users.avatar_id = files.id", "files")
             ->and("user_name='{$user->getUserName()}'")
             ->fetch();
-
-//        return $this->database
-//            ->find("users.id, users.first_name, users.last_name, users.email, files.name, files.path")
-//            ->join("users.avatar_id = files.id", "files")
-//            ->order("id")
-//            ->fetch(true);
     }
 
     /**

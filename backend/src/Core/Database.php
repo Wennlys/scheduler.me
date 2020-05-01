@@ -117,7 +117,7 @@ class Database
     public function join(string $clause, string $table)
     : ?Database
     {
-        $this->join .= " INNER JOIN {$table} ON ({$clause})";
+        $this->join = " INNER JOIN {$table} ON ({$clause})";
         return $this;
     }
 
