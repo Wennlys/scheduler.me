@@ -3,6 +3,15 @@ import styled from 'styled-components'
 export const Container = styled.div`
     background: #fff;
     padding: 0 30px;
+    height: 64px;
+    
+    img[alt="logo"] {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      margin: -54px auto;
+      cursor: pointer;
+    }
 `
 
 export const Content = styled.div`
@@ -28,10 +37,6 @@ export const Content = styled.div`
       
       img[alt="menu"] {
         cursor: pointer;
-      }
-      
-      img[alt="logo"] {
-        margin-left: -115px;
       }
 `
 

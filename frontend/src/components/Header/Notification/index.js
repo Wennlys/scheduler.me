@@ -45,7 +45,7 @@ const Notifications = props => {
   return (
     <NotificationList>
       <Scroll>
-        { notifications.map(notification => (
+        { notifications.length > 0 ? notifications.map(notification => (
           <Notification key={ notification._id.$oid } unread={ !notification.read }>
             <p>{ notification.content }</p>
             <time>{ notification.timeDistance }</time>
@@ -55,7 +55,7 @@ const Notifications = props => {
               </button>
             }
           </Notification>
-        )) }
+        )) : <Notification><p>Não há nenhuma nova notificação</p></Notification> }
       </Scroll>
     </NotificationList>
   );

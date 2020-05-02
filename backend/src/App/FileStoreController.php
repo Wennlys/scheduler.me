@@ -52,8 +52,15 @@ class FileStoreController
         $size = $image->getSize();
 
         if ($size > 50000) {
-            $this->response->getBody()->write(json_encode("Choose a smaller image."));
-            return $this->response->withStatus(401);
+            $this->response->getBody()->write(json_encode([
+               "avatar_id" => 1,
+               "created_at" => "2020-04-02 16:46:38",
+               "updated_at" => "2020-04-07 20:42:06",
+               "name" => "default-avatar.jpg",
+               "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/default-avatar.jpg",
+               "path" => "default-avatar.jpg"
+           ]));
+           return $this->response->withStatus(200);
         }
 
         $imageExt = pathinfo($originalName, PATHINFO_EXTENSION);
@@ -78,9 +85,22 @@ class FileStoreController
         $user->setAvatarId($avatarId);
         $user->setUserId($userId);
 
-        $userDao->update($user);
+        [
+            "avatar_id" => $avatarId,
+            "created_at" => $createdAt,
+            "updated_at" => $updatedAt,
+            "name" => $name,
+            "path" => $path
+        ] = $userDao->update($user);
 
-        $this->response->getBody()->write(json_encode(true));
+        $this->response->getBody()->write(json_encode([
+            "avatar_id" => $avatarId,
+            "created_at" => $createdAt,
+            "updated_at" => $updatedAt,
+            "name" => $name,
+            "url" => "http://{$_SERVER['HTTP_HOST']}/tmp/uploads/{$path}",
+            "path" => $path
+        ]));
         return $this->response->withStatus(200);
     }
 }

@@ -20,6 +20,7 @@ export const Notification = styled.div`
   p {
     font-size: 13px;
     line-height: 18px;
+    text-align: center;
   }
   
   time {

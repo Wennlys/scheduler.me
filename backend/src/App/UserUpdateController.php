@@ -55,7 +55,7 @@ class UserUpdateController
             $user->setCurrentPassword($reqBody['current_password']);
         if (!empty($reqBody['user_name']))
             $user->setUserName($reqBody['user_name']);
-        if (!empty($reqBodyfirst_name))
+        if (!empty($reqBody['first_name']))
             $user->setFirstName($reqBody['first_name']);
         if (!empty($reqBody['last_name']))
             $user->setLastName($reqBody['last_name']);

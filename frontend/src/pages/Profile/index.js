@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Form } from '@unform/web';
 
 import { updateProfileRequest } from "~/store/modules/user/actions";
+import { signOut } from "~/store/modules/auth/actions";
 
 import { Container } from './styles'
 import Input from "~/components/Form";
@@ -16,6 +17,10 @@ const Profile = () => {
   function handleSubmit(data) {
     dispatch(updateProfileRequest(data));
     console.tron.log(data);
+  }
+
+  function handleSignOut() {
+    dispatch(signOut());
   }
 
   return (
@@ -42,7 +47,7 @@ const Profile = () => {
         <button type='submit'>Atualizar perfil</button>
       </Form>
 
-      <button type='button'>Desconectar-se</button>
+      <button type='button' onClick={handleSignOut}>Desconectar-se</button>
     </Container>
   )
 }

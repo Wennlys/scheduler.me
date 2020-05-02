@@ -7,10 +7,10 @@ import { updateProfileSuccess, updateProfileFailure } from "~/store/modules/user
 
 export function* updateProfile({ payload }) {
   try {
-    const { user_name, first_name, last_name, email, ...rest } = payload.data;
+    const { user_name, first_name, last_name, email, avatar_id, ...rest } = payload.data;
 
     const profile = Object.assign(
-      { user_name, first_name, last_name, email },
+      { user_name, first_name, last_name, email, avatar_id },
       rest.current_password ? rest : {}
     );
 
