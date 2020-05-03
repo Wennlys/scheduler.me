@@ -129,7 +129,7 @@ class Database
     public function and(string $clause)
     : ?Database
     {
-        $this->and .= " AND ({$clause})";
+        $this->and .= " AND {$clause}";
         return $this;
     }
 
@@ -188,7 +188,6 @@ class Database
             $this->statement . $this->join . $this->and . $this->group . $this->order .
             $this->limit . $this->offset
         );
-
         $stmt->execute($this->params);
 
         if (!$stmt->rowCount()) return null;

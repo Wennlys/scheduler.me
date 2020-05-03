@@ -1,50 +1,63 @@
-import React from 'react'
-import { MdChevronLeft, MdChevronRight } from 'react-icons/all'
+import React, { useEffect, useState } from 'react'
+import { formatRelative } from "date-fns";
+import pt from "date-fns/locale/pt";
 
-import { Container, Time } from './styles'
+import api from '~/services/api';
 
-import profile from '~/assets/profile.png'
+import { Container, Appointment } from './styles'
+
 import remove from '~/assets/delete.svg';
 
-const ClientDashboard = props => {
+const ClientDashboard = () => {
+  const [date, setDate] = useState([]);
+  const [trigger, setTrigger] = useState(false);
+  const [appointments, setAppointments] = useState([]);
+
+  useEffect(() => {
+    async function loadAppointments () {
+      const response = await api.get('appointments', {
+        params: { page: 1 }
+      });
+
+      setTrigger(false);
+
+      const parsedDate = response.data.map(appointment => ({
+        parsedDate: formatRelative(
+           new Date(appointment.date.replace(/-/g, "/")),
+           new Date(),
+            { addSuffix: true, locale: pt })
+      }));
+
+      setDate(parsedDate);
+      setAppointments(response.data);
+    }
+
+    loadAppointments();
+  }, [trigger]);
+
+  async function handleDelete(id) {
+    await api.delete(`appointments/${id}`);
+    setTrigger(true)
+  }
+
   return (
     <Container>
-      <header>
-        <button type='button'>
-          <MdChevronLeft size={36} color='#ffffff' />
-        </button>
-        <strong>15 de março</strong>
-        <button type='button'>
-          <MdChevronRight size={36} color='#ffffff' />
-        </button>
-      </header>
-
       <ul>
-        <Time past>
-          <span>
-            <img src={profile} alt='profile' />
+        { appointments.map((appointment, index) => (
+          <Appointment key={ appointment.id } past>
             <span>
-              <strong>Wennlys Oliveira</strong>
-              <text>quarta-feira às 16:30</text>
+              <img src={ appointment.provider.avatar.url } alt='profile'/>
+              <span>
+                <strong>{ appointment.provider.name }</strong>
+                <p>{ date[index].parsedDate }</p>
+              </span>
+                <img src={ remove } alt='delete' onClick={ () => handleDelete(appointment.id) }/>
             </span>
-              <img src={remove} alt='delete' onClick={props.handleDelete} />
-          </span>
-        </Time>
-
-        <Time>
-          <span>
-            <img src={profile} alt='profile' />
-            <span>
-              <strong>Wennlys Oliveira</strong>
-              <text>quarta-feira às 16:30</text>
-            </span>
-            <img src={remove} alt='delete' onClick={props.handleDelete} />
-          </span>
-        </Time>
-
+          </Appointment>
+        )) }
       </ul>
     </Container>
-  )
+  );
 }
 
 export default ClientDashboard

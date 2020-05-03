@@ -6,23 +6,7 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: column;
-
-  header {
-    display: flex;
-    align-self: center;
-    align-items: center;
-    
-    button {
-      border: 0;
-      background: none;
-    }
-    
-    strong {
-      color: #fff;
-      font-size: 24px;
-      margin: 0 15px;
-    }
-  }
+  align-items: center;
   
   ul {
     display: grid;
@@ -30,9 +14,10 @@ export const Container = styled.div`
     grid-gap: 15px;
     margin-top: 30px;
   }
+  
 `
 
-export const Time = styled.li`
+export const Appointment = styled.li`
   padding: 30px;
   border-radius: 4px;
   background: #fff; 

@@ -6,12 +6,12 @@ import { Notification, NotificationList, Scroll } from "./styles";
 
 import api from '~/services/api';
 
-const Notifications = props => {
+const Notifications = ({ isRead }) => {
   const [notifications, setNotifications] = useState([]);
 
   useMemo(
-    () => props.isRead(!!notifications.find(notification => notification.read === false))
-  , [notifications]
+    () => isRead(!!notifications.find(notification => notification.read === false))
+  , [notifications, isRead]
   );
 
   useEffect(() => {

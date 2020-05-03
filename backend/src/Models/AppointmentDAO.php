@@ -118,11 +118,10 @@ class AppointmentDAO
             ->find("appointments.id id, appointments.date,
                               users.id user, users.first_name, users.last_name,
                               files.id avatar, files.path")
-            ->join("appointments.user_id = users.id", "users")
-            ->and("appointments.user_id = {$appointment->getUserId()}")
-            ->join("users.avatar_id = files.id", "files")
-            ->limit(20)
-            ->offset(($page - 1)*20)
+            ->join("appointments.provider_id = users.id", "users")
+            ->and("appointments.user_id = {$appointment->getUserId()} INNER JOIN files ON users.avatar_id = files.id AND appointments.canceled_at is null")
+            ->limit(6)
+            ->offset(($page - 1)*6)
             ->fetch(true);
     }
 
@@ -133,7 +132,7 @@ class AppointmentDAO
      */
     public function findByDay(Appointment $appointment)
     {
-        [$date] = (str_split($appointment->getDate(), 10));
+        [$date] = (str_split($appointment->getDate(), 13));
         return $this->database
             ->find("*",
                 "provider_id = :id", ":id={$appointment->getProviderId()}")

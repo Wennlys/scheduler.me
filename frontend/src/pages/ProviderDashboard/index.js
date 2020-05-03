@@ -66,7 +66,7 @@ const ProviderDashboard = () => {
         { schedule.map(time => (
           <Time key={ time.time } past={ time.past } available={ !time.appointment }>
             <strong>{ time.time }</strong>
-            <span>{ time.appointment ? time.appointment.user.name : "Disponível"}</span>
+            <span>{ time.appointment ? time.appointment.user.name : "Disponível" }</span>
           </Time>
         )) }
       </ul>
