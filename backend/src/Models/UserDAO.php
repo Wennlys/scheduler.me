@@ -165,6 +165,7 @@ class UserDAO
         return $this->database
             ->find("users.id, users.first_name, users.last_name, users.email, files.name, files.path")
             ->join("users.avatar_id = files.id", "files")
+            ->and("users.provider = 1")
             ->order("id")
             ->fetch(true);
     }

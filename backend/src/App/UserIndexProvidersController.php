@@ -41,7 +41,8 @@ class UserIndexProvidersController
         $providers = array_map(function ($provider) {
             return [
                 "id" => $provider->id,
-                "full_name" => $provider->first_name . " " . $provider->last_name,
+                "first_name" => $provider->first_name,
+                "last_name" => $provider->last_name,
                 "email" => $provider->email,
                 "provider" => $provider->provider === "1",
                 "avatar" => [

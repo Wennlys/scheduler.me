@@ -24,7 +24,7 @@ class MongoConnection
      */
     final private function __construct()
     {
-        $this->conn = (new Client('mongodb://172.17.0.3:27017/'))->selectDatabase(NOSQL_DB_NAME);
+        $this->conn = (new Client('mongodb://172.17.0.2:27017/'))->selectDatabase(NOSQL_DB_NAME);
     }
 
     /**

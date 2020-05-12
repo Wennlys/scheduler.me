@@ -74,7 +74,7 @@ class AppointmentIndexAvailableController
             $value = "$day $time:00";
 
             $isAvailable = (date("Y-m-d H:i:s") < $value) &&
-                !current(array_filter($appointments,
+                !current(array_filter($appointments ?? [],
                     fn($appointment) =>
                         date_format(date_create($appointment->date), "H:i") === $time));
 

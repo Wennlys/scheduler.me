@@ -3,9 +3,9 @@
 /*
  * SQL(MARIADB) DATABASE
  * */
-define("SQL_DB_HOST", "172.17.0.2");
+define("SQL_DB_HOST", "172.17.0.3");
 define("SQL_DB_USER", "root");
-define("SQL_DB_PASS", "root");
+define("SQL_DB_PASS", "");
 define("SQL_DB_NAME", "scheduler");
 
 /*

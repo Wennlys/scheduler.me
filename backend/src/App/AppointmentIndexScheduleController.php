@@ -10,6 +10,7 @@ use Source\Models\AppointmentDAO;
 use Source\Models\Appointment;
 use Source\Models\User;
 use Source\Models\UserDAO;
+use Exception;
 
 /**
  * Class AppointmentIndexScheduleController
@@ -40,6 +41,7 @@ class AppointmentIndexScheduleController
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
+     * @throws Exception
      */
     public function index(ServerRequestInterface $request): ResponseInterface
     {
@@ -61,7 +63,7 @@ class AppointmentIndexScheduleController
         $appointment = new Appointment();
         $appointmentDao = new AppointmentDAO($this->connection);
 
-        $appointment->setDate($date);
+        $appointment->setDate(str_replace('+', ' ', $date));
         $appointment->setProviderId($userId);
 
         $appointments = array_map(function ($appointment) use ($user) {

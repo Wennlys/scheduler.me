@@ -89,7 +89,7 @@ class AppointmentStoreController
         $appointment->setDate($date);
         $appointment->setUserId($userId);
 
-        $saved = $appointmentDao->save($appointment);
+        $appointmentDao->save($appointment);
 
         $notificationDao = new NotificationDAO($this->mongoConnection);
         $notification = new Notification();
@@ -105,7 +105,7 @@ class AppointmentStoreController
         $notification->setUpdatedAt(date('m-d-Y H:i:s', time()));
         $notificationDao->save($notification);
 
-        $this->response->getBody()->write(json_encode($saved));
+        $this->response->getBody()->write(json_encode(true));
         return $this->response->withStatus(200);
     }
 }

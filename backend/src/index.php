@@ -151,7 +151,7 @@ $router->group(
 )->middleware(new AuthMiddleware(new Response));
 
 $router->map('GET', '/schedule', 'Source\App\AppointmentIndexScheduleController::index')
-    ->middleware(new AuthMiddleware(new Response));
+    ;
 
 $router->group(
     '/appointments',
