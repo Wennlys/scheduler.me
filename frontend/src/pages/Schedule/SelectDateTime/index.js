@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
+import DatePicker from 'react-datepicker';
+import pt from 'date-fns/locale/pt';
+
 import { MdChevronLeft } from "react-icons/all";
 
 import api from '~/services/api';
 
 import { Container } from "../styles";
-import { Content } from "./styles";
+import { Content, Time } from "./styles";
 
 const SelectDateTime = ({ page, setPage }) => {
   const [date, setDate] = useState(new Date());
@@ -20,7 +23,6 @@ const SelectDateTime = ({ page, setPage }) => {
       });
       setHours(response.data);
     }
-
     loadDateTime();
   }, [date]);
 
@@ -30,16 +32,28 @@ const SelectDateTime = ({ page, setPage }) => {
 
   return (
     <Container>
-      {/*<DateTimePicker />*/ }
       <button type='button' onClick={ () => setPage({ number: 0, state: {} }) }>
         <MdChevronLeft size={ 48 } color='#ffffff'/>
       </button>
       <Content>
+        <div className='date-picker-container'>
+          <DatePicker
+            className='date-picker'
+            selected={ date }
+            onChange={ setDate }
+            minDate={ new Date() }
+            locale={ pt }
+          />
+        </div>
         <ul>
           { hours.map(hour => (
-            <li key={ hour.time } onClick={ () => handleClick(hour.value) }>
-              <p>{ hour.value }</p>
-            </li>
+            <Time
+              key={ hour.time }
+              onClick={ hour.available ? () => handleClick(hour.value) : null }
+              past={ hour.available }
+            >
+              <p>{ hour.time }</p>
+            </Time>
           )) }
         </ul>
       </Content>

@@ -11,6 +11,7 @@ export const Content = styled.div`
     
     li {
       width: 200px;
+      padding: 20px 30px;
       border-radius: 4px;
       background: #fff; 
       display: flex;

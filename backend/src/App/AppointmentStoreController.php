@@ -61,7 +61,7 @@ class AppointmentStoreController
         [
             'provider_id' => $providerId,
             'date' => $date
-        ] = json_decode((string)$request->getBody(),true);
+        ] = $request->getQueryParams();
 
         ['user_id' => $userId] = getPayload($request);
 

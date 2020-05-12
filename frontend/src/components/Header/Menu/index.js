@@ -24,16 +24,20 @@ const Menu = props => {
         <span/>
         <span/>
         <ul id="menu">
-          { props.provider ? <li><Notifications isRead={ setRead }/></li> : <li /> }
+          { props.provider ? <li><Notifications isRead={ setRead }/></li> : (
+            <Link to="/schedule">
+              <li>Agendar</li>
+            </Link>
+          )}
+          <Link to='/dashboard'>
+            <li>Sua agenda</li>
+          </Link>
           <Link to='/profile'>
             <li>Perfil</li>
           </Link>
-          <Link to='/dashboard'>
-            <li>Agenda</li>
-          </Link>
-          <a href='/'>
+          <Link to='/'>
             <li className='last' onClick={handleSignOut}>Desconectar-se</li>
-          </a>
+          </Link>
         </ul>
       </div>
     </Navigation>

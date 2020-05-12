@@ -20,7 +20,7 @@ export default function Routes () {
       <DefaultRoute path='/' exact component={ Home }/>
       <DashboardRoute path='/dashboard' component={{ client: ClientDashboard, provider: ProviderDashboard}}/>/>
       <DefaultRoute path='/profile' component={ Profile } isPrivate/>
-      <ScheduleRoute path='/select' component={{ dateTime: SelectDateTime, provider: SelectProvider, confirm: Confirm}} />
+      <ScheduleRoute path='/schedule' component={{ dateTime: SelectDateTime, provider: SelectProvider, confirm: Confirm}} />
     </Switch>
   );
 }

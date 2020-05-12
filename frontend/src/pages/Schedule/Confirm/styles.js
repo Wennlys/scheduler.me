@@ -38,4 +38,9 @@ export const Content = styled.div`
          background: ${darken(0.05, '#8354B3')};
      }
    }
+       
+  p {
+    width: 1000px;
+    text-align: center;
+  }
 `

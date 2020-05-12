@@ -65,6 +65,7 @@
     "eslint-plugin-react": "latest",
     "eslint-plugin-react-native": "latest",
     "prettier": "latest",
-    "react-app-rewired": "latest"
+    "react-app-rewired": "latest",
+    "react-datepicker": "^2.15.0"
   }
 }

@@ -75,7 +75,7 @@ class AppointmentDAO
 
         $difference = date_diff($appointmentDate, $date)->h;
 
-        if ($difference <= 2)
+        if ($difference <= 2 && $difference > 0)
             throw new Exception("You can only cancel an appointment with two hours in advance.");
 
         if (!$appointmentUserId)
