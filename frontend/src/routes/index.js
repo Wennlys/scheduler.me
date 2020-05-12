@@ -1,20 +1,26 @@
 import React from 'react'
 import { Switch } from 'react-router-dom'
 
-import Route from './Route'
+import DefaultRoute from './Route'
 import DashboardRoute from './DashboardRoute';
+import ScheduleRoute from './ScheduleRoute';
 
 import Home from '~/pages/Home'
 import Profile from '~/pages/Profile'
+import ClientDashboard from '~/pages/ClientDashboard';
+import ProviderDashboard from '~/pages/ProviderDashboard';
+import SelectDateTime from "~/pages/Schedule/SelectDateTime";
+import SelectProvider from "~/pages/Schedule/SelectProvider";
+import Confirm from "~/pages/Schedule/Confirm";
 
 export default function Routes () {
 
   return (
     <Switch>
-      <Route path='/' exact component={ Home } />
-      <DashboardRoute path='/dashboard' exact/>
-      <Route path='/profile' component={ Profile } isPrivate />
-      <Route path='/' component={ () => <h1>404</h1> } />
+      <DefaultRoute path='/' exact component={ Home }/>
+      <DashboardRoute path='/dashboard' component={{ client: ClientDashboard, provider: ProviderDashboard}}/>/>
+      <DefaultRoute path='/profile' component={ Profile } isPrivate/>
+      <ScheduleRoute path='/select' component={{ dateTime: SelectDateTime, provider: SelectProvider, confirm: Confirm}} />
     </Switch>
-  )
+  );
 }

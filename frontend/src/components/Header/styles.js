@@ -45,6 +45,7 @@ export const Profile = styled.div`
       align-items: center;
 
       hr {
+        color: #999;
         height: 50px;
         margin: 0 25px;
       }      

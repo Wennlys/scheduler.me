@@ -2,12 +2,11 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
 import Layout from '~/pages/_layouts/default';
-import ProviderDashboard from '~/pages/ProviderDashboard';
-import ClientDashboard from '~/pages/ClientDashboard';
 
 import { store } from '~/store';
 
-export default function RouteWrapper () {
+export default function RouteWrapper ({ component: Component }) {
+
   const { provider, signed } = store.getState().auth;
 
   if (!signed) {
@@ -18,7 +17,7 @@ export default function RouteWrapper () {
     <Route
       render={() => (
         <Layout>
-          {provider ?  <ProviderDashboard /> : <ClientDashboard />}
+          {provider ?  <Component.provider /> : <Component.client /> }
         </Layout>
       )}
     />

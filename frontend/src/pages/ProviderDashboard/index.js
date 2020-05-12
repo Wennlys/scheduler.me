@@ -11,7 +11,7 @@ const range = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 
 const ProviderDashboard = () => {
   const [schedule, setSchedule] = useState([]);
-  const [date, setDate] = useState(new Date());
+  let [date, setDate] = useState(new Date());
 
   const dateFormatted = useMemo(
     () => format(date, "d 'de' MMMM", { locale: pt }),
@@ -21,7 +21,7 @@ const ProviderDashboard = () => {
   useEffect(() => {
     async function loadSchedule() {
       const response = await api.get('schedule', {
-        params: { date }
+        params: { date: format(date, "yyyy-MM-dd HH:mm:ss") }
       });
 
       const data = range.map(hour => {

@@ -51,7 +51,7 @@ export const Container = styled.div`
             }
 
             &:hover {
-                background: ${darken(0.05, '#8354B3')};
+                background: ${ darken(0.05, '#8354B3') };
             }
         }
     }
@@ -72,7 +72,7 @@ export const Container = styled.div`
         }
 
         &:hover {
-            background: ${darken(0.05, '#f55')};
+            background: ${ darken(0.05, '#FF5555') };
         }
     }
 `

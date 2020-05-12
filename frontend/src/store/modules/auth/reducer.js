@@ -15,10 +15,10 @@ export default function auth(state = INITIAL_STATE, action) {
         break;
       }
       case '@auth/SIGN_IN_SUCCESS' : {
-          draft.token = action.payload.token;
-          draft.signed = true;
-          draft.provider = action.payload.user.provider;
-          break;
+        draft.token = action.payload.token;
+        draft.signed = true;
+        draft.provider = action.payload.user.provider;
+        break;
       }
       case '@auth/SIGN_FAILURE' : {
         draft.loading = false;
