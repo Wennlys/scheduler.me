@@ -1,3 +1,2 @@
-src/example
-.idea
-vendor
+.idea/
+vendor/
