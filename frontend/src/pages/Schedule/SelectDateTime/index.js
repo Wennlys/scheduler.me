@@ -50,7 +50,7 @@ const SelectDateTime = ({ page, setPage }) => {
             <Time
               key={ hour.time }
               onClick={ hour.available ? () => handleClick(hour.value) : null }
-              past={ hour.available }
+              past={ !hour.available }
             >
               <p>{ hour.time }</p>
             </Time>
