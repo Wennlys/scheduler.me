@@ -33,6 +33,6 @@ export const Time = styled.li`
   background: #fff; 
   text-align: center;
   
-  opacity: ${props => props.past ? 1 : 0.5};
+  opacity: ${props => props.past ? 0.5 : 1};
   cursor: ${props => props.past ? 'pointer' : 'default'};
 `
