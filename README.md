@@ -26,5 +26,6 @@ Both sorts of users are able to change all their information.
 Ambos usuários podem mudar todas as suas informações. 
 
 ![Providers notifications](assets/Peek%202020-06-09%2001-40.gif)
+
 Providers have access to a notification component that indicates new appointments.
 Prestadores têm um componente próprio para notificações de novos agendamentos.
