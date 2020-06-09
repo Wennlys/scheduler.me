@@ -84,6 +84,11 @@ export const Content = styled.div`
           input {
             margin-right: 20px;
           }
+          
+          input[type=checkbox] {
+            width: 30px;
+            height: 30px;
+          }
         }
         
         span {
