@@ -43,7 +43,7 @@ const ClientDashboard = () => {
     <Container>
       <ul>
         { appointments ? appointments.map(appointment => (
-          <Appointment key={ appointment.id } past>
+          <Appointment key={ appointment.id } past={ appointment.past }>
             <span>
               <img src={ appointment.provider.avatar.url } alt='profile'/>
               <span>
