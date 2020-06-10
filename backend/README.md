@@ -1,6 +1,6 @@
 # Backend
 
-###Data base
+### Data base
 There are two used databases, a MySQL one and a MongoDB one for notifications storage only.
 
 ### Routes
