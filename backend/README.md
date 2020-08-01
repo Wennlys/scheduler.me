@@ -15,7 +15,7 @@ There are two used databases, a MySQL one and a MongoDB one for notifications st
       laminas/laminas-httphandlerrunner: ^1.1,
       rbdwllr/reallysimplejwt: ^2.0
 
-### Routes
+### Routes / Endpoints
 
 If not specified, the route needs an authentication JWT token. 
 
