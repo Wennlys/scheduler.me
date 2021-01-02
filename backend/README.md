@@ -1,9 +1,21 @@
 # Backend
 
-###Data base
+### Structure
+The whole PHP API is built using the [DAO Pattern](https://www.tutorialspoint.com/design_pattern/data_access_object_pattern.htm).
+
+### Data base
 There are two used databases, a MySQL one and a MongoDB one for notifications storage only.
 
-### Routes
+### Libraries
+
+      mongodb/mongodb: 1.6.*,
+      league/route: ^4.3,
+      league/container: ^3.3,
+      laminas/laminas-diactoros: ^2.2,
+      laminas/laminas-httphandlerrunner: ^1.1,
+      rbdwllr/reallysimplejwt: ^2.0
+
+### Routes / Endpoints
 
 If not specified, the route needs an authentication JWT token. 
 
