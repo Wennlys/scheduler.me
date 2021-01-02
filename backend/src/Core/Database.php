@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php 
+declare(strict_types=1);
 
 namespace Source\Core;
 
@@ -6,53 +7,20 @@ use DateTime;
 use Exception;
 use PDO;
 
-/**
- * Class Database
- *
- * @package Source\Core
- */
 class Database
 {
-    /** @var PDO */
     private PDO $connection;
-
-    /** @var string $entity */
     protected string $entity;
-
-    /** @var bool $timestamps */
     protected bool $timestamps;
-
-    /** @var string|null */
     protected ?string $statement = null;
-
-    /** @var string|null */
     private ?string $join = null;
-
-    /** @var string|null */
     protected ?string $and = null;
-
-    /** @var array|null */
     protected ?array $params = null;
-
-    /** @var string|null */
     protected ?string $group = null;
-
-    /** @var string|null */
     protected ?string $order = null;
-
-    /** @var string|null */
     protected ?string $limit = null;
-
-    /** @var string|null */
     protected ?string $offset = null;
 
-    /**
-     * Constructor.
-     *
-     * @param Connection $connection
-     * @param string     $entity
-     * @param bool       $timestamps
-     */
     public function __construct(Connection $connection, string $entity, bool $timestamps = true)
     {
         $this->connection = $connection->getConnection();
@@ -60,11 +28,6 @@ class Database
         $this->timestamps = $timestamps;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array|null
-     */
     protected function filter(array $data): ?array
     {
         $filter = [];
@@ -74,26 +37,14 @@ class Database
         return $filter;
     }
 
-    /**
-     * @return int
-     */
-    public function count()
-    : int
+    public function count(): int
     {
         $stmt = $this->connection->prepare($this->statement);
         $stmt->execute($this->params);
         return $stmt->rowCount();
     }
 
-    /**
-     * @param string|null $terms
-     * @param string|null $params
-     * @param string|null $columns
-     *
-     * @return Database
-     */
-    public function find(?string $columns = "*", ?string $terms = null, string $params = "")
-    : Database {
+    public function find(?string $columns = "*", ?string $terms = null, string $params = ""): Database {
         $columns = $columns ?? "*";
 
         if ($terms) {
@@ -108,80 +59,38 @@ class Database
         return $this;
     }
 
-    /**
-     * @param string $clause
-     * @param string $table
-     *
-     * @return Database|null
-     */
-    public function join(string $clause, string $table)
-    : ?Database
+    public function join(string $clause, string $table): ?Database
     {
         $this->join = " INNER JOIN {$table} ON ({$clause})";
         return $this;
     }
 
-    /**
-     * @param string $clause
-     *
-     * @return Database|null
-     */
-    public function and(string $clause)
-    : ?Database
+    public function and(string $clause): ?Database
     {
         $this->and .= " AND {$clause}";
         return $this;
     }
 
-    /**
-     * @param string $column
-     *
-     * @return Database|null
-     */
-    public function group(string $column)
-    : ?Database {
+    public function group(string $column): ?Database {
         $this->group = " GROUP BY {$column}";
         return $this;
     }
 
-    /**
-     * @param string $columnOrder
-     *
-     * @return Database|null
-     */
-    public function order(string $columnOrder)
-    : ?Database {
+    public function order(string $columnOrder): ?Database {
         $this->order = " ORDER BY {$columnOrder}";
         return $this;
     }
 
-    /**
-     * @param int $limit
-     *
-     * @return Database|null
-     */
-    public function limit(int $limit)
-    : ?Database {
+    public function limit(int $limit): ?Database {
         $this->limit = " LIMIT {$limit}";
         return $this;
     }
 
-    /**
-     * @param int $offset
-     *
-     * @return Database|null
-     */
-    public function offset(int $offset)
-    : ?Database {
+    public function offset(int $offset): ?Database {
         $this->offset = " OFFSET {$offset}";
         return $this;
     }
 
-    /**
-     * @param bool $all
-     *
-     * @return array|mixed|null
-     */
     public function fetch(bool $all = false)
     {
         $stmt = $this->connection->prepare(
@@ -197,12 +106,6 @@ class Database
         return $stmt->fetchObject();
     }
 
-    /**
-     * @param array $data
-     *
-     * @return string
-     * @throws Exception
-     */
     public function create(array $data): string
     {
         $connection = $this->connection;
@@ -222,13 +125,6 @@ class Database
         return $this->connection->lastInsertId();
     }
 
-    /**
-     * @param array $data
-     * @param string $terms
-     * @param string $params
-     * @return bool
-     * @throws Exception
-     */
     public function update(array $data, string $terms, string $params): bool
     {
         $connection = $this->connection;
@@ -247,11 +143,6 @@ class Database
         return $stmt->execute($this->filter(array_merge($data, $params)));
     }
 
-    /**
-     * @param string $terms
-     * @param string|null $params
-     * @return bool
-     */
     public function delete(string $terms, string $params = ""): bool
     {
         $connection = $this->connection;

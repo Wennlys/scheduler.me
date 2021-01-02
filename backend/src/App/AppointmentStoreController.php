@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-
+<?php 
+declare(strict_types=1);
 
 namespace Source\App;
 
@@ -16,29 +16,12 @@ use Source\Models\Notification;
 use DateTime;
 use Exception;
 
-/**
- * Class AppointmentStoreController
- *
- * @package Source\App
- */
 class AppointmentStoreController
 {
-    /** @var Connection */
     private Connection $connection;
-
-    /** @var ResponseInterface */
     private ResponseInterface $response;
-
-    /** @var MongoConnection */
     private MongoConnection $mongoConnection;
 
-    /**
-     * AppointmentStoreController constructor.
-     *
-     * @param Connection        $connection
-     * @param MongoConnection   $mongoConnection
-     * @param ResponseInterface $response
-     */
     public function __construct(Connection $connection,
                                 MongoConnection $mongoConnection,
                                 ResponseInterface $response)
@@ -48,12 +31,6 @@ class AppointmentStoreController
         $this->response = $response;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     * @throws Exception
-     */
     public function store(ServerRequestInterface $request): ResponseInterface
     {
         date_default_timezone_set('America/Sao_Paulo');

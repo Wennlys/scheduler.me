@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-
+<?php 
+declare(strict_types=1);
 
 namespace Source\App;
 
@@ -12,29 +12,12 @@ use Source\Models\User;
 use Source\Models\UserDAO;
 use Source\Core\Connection;
 
-/**
- * Class NotificationProviderIndexController
- *
- * @package Source\App
- */
 class NotificationProviderIndexController
 {
-    /** @var MongoConnection */
     private MongoConnection $mongoConnection;
-
-    /** @var ResponseInterface */
     private ResponseInterface $response;
-
-    /** @var Connection */
     private Connection $connection;
 
-    /**
-     * NotificationProviderIndexController constructor.
-     *
-     * @param MongoConnection   $mongoConnection
-     * @param Connection        $connection
-     * @param ResponseInterface $response
-     */
     public function __construct(Connection $connection,
                                 MongoConnection $mongoConnection,
                                 ResponseInterface $response)
@@ -44,13 +27,7 @@ class NotificationProviderIndexController
         $this->response = $response;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    public function index(ServerRequestInterface $request)
-    : ResponseInterface {
+    public function index(ServerRequestInterface $request): ResponseInterface {
         $payload = getPayload($request);
         $userId = $payload["user_id"];
 

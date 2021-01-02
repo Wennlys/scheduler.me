@@ -1,38 +1,23 @@
-<?php declare(strict_types=1);
-
+<?php 
+declare(strict_types=1);
 
 namespace Source\Models;
 
 use MongoDB\Collection;
 use Source\Core\MongoConnection;
 use MongoDB\BSON\ObjectId;
+use MongoDB\InsertOneResult;
 
-/**
- * Class NotificationDAO
- *
- * @package Source\Models
- */
 class NotificationDAO
 {
-    /** @var Collection */
     private Collection $database;
 
-    /**
-     * NotificationDAO constructor.
-     *
-     * @param MongoConnection $connection
-     */
     public function __construct(MongoConnection $connection)
     {
         $this->database = $connection->getConnection()->selectCollection("notifications");
     }
 
-    /**
-     * @param Notification $notification
-     *
-     * @return \MongoDB\InsertOneResult
-     */
-    public function save(Notification $notification)
+    public function save(Notification $notification): InsertOneResult
     {
         return $this->database->insertOne([
             "user" => $notification->getUser(),
@@ -43,12 +28,7 @@ class NotificationDAO
         ]);
     }
 
-    /**
-     * @param Notification $notification
-     *
-     * @return array
-     */
-    public function findByProvider(Notification $notification)
+    public function findByProvider(Notification $notification): array
     {
         return $this->database->find(["user" => $notification->getUser()],
             [
@@ -57,12 +37,7 @@ class NotificationDAO
             ])->toArray();
     }
 
-    /**
-     * @param Notification $notification
-     *
-     * @return array|object|null
-     */
-    public function update(Notification $notification)
+    public function update(Notification $notification): array
     {
         return $this->database->findOneAndUpdate([
             "user" => $notification->getUser(),

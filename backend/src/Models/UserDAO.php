@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-
+<?php 
+declare(strict_types=1);
 
 namespace Source\Models;
 
@@ -7,35 +7,16 @@ use Source\Core\Connection;
 use Source\Core\Database;
 use Exception;
 
-/**
- * Class UserDAO
- *
- * @package Source\Models
- */
 class UserDAO
 {
-    /** @var string|null string $id */
     private ?string $id;
-
-    /** @var Database */
     private Database $database;
 
-    /**
-     * UserDAO constructor.
-     *
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->database = new Database($connection,"users");
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array
-     * @throws Exception
-     */
     public function save(User $user): array
     {
         $this->id = $this->database->create([
@@ -50,12 +31,6 @@ class UserDAO
         return (array)$this->findById();
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array
-     * @throws Exception
-     */
     public function update(User $user): array
     {
         $this->id = $user->getUserId();
@@ -83,12 +58,6 @@ class UserDAO
         return (array)$this->findById();
     }
 
-    /**
-     * @param User $user
-     *
-     * @return bool
-     * @throws Exception
-     */
     public function delete(User $user): bool
     {
         $id = $user->getUserId();
@@ -99,12 +68,6 @@ class UserDAO
         return $this->database->delete("id = :id", "id={$id}");
     }
 
-    /**
-     * @param User $user
-     *
-     * @return bool
-     * @throws Exception
-     */
     public function verifyPassword(User $user): bool
     {
         $currentPass = $user->getCurrentPassword();
@@ -115,11 +78,6 @@ class UserDAO
         return true;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return object
-     */
     public function findByLogin(User $user): ?object
     {
         if ($user->getEmail()) {
@@ -134,11 +92,6 @@ class UserDAO
             ->fetch();
     }
 
-    /**
-     * @param User|null $user
-     *
-     * @return object
-     */
     public function findById(?User $user = null): ?object
     {
         $id = $user ? $user->getUserId() : $this->id;
@@ -149,17 +102,11 @@ class UserDAO
             ->fetch();
     }
 
-    /**
-     * @return array
-     */
     public function findAll(): ?array
     {
         return $this->database->find()->fetch(true);
     }
 
-    /**
-     * @return array|mixed|null
-     */
     public function findAllProviders()
     {
         return $this->database
@@ -170,11 +117,6 @@ class UserDAO
             ->fetch(true);
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array|mixed|null
-     */
     public function findProvider(User $user)
     {
         return $this->database

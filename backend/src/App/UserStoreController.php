@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-
+<?php 
+declare(strict_types=1);
 
 namespace Source\App;
 
@@ -10,37 +10,17 @@ use Source\Models\UserDAO;
 use Source\Models\User;
 use Exception;
 
-/**
- * Class UserStoreController
- *
- * @package Source\App
- */
 class UserStoreController
 {
-    /** @var ResponseInterface */
     private ResponseInterface $response;
-
-    /** @var Connection*/
     private Connection $connection;
 
-    /**
-     * UserStoreController constructor.
-     *
-     * @param Connection        $connection
-     * @param ResponseInterface $response
-     */
     public function __construct(Connection $connection, ResponseInterface $response)
     {
         $this->connection = $connection;
         $this->response = $response;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     * @throws Exception
-     */
     public function store(ServerRequestInterface $request): ResponseInterface
     {
         $reqBody = json_decode((string)$request->getBody(), true);

@@ -104,11 +104,12 @@ $container->add(Connection::class);
 $container->add(MongoConnection::class);
 $container->add(Response::class);
 
-
+/** @var League\Route\Strategy\StrategyInterface $strategy */
 $strategy = (new League\Route\Strategy\JsonStrategy($responseFactory))
     ->addDefaultResponseHeader('content-type', 'application/json')
     ->setContainer($container);
 
+/** @var Router $router */
 $router = (new League\Route\Router())->setStrategy($strategy);
 
 $router->middleware(new DefaultMiddleware(new Response()));

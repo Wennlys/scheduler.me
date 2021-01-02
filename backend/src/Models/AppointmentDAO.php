@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-
+<?php 
+declare(strict_types=1);
 
 namespace Source\Models;
 
@@ -7,35 +7,16 @@ use Source\Core\Database;
 use Source\Core\Connection;
 use Exception;
 
-/**
- * Class AppointmentDAO
- *
- * @package Source\Models
- */
 class AppointmentDAO
 {
-    /** @var string $id */
     private string $id;
-
-    /** @var Database*/
     private Database $database;
 
-    /**
-     * AppointmentDAO constructor.
-     *
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->database = new Database($connection, "appointments");
     }
 
-    /**
-     * @param Appointment $appointment
-     *
-     * @return array
-     * @throws Exception
-     */
     public function save(Appointment $appointment): array
     {
         $userId = $appointment->getUserId();
@@ -57,12 +38,6 @@ class AppointmentDAO
         return (array)$this->findById();
     }
 
-    /**
-     * @param Appointment $appointment
-     *
-     * @return bool
-     * @throws Exception
-     */
     public function cancel(Appointment $appointment)
     {
         [
@@ -90,11 +65,6 @@ class AppointmentDAO
             "id={$appointment->getId()}");
     }
 
-    /**
-     * @param Appointment $appointment
-     *
-     * @return array|mixed|null
-     */
     public function findById(?Appointment $appointment = null)
     {
         $id = $appointment ? $appointment->getId() : $this->id;
@@ -106,11 +76,6 @@ class AppointmentDAO
             ->fetch();
     }
 
-    /**
-     * @param Appointment $appointment
-     *
-     * @return array|null
-     */
     public function findAppointments(Appointment $appointment): ?array
     {
         $page = $appointment->getPage();
@@ -125,11 +90,6 @@ class AppointmentDAO
             ->fetch(true);
     }
 
-    /**
-     * @param Appointment $appointment
-     *
-     * @return array|mixed|null
-     */
     public function findByDay(Appointment $appointment)
     {
         [$date] = (str_split($appointment->getDate(), 10));

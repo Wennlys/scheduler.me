@@ -1,6 +1,5 @@
-<?php declare(strict_types=1);
-
-
+<?php 
+declare(strict_types=1);
 
 namespace Source\App;
 
@@ -11,37 +10,17 @@ use Source\Core\Connection;
 use Source\Models\User;
 use Source\Models\UserDAO;
 
-/**
- * Class UserDestroyController
- *
- * @package Source\App
- */
 class UserDestroyController
 {
-    /** @var ResponseInterface */
     private ResponseInterface $response;
-
-    /** @var Connection*/
     private Connection $connection;
 
-    /**
-     * UserDestroyController constructor.
-     *
-     * @param Connection        $connection
-     * @param ResponseInterface $response
-     */
     public function __construct(Connection $connection, ResponseInterface $response)
     {
         $this->connection = $connection;
         $this->response = $response;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     * @throws Exception
-     */
     public function destroy(ServerRequestInterface $request): ResponseInterface
     {
         ['password' => $currentPassword] = json_decode((string)$request->getBody(), true);

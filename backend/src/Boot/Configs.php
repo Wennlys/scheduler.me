@@ -1,36 +1,36 @@
 <?php declare(strict_types=1);
 
 /*
- * SQL(MARIADB) DATABASE
- * */
+ SQL(MARIADB) DATABASE
+ **/
 define("SQL_DB_HOST", "172.17.0.3");
 define("SQL_DB_USER", "root");
 define("SQL_DB_PASS", "");
 define("SQL_DB_NAME", "scheduler");
 
 /*
- * PASSWORD
- * */
+ PASSWORD
+ **/
 define("MIN_PASS_LEN", 8);
 define("MAX_PASS_LEN", 40);
 define("PASS_ALGO", PASSWORD_DEFAULT);
 define("PASS_OPTION", PASSWORD_BCRYPT_DEFAULT_COST);
 
-/**
- * JWT
- */
+/*
+ JWT
+ **/
 define("JWT_SECRET", "97af779fec9b7be2dc0bd5855e77ba71!A");
 define("JWT_EXPIRATION", time() + 10000);
 define("JWT_ISSUER", "localhost");
 
-/**
- * FILTERS
- */
+/*
+ FILTERS
+ **/
 define("DEFAULT_FILTER", FILTER_SANITIZE_STRIPPED);
 
 /*
- * NOSQL(MONGODB) DATABASE
- * */
+ NOSQL(MONGODB) DATABASE
+ **/
 define("NOSQL_DB_NAME", "schedulerMongo");
 
 //MONGO CONFIGS
